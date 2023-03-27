@@ -1,0 +1,30 @@
+[tool.poetry]
+name = "st-server"
+version = "0.1.0"
+description = ""
+authors = ["Damian Ontivero <damian.ontivero@outlook.com>"]
+readme = "README.md"
+packages = [{include = "st_server"}]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+sqlalchemy = "^2.0.0"
+alembic = "^1.9.2"
+pymysql = "^1.0.2"
+fastapi = "^0.89.1"
+uvicorn = "^0.20.0"
+werkzeug = "^2.2.2"
+python-multipart = "^0.0.5"
+pyjwt = "^2.6.0"
+cryptography = "^39.0.0"
+pytz = "^2022.7.1"
+
+[tool.poetry.group.dev.dependencies]
+flake8 = "^6.0.0"
+black = "^22.12.0"
+ipdb = "^0.13.11"
+pytest = "^7.2.1"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
