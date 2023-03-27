@@ -1,0 +1,34 @@
+version: "3.9"
+services:
+  # api:
+  #   image: support-domain-api-v1
+  #   build:
+  #     context: .
+  #     dockerfile: ./Dockerfile
+  #   container_name: support-domain-api-v1
+  #   ports:
+  #     - 16400:16400
+  #   depends_on:
+  #     - mysql
+  #   links:
+  #     - mysql
+
+  mysql:
+    image: mysql:8.0.32
+    container_name: servertree-mysql
+    restart: always
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+    ports:
+      - 3306:3306
+    volumes:
+      - servertree-mysql-data:/var/lib/mysql
+      - ~/workspace/servertree/docker/mysql/db-init.sql:/docker-entrypoint-initdb.d/init.sql
+
+volumes:
+  servertree-mysql-data:
+    driver: local
+    driver_opts:
+      type: "none"
+      o: "bind"
+      device: "~/workspace/servertree/docker/mysql/data"
