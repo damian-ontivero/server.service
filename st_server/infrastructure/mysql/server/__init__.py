@@ -42,87 +42,133 @@ def start_mappers():
 
     # Server
     mapper_registry.map_imperatively(
-        Server,
-        ServerDbModel.__table__,
+        class_=Server,
+        local_table=ServerDbModel.__table__,
         properties={
             "environment": relationship(
-                Environment, lazy="joined", viewonly=True
+                Environment,
+                lazy="joined",
+                viewonly=True,
             ),
             "operating_system": relationship(
-                OperatingSystem, lazy="joined", viewonly=True
+                OperatingSystem,
+                lazy="joined",
+                viewonly=True,
             ),
             "credentials": relationship(
-                Credential, lazy="joined", viewonly=True
+                Credential,
+                lazy="joined",
+                viewonly=True,
             ),
             "applications": relationship(
-                ServerApplication, lazy="joined", viewonly=True
+                ServerApplication,
+                lazy="joined",
+                viewonly=True,
             ),
         },
     )
+
     mapper_registry.map_imperatively(
-        ServerFull,
-        ServerDbModel.__table__,
+        class_=ServerFull,
+        local_table=ServerDbModel.__table__,
         properties={
             "environment": relationship(
-                EnvironmentFull, lazy="joined", viewonly=True
+                EnvironmentFull,
+                lazy="joined",
+                viewonly=True,
             ),
             "operating_system": relationship(
-                OperatingSystemFull, lazy="joined", viewonly=True
+                OperatingSystemFull,
+                lazy="joined",
+                viewonly=True,
             ),
             "credentials": relationship(
-                CredentialFull, lazy="joined", viewonly=True
+                CredentialFull,
+                lazy="joined",
+                viewonly=True,
             ),
             "applications": relationship(
-                ServerApplicationFull, lazy="joined", viewonly=True
+                ServerApplicationFull,
+                lazy="joined",
+                viewonly=True,
             ),
         },
     )
-    mapper_registry.map_imperatively(ServerSimple, ServerDbModel.__table__)
-    mapper_registry.map_imperatively(ServerCreate, ServerDbModel.__table__)
-    mapper_registry.map_imperatively(ServerUpdate, ServerDbModel.__table__)
+
+    mapper_registry.map_imperatively(
+        class_=ServerSimple,
+        local_table=ServerDbModel.__table__,
+    )
+
+    mapper_registry.map_imperatively(
+        class_=ServerCreate,
+        local_table=ServerDbModel.__table__,
+    )
+
+    mapper_registry.map_imperatively(
+        class_=ServerUpdate,
+        local_table=ServerDbModel.__table__,
+    )
 
     # ServerApplication
     mapper_registry.map_imperatively(
-        ServerApplication,
-        ServerApplicationDbModel.__table__,
-        properties={"application": relationship(Application, lazy="joined")},
-    )
-    mapper_registry.map_imperatively(
-        ServerApplicationFull,
-        ServerApplicationDbModel.__table__,
+        class_=ServerApplication,
+        local_table=ServerApplicationDbModel.__table__,
         properties={
-            "application": relationship(ApplicationFull, lazy="joined")
+            "application": relationship(
+                Application,
+                lazy="joined",
+            )
+        },
+    )
+
+    mapper_registry.map_imperatively(
+        class_=ServerApplicationFull,
+        local_table=ServerApplicationDbModel.__table__,
+        properties={
+            "application": relationship(
+                ApplicationFull,
+                lazy="joined",
+            )
         },
     )
 
     # Credential
     mapper_registry.map_imperatively(
-        Credential,
-        CredentialDbModel.__table__,
+        class_=Credential,
+        local_table=CredentialDbModel.__table__,
         properties={
             "connection_type": relationship(
-                ConnectionType, lazy="joined", viewonly=True
+                ConnectionType,
+                lazy="joined",
+                viewonly=True,
             )
         },
     )
+
     mapper_registry.map_imperatively(
-        CredentialFull,
-        CredentialDbModel.__table__,
+        class_=CredentialFull,
+        local_table=CredentialDbModel.__table__,
         properties={
             "connection_type": relationship(
-                ConnectionTypeFull, lazy="joined", viewonly=True
+                ConnectionTypeFull,
+                lazy="joined",
+                viewonly=True,
             )
         },
     )
+
     mapper_registry.map_imperatively(
-        CredentialSimple, CredentialDbModel.__table__
-    )
-    mapper_registry.map_imperatively(
-        CredentialCreate, CredentialDbModel.__table__
-    )
-    mapper_registry.map_imperatively(
-        CredentialUpdate, CredentialDbModel.__table__
+        class_=CredentialSimple,
+        local_table=CredentialDbModel.__table__,
     )
 
+    mapper_registry.map_imperatively(
+        class_=CredentialCreate,
+        local_table=CredentialDbModel.__table__,
+    )
 
-start_mappers()
+    mapper_registry.map_imperatively(
+        class_=CredentialUpdate,
+        local_table=CredentialDbModel.__table__,
+    )

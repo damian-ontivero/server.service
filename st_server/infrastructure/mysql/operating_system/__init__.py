@@ -24,17 +24,21 @@ def start_mappers():
     # configuration will fail.
 
     mapper_registry.map_imperatively(
-        OperatingSystem, OperatingSystemDbModel.__table__
-    )
-    mapper_registry.map_imperatively(
-        OperatingSystemFull, OperatingSystemDbModel.__table__
-    )
-    mapper_registry.map_imperatively(
-        OperatingSystemCreate, OperatingSystemDbModel.__table__
-    )
-    mapper_registry.map_imperatively(
-        OperatingSystemUpdate, OperatingSystemDbModel.__table__
+        class_=OperatingSystem,
+        local_table=OperatingSystemDbModel.__table__,
     )
 
+    mapper_registry.map_imperatively(
+        class_=OperatingSystemFull,
+        local_table=OperatingSystemDbModel.__table__,
+    )
 
-start_mappers()
+    mapper_registry.map_imperatively(
+        class_=OperatingSystemCreate,
+        local_table=OperatingSystemDbModel.__table__,
+    )
+
+    mapper_registry.map_imperatively(
+        class_=OperatingSystemUpdate,
+        local_table=OperatingSystemDbModel.__table__,
+    )

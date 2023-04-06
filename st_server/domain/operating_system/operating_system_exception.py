@@ -14,7 +14,7 @@ class OperatingSystemNotFound(Exception):
 
     def __str__(self) -> str:
         """Returns the string representation of an object."""
-        return f"No Operating System found with id {self.id}."
+        return f"No Operating System found with the provided id {self.id}."
 
 
 class OperatingSystemAlreadyExists(Exception):
@@ -30,7 +30,7 @@ class OperatingSystemAlreadyExists(Exception):
 
     def __str__(self) -> str:
         """Returns the string representation of an object."""
-        return f"A Operating System with id {self.id} already exists."
+        return f"A Operating System with the provided id {self.id} already exists."
 
 
 class OperatingSystemNameAlreadyExists(Exception):
@@ -46,4 +46,4 @@ class OperatingSystemNameAlreadyExists(Exception):
 
     def __str__(self) -> str:
         """Returns the string representation of an object."""
-        return f"A Operating System with name {self.name} already exists."
+        return f"A Operating System with the provided name {self.name} already exists."

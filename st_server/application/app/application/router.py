@@ -14,7 +14,9 @@ from st_server.application.helper.pagination import (
     PerPageNotAnInteger,
 )
 from st_server.application.helper.sort import SortFormatError
-from st_server.application.service.application import ApplicationService
+from st_server.application.service.application.application import (
+    ApplicationService,
+)
 from st_server.domain.application import (
     Application,
     ApplicationCreate,

@@ -14,7 +14,7 @@ class ApplicationNotFound(Exception):
 
     def __str__(self) -> str:
         """Returns the string representation of an object."""
-        return f"No Application found with id {self.id}."
+        return f"No Application found with the provided id {self.id}."
 
 
 class ApplicationAlreadyExists(Exception):
@@ -30,7 +30,7 @@ class ApplicationAlreadyExists(Exception):
 
     def __str__(self) -> str:
         """Returns the string representation of an object."""
-        return f"A Application with id {self.id} already exists."
+        return f"A Application with the provided id {self.id} already exists."
 
 
 class ApplicationNameAlreadyExists(Exception):
@@ -46,4 +46,6 @@ class ApplicationNameAlreadyExists(Exception):
 
     def __str__(self) -> str:
         """Returns the string representation of an object."""
-        return f"A Application with name {self.name} already exists."
+        return (
+            f"A Application with the provided name {self.name} already exists."
+        )

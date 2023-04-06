@@ -16,7 +16,7 @@ from st_server.application.helper.pagination import (
     PerPageNotAnInteger,
 )
 from st_server.application.helper.sort import SortFormatError
-from st_server.application.service.operating_system import (
+from st_server.application.service.operating_system.operating_system import (
     OperatingSystemService,
 )
 from st_server.domain.operating_system import (

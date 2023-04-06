@@ -24,17 +24,21 @@ def start_mappers():
     # configuration will fail.
 
     mapper_registry.map_imperatively(
-        ConnectionType, ConnectionTypeDbModel.__table__
-    )
-    mapper_registry.map_imperatively(
-        ConnectionTypeFull, ConnectionTypeDbModel.__table__
-    )
-    mapper_registry.map_imperatively(
-        ConnectionTypeCreate, ConnectionTypeDbModel.__table__
-    )
-    mapper_registry.map_imperatively(
-        ConnectionTypeUpdate, ConnectionTypeDbModel.__table__
+        class_=ConnectionType,
+        local_table=ConnectionTypeDbModel.__table__,
     )
 
+    mapper_registry.map_imperatively(
+        class_=ConnectionTypeFull,
+        local_table=ConnectionTypeDbModel.__table__,
+    )
 
-start_mappers()
+    mapper_registry.map_imperatively(
+        class_=ConnectionTypeCreate,
+        local_table=ConnectionTypeDbModel.__table__,
+    )
+
+    mapper_registry.map_imperatively(
+        class_=ConnectionTypeUpdate,
+        local_table=ConnectionTypeDbModel.__table__,
+    )

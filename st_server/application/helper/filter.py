@@ -2,8 +2,22 @@
 
 from functools import wraps
 
-KNOWN_PARAMS = ["per_page", "page", "sort", "access_token"]
-OPERATORS = ["eq", "gt", "ge", "lt", "le", "in", "btw", "lk"]
+KNOWN_PARAMS = [
+    "per_page",
+    "page",
+    "sort",
+    "access_token",
+]
+OPERATORS = [
+    "eq",
+    "gt",
+    "ge",
+    "lt",
+    "le",
+    "in",
+    "btw",
+    "lk",
+]
 
 
 class FilterFormatError(Exception):
