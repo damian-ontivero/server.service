@@ -23,16 +23,22 @@ def start_mappers():
     # Otherwise, the mappers will not be available, and the
     # configuration will fail.
 
-    mapper_registry.map_imperatively(Application, ApplicationDbModel.__table__)
     mapper_registry.map_imperatively(
-        ApplicationFull, ApplicationDbModel.__table__
-    )
-    mapper_registry.map_imperatively(
-        ApplicationCreate, ApplicationDbModel.__table__
-    )
-    mapper_registry.map_imperatively(
-        ApplicationUpdate, ApplicationDbModel.__table__
+        class_=Application,
+        local_table=ApplicationDbModel.__table__,
     )
 
+    mapper_registry.map_imperatively(
+        class_=ApplicationFull,
+        local_table=ApplicationDbModel.__table__,
+    )
 
-start_mappers()
+    mapper_registry.map_imperatively(
+        class_=ApplicationCreate,
+        local_table=ApplicationDbModel.__table__,
+    )
+
+    mapper_registry.map_imperatively(
+        class_=ApplicationUpdate,
+        local_table=ApplicationDbModel.__table__,
+    )

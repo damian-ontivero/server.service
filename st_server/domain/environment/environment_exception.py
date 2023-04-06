@@ -14,7 +14,7 @@ class EnvironmentNotFound(Exception):
 
     def __str__(self) -> str:
         """Returns the string representation of an object."""
-        return f"No Environment found with id {self.id}."
+        return f"No Environment found with the provided id {self.id}."
 
 
 class EnvironmentAlreadyExists(Exception):
@@ -30,7 +30,7 @@ class EnvironmentAlreadyExists(Exception):
 
     def __str__(self) -> str:
         """Returns the string representation of an object."""
-        return f"A Environment with id {self.id} already exists."
+        return f"A Environment with the provided id {self.id} already exists."
 
 
 class EnvironmentNameAlreadyExists(Exception):
@@ -46,4 +46,6 @@ class EnvironmentNameAlreadyExists(Exception):
 
     def __str__(self) -> str:
         """Returns the string representation of an object."""
-        return f"A Environment with name {self.name} already exists."
+        return (
+            f"A Environment with the provided name {self.name} already exists."
+        )

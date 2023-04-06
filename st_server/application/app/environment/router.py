@@ -14,7 +14,9 @@ from st_server.application.helper.pagination import (
     PerPageNotAnInteger,
 )
 from st_server.application.helper.sort import SortFormatError
-from st_server.application.service.environment import EnvironmentService
+from st_server.application.service.environment.environment import (
+    EnvironmentService,
+)
 from st_server.domain.environment import (
     Environment,
     EnvironmentCreate,

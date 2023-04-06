@@ -23,16 +23,22 @@ def start_mappers():
     # Otherwise, the mappers will not be available, and the
     # configuration will fail.
 
-    mapper_registry.map_imperatively(Environment, EnvironmentDbModel.__table__)
     mapper_registry.map_imperatively(
-        EnvironmentFull, EnvironmentDbModel.__table__
-    )
-    mapper_registry.map_imperatively(
-        EnvironmentCreate, EnvironmentDbModel.__table__
-    )
-    mapper_registry.map_imperatively(
-        EnvironmentUpdate, EnvironmentDbModel.__table__
+        class_=Environment,
+        local_table=EnvironmentDbModel.__table__,
     )
 
+    mapper_registry.map_imperatively(
+        class_=EnvironmentFull,
+        local_table=EnvironmentDbModel.__table__,
+    )
 
-start_mappers()
+    mapper_registry.map_imperatively(
+        class_=EnvironmentCreate,
+        local_table=EnvironmentDbModel.__table__,
+    )
+
+    mapper_registry.map_imperatively(
+        class_=EnvironmentUpdate,
+        local_table=EnvironmentDbModel.__table__,
+    )

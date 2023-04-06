@@ -16,7 +16,9 @@ from st_server.application.helper.pagination import (
     PerPageNotAnInteger,
 )
 from st_server.application.helper.sort import SortFormatError
-from st_server.application.service.connection_type import ConnectionTypeService
+from st_server.application.service.connection_type.connection_type import (
+    ConnectionTypeService,
+)
 from st_server.domain.connection_type import (
     ConnectionType,
     ConnectionTypeCreate,

@@ -14,7 +14,7 @@ class ConnectionTypeNotFound(Exception):
 
     def __str__(self) -> str:
         """Returns the string representation of an object."""
-        return f"No Connection Type found with id {self.id}."
+        return f"No Connection Type found with the provided id {self.id}."
 
 
 class ConnectionTypeAlreadyExists(Exception):
@@ -30,7 +30,9 @@ class ConnectionTypeAlreadyExists(Exception):
 
     def __str__(self) -> str:
         """Returns the string representation of an object."""
-        return f"A Connection Type with id {self.id} already exists."
+        return (
+            f"A Connection Type with the provided id {self.id} already exists."
+        )
 
 
 class ConnectionTypeNameAlreadyExists(Exception):
@@ -46,4 +48,4 @@ class ConnectionTypeNameAlreadyExists(Exception):
 
     def __str__(self) -> str:
         """Returns the string representation of an object."""
-        return f"A Connection Type with name {self.name} already exists."
+        return f"A Connection Type with the provided name {self.name} already exists."

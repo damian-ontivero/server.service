@@ -14,7 +14,7 @@ class ServerNotFound(Exception):
 
     def __str__(self) -> str:
         """Returns the string representation of an object."""
-        return f"No Server found with id {self.id}."
+        return f"No Server found with the provided id {self.id}."
 
 
 class ServerAlreadyExists(Exception):
@@ -30,7 +30,7 @@ class ServerAlreadyExists(Exception):
 
     def __str__(self) -> str:
         """Returns the string representation of an object."""
-        return f"A Server with id {self.id} already exists."
+        return f"A Server with the provided id {self.id} already exists."
 
 
 class ServerNameAlreadyExists(Exception):
@@ -46,4 +46,4 @@ class ServerNameAlreadyExists(Exception):
 
     def __str__(self) -> str:
         """Returns the string representation of an object."""
-        return f"A Server with name {self.name} already exists."
+        return f"A Server with the provided name {self.name} already exists."
