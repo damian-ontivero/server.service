@@ -29,17 +29,23 @@ class ServerApplicationDbModel(db.Base):
             `str`: String representation of the object.
         """
         return (
-            f"ServerApplicationDbModel(server_id={self.server_id}, "
-            f"application_id={self.application_id}, "
-            f"install_dir={self.install_dir}, log_dir={self.log_dir}, "
-            f"application={self.application})"
+            "{c}(server_id={server_id!r}, application_id={application_id!r}, "
+            "install_dir={install_dir!r}, log_dir={log_dir!r}, "
+            "application={application!r})"
+        ).format(
+            c=self.__class__.__name__,
+            server_id=self.server_id,
+            application_id=self.application_id,
+            install_dir=self.install_dir,
+            log_dir=self.log_dir,
+            application=self.application,
         )
 
-    def to_dict(self, exclude: list[str] = None) -> dict:
+    def to_dict(self, exclude: list[str] | None = None) -> dict:
         """Returns a dictionary representation of the object.
 
         Args:
-            exclude (`list[str]`, optional): List of attributes to exclude.
+            exclude (`list[str]`): List of attributes to exclude.
 
         Returns:
             `dict`: Dictionary representation of the object.

@@ -129,10 +129,15 @@ class ServerApplication:
             `str`: String representation of the object.
         """
         return (
-            f"ServerApplication(server_id={self._server_id}, "
-            f"application_id={self._application_id}, "
-            f"install_dir={self._install_dir}, log_dir={self._log_dir}, "
-            f"application={self._application})"
+            "{c}(server_id={server_id!r}, application_id={application_id!r}, "
+            "install_dir={install_dir!r}, log_dir={log_dir!r}, application={application!r})"
+        ).format(
+            c=self.__class__.__name__,
+            server_id=self._server_id,
+            application_id=self._application_id,
+            install_dir=self._install_dir,
+            log_dir=self._log_dir,
+            application=self._application,
         )
 
     def to_dict(self) -> dict:

@@ -1,18 +1,13 @@
-"""Server schema."""
+"""Operating system schema."""
 
 from dataclasses import asdict, dataclass
 
 
 @dataclass
-class ServerBase:
+class OperatingSystemBase:
     name: str | None = None
-    cpu: str | None = None
-    ram: str | None = None
-    hdd: str | None = None
-    environment_id: str | None = None
-    operating_system_id: str | None = None
-    credentials: list | None = None
-    applications: list | None = None
+    version: str | None = None
+    architect: str | None = None
 
     def to_dict(self) -> dict:
         """Returns a dictionary representation of the object.
@@ -24,16 +19,16 @@ class ServerBase:
 
 
 @dataclass
-class ServerRead(ServerBase):
+class OperatingSystemRead(OperatingSystemBase):
     id: str | None = None
     discarded: bool | None = None
 
 
 @dataclass
-class ServerUpdate(ServerBase):
+class OperatingSystemUpdate(OperatingSystemBase):
     pass
 
 
 @dataclass
-class ServerCreate(ServerBase):
+class OperatingSystemCreate(OperatingSystemBase):
     pass

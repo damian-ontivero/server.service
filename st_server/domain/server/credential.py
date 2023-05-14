@@ -3,10 +3,10 @@
 This is the aggregate root entity of the credential aggregate.
 """
 
+from st_server.domain.connection_type.connection_type import ConnectionType
 from st_server.domain.domain_event import DomainEvent
 from st_server.domain.entity import Entity
 from st_server.domain.entity_id import EntityId
-from st_server.domain.server.connection_type import ConnectionType
 
 
 class Credential(Entity):
@@ -260,12 +260,23 @@ class Credential(Entity):
             `str`: String representation of the object.
         """
         return (
-            f"Credential(id={self.id}, "
-            f"server_id={self._server_id}, connection_type={self._connection_type}, "
-            f"username={self._username}, password={self._password}, "
-            f"local_ip={self._local_ip}, local_port={self._local_port}, "
-            f"public_ip={self._public_ip}, public_port={self._public_port}, "
-            f"discarded={self._discarded})"
+            "{d}{c}(id={id!r}, server_id={server_id!r}, connection_type={connection_type!r}, "
+            "username={username!r}, password={password!r}, local_ip={local_ip!r}, "
+            "local_port={local_port!r}, public_ip={public_ip!r}, public_port={public_port!r}, "
+            "discarded={discarded!r})"
+        ).format(
+            d="*Discarded* " if self._discarded else "",
+            c=self.__class__.__name__,
+            id=self.id,
+            server_id=self._server_id,
+            connection_type=self._connection_type,
+            username=self._username,
+            password=self._password,
+            local_ip=self._local_ip,
+            local_port=self._local_port,
+            public_ip=self._public_ip,
+            public_port=self._public_port,
+            discarded=self._discarded,
         )
 
     def to_dict(self) -> dict:

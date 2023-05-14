@@ -14,7 +14,9 @@ class CredentialDbModel(db.Base):
         sa.String(32), primary_key=True, unique=True, nullable=False
     )
     server_id = sa.Column(sa.ForeignKey("server.id"), nullable=False)
-    connection_type = sa.Column(sa.String(255), nullable=False)
+    connection_type_id = sa.Column(
+        sa.ForeignKey("connection_type.id"), nullable=False
+    )
     local_ip = sa.Column(sa.String(255), nullable=True)
     local_port = sa.Column(sa.String(255), nullable=True)
     public_ip = sa.Column(sa.String(255), nullable=True)
@@ -30,20 +32,31 @@ class CredentialDbModel(db.Base):
             `str`: String representation of the object.
         """
         return (
-            f"CredentialDbModel(id={self.id}, "
-            f"server_id={self.server_id}, "
-            f"connection_type={self.connection_type}, "
-            f"local_ip={self.local_ip}, local_port={self.local_port}, "
-            f"public_ip={self.public_ip}, public_port={self.public_port}, "
-            f"username={self.username}, password={self.password}, "
-            f"discarded={self.discarded})"
+            "{c}(id={id!r}, server_id={server_id!r}, "
+            "connection_type_id={connection_type_id!r}, "
+            "local_ip={local_ip!r}, local_port={local_port!r}, "
+            "public_ip={public_ip!r}, public_port={public_port!r}, "
+            "username={username!r}, password={password!r}, "
+            "discarded={discarded!r})"
+        ).format(
+            c=self.__class__.__name__,
+            id=self.id,
+            server_id=self.server_id,
+            connection_type_id=self.connection_type_id,
+            local_ip=self.local_ip,
+            local_port=self.local_port,
+            public_ip=self.public_ip,
+            public_port=self.public_port,
+            username=self.username,
+            password=self.password,
+            discarded=self.discarded,
         )
 
-    def to_dict(self, exclude: list[str] = None) -> dict:
+    def to_dict(self, exclude: list[str] | None = None) -> dict:
         """Returns a dictionary representation of the object.
 
         Args:
-            exclude (`list[str]`, optional): List of attributes to exclude.
+            exclude (`list[str]`): List of attributes to exclude.
 
         Returns:
             `dict`: Dictionary representation of the object.
@@ -51,7 +64,7 @@ class CredentialDbModel(db.Base):
         data = {
             "id": self.id,
             "server_id": self.server_id,
-            "connection_type": self.connection_type,
+            "connection_type_id": self.connection_type_id,
             "local_ip": self.local_ip,
             "local_port": self.local_port,
             "public_ip": self.public_ip,
@@ -79,7 +92,7 @@ class CredentialDbModel(db.Base):
         return CredentialDbModel(
             id=data.get("id"),
             server_id=data.get("server_id"),
-            connection_type=data.get("connection_type"),
+            connection_type_id=data.get("connection_type_id"),
             local_ip=data.get("local_ip"),
             local_port=data.get("local_port"),
             public_ip=data.get("public_ip"),

@@ -1,18 +1,11 @@
-"""Server schema."""
+"""Environment schema."""
 
 from dataclasses import asdict, dataclass
 
 
 @dataclass
-class ServerBase:
+class EnvironmentBase:
     name: str | None = None
-    cpu: str | None = None
-    ram: str | None = None
-    hdd: str | None = None
-    environment_id: str | None = None
-    operating_system_id: str | None = None
-    credentials: list | None = None
-    applications: list | None = None
 
     def to_dict(self) -> dict:
         """Returns a dictionary representation of the object.
@@ -24,16 +17,16 @@ class ServerBase:
 
 
 @dataclass
-class ServerRead(ServerBase):
+class EnvironmentRead(EnvironmentBase):
     id: str | None = None
     discarded: bool | None = None
 
 
 @dataclass
-class ServerUpdate(ServerBase):
+class EnvironmentUpdate(EnvironmentBase):
     pass
 
 
 @dataclass
-class ServerCreate(ServerBase):
+class EnvironmentCreate(EnvironmentBase):
     pass

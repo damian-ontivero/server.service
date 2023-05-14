@@ -1,14 +1,14 @@
-"""Application database model."""
+"""Operating system database model."""
 
 import sqlalchemy as sa
 
 from st_server.infrastructure.mysql import db
 
 
-class ApplicationDbModel(db.Base):
-    """Application database model."""
+class OperatingSystemDbModel(db.Base):
+    """Operating system database model."""
 
-    __tablename__ = "application"
+    __tablename__ = "operating_system"
 
     id = sa.Column(
         sa.String(32), primary_key=True, unique=True, nullable=False
@@ -25,8 +25,9 @@ class ApplicationDbModel(db.Base):
             `str`: String representation of the object.
         """
         return (
-            "{c}(id={id!r}, name={name!r}, version={version!r}, "
-            "architect={architect!r}, discarded={discarded!r})"
+            "{c}(id={id!r}, name={name!r}, "
+            "version={version!r}, architect={architect!r}, "
+            "discarded={discarded!r})"
         ).format(
             c=self.__class__.__name__,
             id=self.id,
@@ -59,16 +60,16 @@ class ApplicationDbModel(db.Base):
 
         return data
 
-    def from_dict(data: dict) -> "ApplicationDbModel":
+    def from_dict(data: dict) -> "OperatingSystemDbModel":
         """Returns an instance of the class based on the provided dictionary.
 
         Args:
             data (`dict`): Dictionary representation of the object.
 
         Returns:
-            `ApplicationDbModel`: Instance of the class.
+            `OperatingSystemDbModel`: Instance of the class.
         """
-        return ApplicationDbModel(
+        return OperatingSystemDbModel(
             id=data.get("id"),
             name=data.get("name"),
             version=data.get("version"),
