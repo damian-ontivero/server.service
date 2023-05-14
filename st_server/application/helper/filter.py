@@ -2,30 +2,10 @@
 
 from functools import wraps
 
-KNOWN_PARAMS = [
-    "per_page",
-    "page",
-    "sort",
-    "access_token",
-]
-OPERATORS = [
-    "eq",
-    "gt",
-    "ge",
-    "lt",
-    "le",
-    "in",
-    "btw",
-    "lk",
-]
+from st_server.domain.exception import FilterError
 
-
-class FilterFormatError(Exception):
-    """Custom error that is raised when the filter format is incorrect."""
-
-    def __str__(self) -> str:
-        """Returns the string representation of an object."""
-        return "Incorrect filter format."
+KNOWN_PARAMS = ["fields", "per_page", "page", "sort", "access_token"]
+OPERATORS = ["eq", "gt", "ge", "lt", "le", "in", "btw", "lk"]
 
 
 def validate_filter(func):
@@ -41,7 +21,7 @@ def validate_filter(func):
                 operator = _filter[1].split(":")[0]
 
                 if operator not in OPERATORS:
-                    raise FilterFormatError
+                    raise FilterError
 
         return func(*args, **kwargs)
 

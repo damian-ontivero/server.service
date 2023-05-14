@@ -2,37 +2,7 @@
 
 from functools import wraps
 
-
-class PageNotAnInteger(Exception):
-    """Custom error that is raised when the page number is not an integer."""
-
-    def __str__(self) -> str:
-        """Returns the string representation of an object."""
-        return "The page number must be an integer value."
-
-
-class PageLessThanOne(Exception):
-    """Custom error that is raised when the page number is less than 1."""
-
-    def __str__(self) -> str:
-        """Returns the string representation of an object."""
-        return "The page number cannot be less than 1."
-
-
-class PerPageNotAnInteger(Exception):
-    """Custom error that is raised when the number of records per page is not an integer."""
-
-    def __str__(self) -> str:
-        """Returns the string representation of an object."""
-        return "The number of records per page must be an integer value."
-
-
-class PerPageLessThanZero(Exception):
-    """Custom error that is raised when the number of records is less than 0."""
-
-    def __str__(self) -> str:
-        """Returns the string representation of an object."""
-        return "The number of records per page cannot be less than 0."
+from st_server.domain.exception import PaginationError
 
 
 def validate_pagination(func):
@@ -46,27 +16,27 @@ def validate_pagination(func):
 
         if per_page is not None:
             try:
-                per_page = int(per_page)
-
-                assert per_page >= 0
-
+                assert int(per_page) >= 0
             except ValueError:
-                raise PerPageNotAnInteger
-
+                raise PaginationError(
+                    message="The number of records per page must be an integer value."
+                )
             except AssertionError:
-                raise PerPageLessThanZero
+                raise PaginationError(
+                    message="The number of records per page cannot be less than 0."
+                )
 
         if page is not None:
             try:
-                page = int(page)
-
-                assert page >= 1
-
+                assert int(page) >= 1
             except ValueError:
-                raise PageNotAnInteger
-
+                raise PaginationError(
+                    message="The page number must be an integer value."
+                )
             except AssertionError:
-                raise PageLessThanOne
+                raise PaginationError(
+                    message="The page number cannot be less than 1."
+                )
 
         return func(*args, **kwargs)
 
