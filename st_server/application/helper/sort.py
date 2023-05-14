@@ -2,15 +2,7 @@
 
 from functools import wraps
 
-
-class SortFormatError(Exception):
-    """Custom error that is raised when the sort format is incorrect."""
-
-    def __str__(self) -> str:
-        """Returns the string representation of an object."""
-        return (
-            "Incorrect sort format. Valid format: 'name:asc' or 'name:desc'."
-        )
+from st_server.domain.exception import SortError
 
 
 def validate_sort(func):
@@ -26,10 +18,10 @@ def validate_sort(func):
                 criteria = sort_criteria.split(":")
 
                 if len(criteria) != 2:
-                    raise SortFormatError
+                    raise SortError
 
                 if criteria[1] not in ["asc", "desc"]:
-                    raise SortFormatError
+                    raise SortError
 
         return func(*args, **kwargs)
 

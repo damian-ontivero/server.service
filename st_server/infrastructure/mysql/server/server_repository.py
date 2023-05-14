@@ -1,150 +1,183 @@
-"""Server repository."""
+"""Server repository implementation."""
 
-import abc
+from sqlalchemy import inspect
+from sqlalchemy.orm import (
+    ColumnProperty,
+    RelationshipProperty,
+    Session,
+    joinedload,
+    load_only,
+)
 
-from sqlalchemy.orm import Session
+from st_server.domain.repository import FILTER_OPERATOR_MAPPER, Repository
+from st_server.domain.response import RepositoryResponse
+from st_server.domain.server.server import Server
+from st_server.infrastructure.mysql.server.server import ServerDbModel
 
-from st_server.domain.helper import RepositoryResponse
-from st_server.domain.server import Server
-from st_server.infrastructure.mysql import db
 
+class ServerRepository(Repository):
+    """Server repository implementation."""
 
-class ServerRepository:
-    """Server repository."""
-
-    def __init__(self, session: Session, model: db.Base) -> None:
+    def __init__(self, session: Session) -> None:
         """Server repository.
 
         Args:
             session (`Session`): SQLAlchemy session object.
-            model (`db.Base`): SQLAlchemy mapper model.
         """
         self._session = session
-        self._model = model
-        self._filter_operator_mapper = {
-            "eq": lambda k, v: getattr(self._model, k) == v,
-            "gt": lambda k, v: getattr(self._model, k) > v,
-            "ge": lambda k, v: getattr(self._model, k) >= v,
-            "lt": lambda k, v: getattr(self._model, k) < v,
-            "le": lambda k, v: getattr(self._model, k) <= v,
-            "in": lambda k, v: getattr(self._model, k).in_(v.split(",")),
-            "btw": lambda k, v: getattr(self._model, k).between(*v.split(",")),
-            "lk": lambda k, v: getattr(self._model, k).ilike(f"%{v}%"),
-        }
 
-    @abc.abstractmethod
     def find_many(
         self,
         limit: int | None = None,
         offset: int | None = None,
         sort: list[str] | None = None,
+        fields: list[str] | None = None,
         **kwargs,
     ) -> RepositoryResponse:
-        """Returns all entities that match the provided conditions.
+        """Returns all Servers that match the provided conditions.
 
         If a `None` value is provided to limit, there will be no pagination.
 
-        If a `Zero` value is provided to limit, no entity will be returned.
+        If a `Zero` value is provided to limit, no Servers will be returned.
 
         If a `None` value is provided to offset, the first offset will be returned.
 
-        If a `None` value is provided to kwargs, all entities will be returned.
+        If a `None` value is provided to kwargs, all Servers will be returned.
 
         Args:
-            limit (`int` | `None`, `optional`): Number of records per offset. Defaults to `None`.
-            offset (`int` | `None`, `optional`): offset number. Defaults to `None`.
-            sort (`list[str]` | `None`, `optional`): Sort criteria. Defaults to `None`.
+            limit (`int` | `None`): Number of records per offset. Defaults to `None`.
+            offset (`int` | `None`): Offset number. Defaults to `None`.
+            sort (`list[str]` | `None`): Sort criteria. Defaults to `None`.
+            fields (`list[str]` | `None`): List of fields to return. Defaults to `None`.
 
         Returns:
-            `RepositoryResponse`: Entities found.
+            `RepositoryResponse`: Servers found.
         """
         with self._session as session:
-            query = session.query(self._model)
+            query = session.query(ServerDbModel)
 
-            for attr, value in kwargs.items():
-                if hasattr(self._model, attr):
-                    op, val = value.split(":")
+            exclude = []
+            for attr in inspect(ServerDbModel).attrs:
+                # If no fields are provided, load all.
+                if not fields:
+                    query = query.options(joinedload("*"))
+
+                # If the attribute is in the fields, load it.
+                elif attr.key in fields:
+                    if isinstance(attr, ColumnProperty):
+                        query = query.options(
+                            load_only(getattr(ServerDbModel, attr.key))
+                        )
+
+                    if isinstance(attr, RelationshipProperty):
+                        query = query.options(joinedload(attr))
+
+                # If the attribute is not in the fields, exclude it.
+                else:
+                    exclude.append(attr.key)
+
+                # If the attribute is in the kwargs, filter by it.
+                if kwargs and attr.key in kwargs:
+                    op, val = kwargs[attr.key].split(":")
                     query = query.filter(
-                        self._filter_operator_mapper[op](attr, val)
+                        FILTER_OPERATOR_MAPPER[op](
+                            ServerDbModel, attr.key, val
+                        )
                     )
 
-            if sort:
-                for sort_criteria in sort:
-                    attr, direction = sort_criteria.split(":")
-
-                    if hasattr(self._model, attr):
-                        sorting = getattr(
-                            getattr(self._model, attr), direction
-                        )
-                        query = query.order_by(sorting())
+                # If the attribute is in the sort criteria, sort by it.
+                if sort and attr.key in sort:
+                    attr, direction = sort.split(":")
+                    sorting = getattr(getattr(ServerDbModel, attr), direction)
+                    query = query.order_by(sorting())
 
             total = query.count()
             query = query.limit(limit or total)
             query = query.offset(((offset or 1) - 1) * (limit or total))
+            servers = query.all()
 
-            return RepositoryResponse(total_items=total, items=query.all())
+            return RepositoryResponse(
+                total_items=total,
+                items=[
+                    Server.from_dict(server.to_dict(exclude=exclude))
+                    for server in servers
+                ],
+            )
 
-    @abc.abstractmethod
-    def find_one(self, id: int) -> Server:
-        """Returns the entity that matches the provided id.
+    def find_one(
+        self, id: int, fields: list[str] | None = None
+    ) -> Server | None:
+        """Returns the Server that matches the provided id.
 
-        If no entities match, the value `None` is returned.
-
-        Args:
-            id (`int`): Entity id.
-
-        Returns:
-            `Server`: Entity found.
-        """
-        with self._session as session:
-            return session.query(self._model).get(ident=id)
-
-    @abc.abstractmethod
-    def add_one(self, entity: Server) -> Server:
-        """Adds an entity.
+        If no Servers match, the value `None` is returned.
 
         Args:
-            entity (`Server`): Entity to add.
+            id (`int`): Server id.
+            fields (`list[str]`): List of fields to return. Defaults to `None`.
 
         Returns:
-            `Server`: Entity added.
+            `Server` | `None`: Server found.
         """
         with self._session as session:
-            session.add(entity)
+            query = session.query(ServerDbModel).filter(ServerDbModel.id == id)
+
+            exclude = []
+            for attr in inspect(ServerDbModel).attrs:
+                # If no fields are provided, load all.
+                if not fields:
+                    query = query.options(joinedload("*"))
+
+                # If the attribute is in the fields, load it.
+                elif attr.key in fields:
+                    if isinstance(attr, ColumnProperty):
+                        query = query.options(
+                            load_only(getattr(ServerDbModel, attr.key))
+                        )
+
+                    if isinstance(attr, RelationshipProperty):
+                        query = query.options(joinedload(attr))
+
+                # If the attribute is not in the fields, exclude it.
+                else:
+                    exclude.append(attr.key)
+
+            server = query.one_or_none()
+
+            return (
+                Server.from_dict(server.to_dict(exclude=exclude))
+                if server
+                else None
+            )
+
+    def add_one(self, aggregate: Server) -> None:
+        """Adds the provided Server.
+
+        Args:
+            aggregate (`Server`): Server to add.
+        """
+        with self._session as session:
+            model = ServerDbModel.from_dict(aggregate.to_dict())
+            session.add(model)
             session.commit()
-            session.refresh(entity)
 
-            return entity
-
-    @abc.abstractmethod
-    def update_one(self, entity: Server) -> Server:
-        """Updates an entity.
+    def update_one(self, aggregate: Server) -> None:
+        """Updates the provided Server.
 
         Args:
-            entity (`Server`): Entity to update.
-
-        Returns:
-            `Server`: Entity updated.
+            aggregate (`Server`): Server to update.
         """
         with self._session as session:
-            entity = session.merge(entity)
+            model = ServerDbModel.from_dict(aggregate.to_dict())
+            session.merge(model)
             session.commit()
-            session.refresh(entity)
 
-            return entity
-
-    @abc.abstractmethod
-    def delete_one(self, entity: Server) -> Server:
-        """Deletes an entity.
+    def delete_one(self, id: int) -> None:
+        """Deletes the Server that matches the provided id.
 
         Args:
-            entity (`Server`): Entity to delete.
-
-        Returns:
-            `Server`: Entity deleted.
+            id (`int`): Server id.
         """
         with self._session as session:
-            session.delete(entity)
+            model = session.get(entity=ServerDbModel, ident=id)
+            session.delete(model)
             session.commit()
-
-            return entity

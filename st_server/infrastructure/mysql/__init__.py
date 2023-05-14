@@ -1,15 +1,13 @@
-"""This is the infrastructure package for MySQL engine."""
+"""This package contains the SQLAlchemy models and repository implementations for the MySQL engine."""
 
-from st_server.infrastructure.mysql import (
-    application,
-    connection_type,
-    environment,
-    operating_system,
-    server,
-)
+from .application.application import ApplicationDbModel
+from .server.credential import CredentialDbModel
+from .server.server import ServerDbModel
+from .server.server_application import ServerApplicationDbModel
 
-application.start_mappers()
-connection_type.start_mappers()
-environment.start_mappers()
-operating_system.start_mappers()
-server.start_mappers()
+__all__ = [
+    "ApplicationDbModel",
+    "CredentialDbModel",
+    "ServerDbModel",
+    "ServerApplicationDbModel",
+]
