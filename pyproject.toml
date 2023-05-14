@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "st-server"
-version = "0.1.0-preview.3"
+version = "0.1.0-preview.4"
 description = ""
 authors = ["Damian Ontivero <damian.ontivero@outlook.com>"]
 readme = "README.md"
