@@ -63,7 +63,10 @@ class EntityId:
         Returns:
             `str`: String representation of the object.
         """
-        return f"{self.__class__.__name__}(value={self._value})"
+        return "{c}(value='{v!r}')".format(
+            c=self.__class__.__name__,
+            v=self._value,
+        )
 
     def __dict__(self) -> dict:
         """Returns the dictionary representation of the object.

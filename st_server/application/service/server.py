@@ -104,7 +104,7 @@ class ServerService:
         server = self._repository.find_one(id=id, fields=fields)
 
         if server is None:
-            raise NotFound(message=f"Server with id {id} not found.")
+            raise NotFound("Server with id {id!r} not found.".format(id=id))
 
         return server
 
@@ -127,7 +127,9 @@ class ServerService:
 
         if servers.total_items:
             raise AlreadyExists(
-                message=f"Server with name {server.name} already exists."
+                "Server with name {name!r} already exists.".format(
+                    name=server.name
+                )
             )
 
         self._repository.add_one(aggregate=server)
@@ -157,7 +159,7 @@ class ServerService:
         server = self._repository.find_one(id=id)
 
         if server is None:
-            raise NotFound(message=f"Server with id {id} not found.")
+            raise NotFound("Server with id {id!r} not found.".format(id=id))
 
         for key, value in data.items():
             setattr(server, key, value)
@@ -182,7 +184,7 @@ class ServerService:
         server = self._repository.find_one(id=id)
 
         if server is None:
-            raise NotFound(message=f"Server with id {id} not found.")
+            raise NotFound("Server with id {id!r} not found.".format(id=id))
 
         server.discard()
 
@@ -204,7 +206,7 @@ class ServerService:
         server = self._repository.find_one(id=id)
 
         if server is None:
-            raise NotFound(message=f"Server with id {id} not found.")
+            raise NotFound("Server with id {id!r} not found.".format(id=id))
 
         self._repository.delete_one(id=id)
         self._message_bus.publish(domain_events=server.domain_events)

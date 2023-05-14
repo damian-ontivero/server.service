@@ -6,9 +6,9 @@ This is the aggregate root entity of the server aggregate.
 from st_server.domain.aggregate_root import AggregateRoot
 from st_server.domain.domain_event import DomainEvent
 from st_server.domain.entity_id import EntityId
+from st_server.domain.environment.environment import Environment
+from st_server.domain.operating_system.operating_system import OperatingSystem
 from st_server.domain.server.credential import Credential
-from st_server.domain.server.environment import Environment
-from st_server.domain.server.operating_system import OperatingSystem
 from st_server.domain.server.server_application import ServerApplication
 
 
@@ -62,8 +62,8 @@ class Server(AggregateRoot):
         cpu: str | None = None,
         ram: str | None = None,
         hdd: str | None = None,
-        environment: Environment | None = None,
-        operating_system: OperatingSystem | None = None,
+        environment_id: EntityId | None = None,
+        operating_system_id: EntityId | None = None,
         credentials: list[Credential] | None = None,
         applications: list[ServerApplication] | None = None,
         discarded: bool | None = None,
@@ -93,8 +93,8 @@ class Server(AggregateRoot):
         self._cpu = cpu
         self._ram = ram
         self._hdd = hdd
-        self._environment = environment
-        self._operating_system = operating_system
+        self._environment_id = environment_id
+        self._operating_system_id = operating_system_id
         self._credentials = credentials
         self._applications = applications
 
@@ -215,61 +215,61 @@ class Server(AggregateRoot):
         self.register_domain_event(domain_event=domain_event)
 
     @property
-    def environment(self) -> Environment:
-        """Returns the environment of the server.
+    def environment_id(self) -> EntityId:
+        """Returns the environment id of the server.
 
         Returns:
-            `Environment`: Environment of the server.
+            `EntityId`: Environment id of the server.
         """
-        return self._environment
+        return self._environment_id
 
-    @environment.setter
-    def environment(self, value: Environment) -> None:
-        """Sets the environment of the server.
+    @environment_id.setter
+    def environment_id(self, value: EntityId) -> None:
+        """Sets the environment id of the server.
 
         Args:
-            value (`Environment`): Environment of the server.
+            value (`EntityId`): Environment id of the server.
         """
-        if self._environment == value:
+        if self._environment_id == value:
             return
 
         domain_event = Server.EnvironmentChanged(
             type_="server_updated",
             aggregate_id=self.id,
-            old_value=self._environment,
+            old_value=self._environment_id,
             new_value=value,
         )
 
-        self._environment = value
+        self._environment_id = value
         self.register_domain_event(domain_event=domain_event)
 
     @property
-    def operating_system(self) -> OperatingSystem:
-        """Returns the operating system of the server.
+    def operating_system_id(self) -> EntityId:
+        """Returns the operating system id of the server.
 
         Returns:
-            `OperatingSystem`: Operating system of the server.
+            `EntityId`: Operating system id of the server.
         """
-        return self._operating_system
+        return self._operating_system_id
 
-    @operating_system.setter
-    def operating_system(self, value: OperatingSystem) -> None:
-        """Sets the operating system of the server.
+    @operating_system_id.setter
+    def operating_system_id(self, value: EntityId) -> None:
+        """Sets the operating system id of the server.
 
         Args:
-            value (`OperatingSystem`): Operating system of the server.
+            value (`EntityId`): Operating system id of the server.
         """
-        if self._operating_system == value:
+        if self._operating_system_id == value:
             return
 
         domain_event = Server.OperatingSystemChanged(
             type_="server_updated",
             aggregate_id=self.id,
-            old_value=self._operating_system,
+            old_value=self._operating_system_id,
             new_value=value,
         )
 
-        self._operating_system = value
+        self._operating_system_id = value
         self.register_domain_event(domain_event=domain_event)
 
     @property
@@ -337,14 +337,26 @@ class Server(AggregateRoot):
             `str`: String representation of the object.
         """
         return (
-            f"{self.__class__.__name__}(id={self.id}, "
-            f"name={self._name}, cpu={self._cpu}, "
-            f"ram={self._ram}, hdd={self._hdd}, "
-            f"environment={self._environment}, "
-            f"operating_system={self._operating_system}, "
-            f"applications={self._applications}, "
-            f"credentials={self._credentials}, "
-            f"discarded={self._discarded})"
+            "{d}{c}(id={id!r}, name={name!r}, "
+            "cpu={cpu!r}, ram={ram!r}, hdd={hdd!r}, "
+            "environment_id={environment_id!r}, "
+            "operating_system_id={operating_system_id!r}, "
+            "credentials={credentials!r}, "
+            "applications={applications!r}, "
+            "discarded={discarded!r})"
+        ).format(
+            d="*Discarded*" if self._discarded else "",
+            c=self.__class__.__name__,
+            id=self.id,
+            name=self._name,
+            cpu=self._cpu,
+            ram=self._ram,
+            hdd=self._hdd,
+            environment_id=self._environment_id,
+            operating_system_id=self._operating_system_id,
+            credentials=self._credentials,
+            applications=self._applications,
+            discarded=self._discarded,
         )
 
     def to_dict(self) -> dict:
@@ -359,8 +371,8 @@ class Server(AggregateRoot):
             "cpu": self._cpu,
             "ram": self._ram,
             "hdd": self._hdd,
-            "environment": self._environment,
-            "operating_system": self._operating_system,
+            "environment_id": self._environment_id,
+            "operating_system_id": self._operating_system_id,
             "credentials": [
                 credential.to_dict() for credential in self._credentials
             ],
@@ -385,6 +397,7 @@ class Server(AggregateRoot):
                 data[k] = [
                     Credential.from_dict(data=credential) for credential in v
                 ]
+
             elif k == "applications":
                 data[k] = [
                     ServerApplication.from_dict(data=application)
@@ -399,8 +412,8 @@ class Server(AggregateRoot):
         cpu: str,
         ram: str,
         hdd: str,
-        environment: Environment,
-        operating_system: OperatingSystem,
+        environment_id: EntityId,
+        operating_system_id: EntityId,
         credentials: list[Credential] | None = None,
         applications: list[ServerApplication] | None = None,
     ) -> "Server":
@@ -416,8 +429,8 @@ class Server(AggregateRoot):
             cpu (`str`): Server cpu.
             ram (`str`): Server ram.
             hdd (`str`): Server hdd.
-            environment (`Environment`): Server environment.
-            operating_system (`OperatingSystem`): Server operating system.
+            environment_id (`EntityId`): Server environment id.
+            operating_system_id (`EntityId`): Server operating system id.
             credentials (`list[Credential]`): Server credentials.
             applications (`list[ServerApplication]`): Server applications.
 
@@ -430,10 +443,10 @@ class Server(AggregateRoot):
             cpu=cpu,
             ram=ram,
             hdd=hdd,
-            environment=environment,
-            operating_system=operating_system,
-            credentials=credentials,
-            applications=applications,
+            environment_id=environment_id,
+            operating_system_id=operating_system_id,
+            credentials=credentials or [],
+            applications=applications or [],
         )
 
         domain_event = Server.Created(
@@ -447,8 +460,8 @@ class Server(AggregateRoot):
         """Server discard method.
 
         Important:
-            This method is only used to discard an server.
-            When discarding an server, the discarded attribute is set to True
+            This method is only used to discard a server.
+            When discarding a server, the discarded attribute is set to True
             and a domain event is registered.
         """
         domain_event = Server.Discarded(
