@@ -2,7 +2,7 @@
 
 from functools import wraps
 
-from st_server.shared.exception import SortError
+from st_server.shared.core.exception import SortError
 
 
 def validate_sort(func):

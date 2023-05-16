@@ -23,7 +23,7 @@ from st_server.context.server.interface.api.operating_system.schema import (
 from st_server.context.server.interface.api.server.query_parameter import (
     ServerQueryParameter,
 )
-from st_server.shared.exception import (
+from st_server.shared.core.exception import (
     AlreadyExists,
     AuthenticationError,
     FilterError,

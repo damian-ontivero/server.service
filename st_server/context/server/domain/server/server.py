@@ -11,9 +11,9 @@ from st_server.context.server.domain.server.credential import Credential
 from st_server.context.server.domain.server.server_application import (
     ServerApplication,
 )
-from st_server.shared.aggregate_root import AggregateRoot
-from st_server.shared.domain_event import DomainEvent
-from st_server.shared.entity_id import EntityId
+from st_server.shared.core.aggregate_root import AggregateRoot
+from st_server.shared.core.domain_event import DomainEvent
+from st_server.shared.core.entity_id import EntityId
 
 
 class Server(AggregateRoot):

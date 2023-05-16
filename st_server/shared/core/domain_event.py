@@ -2,7 +2,7 @@
 
 from typing import Any
 
-from st_server.shared.helper import now
+from st_server.shared.helper.time import now
 
 
 class DomainEvent:

@@ -2,8 +2,8 @@
 
 from abc import ABCMeta, abstractmethod
 
-from st_server.shared.domain_event import DomainEvent
-from st_server.shared.entity_id import EntityId
+from st_server.shared.core.domain_event import DomainEvent
+from st_server.shared.core.entity_id import EntityId
 
 
 class Entity(metaclass=ABCMeta):

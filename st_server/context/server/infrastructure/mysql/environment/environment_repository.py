@@ -13,8 +13,8 @@ from st_server.context.server.domain.environment.environment import Environment
 from st_server.context.server.infrastructure.mysql.environment.environment import (
     EnvironmentDbModel,
 )
-from st_server.shared.repository import FILTER_OPERATOR_MAPPER, Repository
-from st_server.shared.response import RepositoryResponse
+from st_server.shared.core.repository import FILTER_OPERATOR_MAPPER, Repository
+from st_server.shared.core.response import RepositoryResponse
 
 
 class EnvironmentRepository(Repository):

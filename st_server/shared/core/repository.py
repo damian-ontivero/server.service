@@ -2,8 +2,8 @@
 
 from abc import ABCMeta, abstractmethod
 
-from st_server.shared.aggregate_root import AggregateRoot
-from st_server.shared.response import RepositoryResponse
+from st_server.shared.core.aggregate_root import AggregateRoot
+from st_server.shared.core.response import RepositoryResponse
 
 FILTER_OPERATOR_MAPPER = {
     "eq": lambda m, k, v: getattr(m, k) == v,

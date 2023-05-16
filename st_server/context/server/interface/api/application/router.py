@@ -23,7 +23,7 @@ from st_server.context.server.interface.api.application.schema import (
     ApplicationRead,
     ApplicationUpdate,
 )
-from st_server.shared.exception import (
+from st_server.shared.core.exception import (
     AlreadyExists,
     AuthenticationError,
     FilterError,

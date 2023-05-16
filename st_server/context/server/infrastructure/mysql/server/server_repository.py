@@ -13,8 +13,8 @@ from st_server.context.server.domain.server.server import Server
 from st_server.context.server.infrastructure.mysql.server.server import (
     ServerDbModel,
 )
-from st_server.shared.repository import FILTER_OPERATOR_MAPPER, Repository
-from st_server.shared.response import RepositoryResponse
+from st_server.shared.core.repository import FILTER_OPERATOR_MAPPER, Repository
+from st_server.shared.core.response import RepositoryResponse
 
 
 class ServerRepository(Repository):

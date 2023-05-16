@@ -1,17 +1,6 @@
-"""Helper functions."""
-
-import datetime
+"""Helper functions for password hashing."""
 
 from werkzeug.security import check_password_hash, generate_password_hash
-
-
-def now() -> datetime.datetime:
-    """Returns the current datetime.
-
-    Returns:
-        `datetime.datetime`: Current datetime.
-    """
-    return datetime.datetime.now()
 
 
 def hash_password(password: str) -> str:

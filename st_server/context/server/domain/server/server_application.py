@@ -1,9 +1,9 @@
 """Server application relationship."""
 
 from st_server.context.server.domain.application.application import Application
-from st_server.shared.aggregate_root import AggregateRoot
-from st_server.shared.domain_event import DomainEvent
-from st_server.shared.entity_id import EntityId
+from st_server.shared.core.aggregate_root import AggregateRoot
+from st_server.shared.core.domain_event import DomainEvent
+from st_server.shared.core.entity_id import EntityId
 
 
 class ServerApplication:
