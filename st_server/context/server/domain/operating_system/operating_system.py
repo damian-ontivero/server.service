@@ -3,9 +3,9 @@
 This is the aggregate root entity of the Operating system aggregate.
 """
 
-from st_server.shared.aggregate_root import AggregateRoot
-from st_server.shared.domain_event import DomainEvent
-from st_server.shared.entity_id import EntityId
+from st_server.shared.core.aggregate_root import AggregateRoot
+from st_server.shared.core.domain_event import DomainEvent
+from st_server.shared.core.entity_id import EntityId
 
 
 class OperatingSystem(AggregateRoot):

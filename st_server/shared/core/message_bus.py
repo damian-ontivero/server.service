@@ -2,7 +2,7 @@
 
 from abc import ABCMeta, abstractmethod
 
-from st_server.shared.domain_event import DomainEvent
+from st_server.shared.core.domain_event import DomainEvent
 
 
 class MessageBus(metaclass=ABCMeta):

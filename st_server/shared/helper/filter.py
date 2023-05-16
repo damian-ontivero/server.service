@@ -2,7 +2,7 @@
 
 from functools import wraps
 
-from st_server.shared.exception import FilterError
+from st_server.shared.core.exception import FilterError
 
 KNOWN_PARAMS = ["fields", "per_page", "page", "sort", "access_token"]
 OPERATORS = ["eq", "gt", "ge", "lt", "le", "in", "btw", "lk"]

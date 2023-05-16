@@ -15,8 +15,8 @@ from st_server.context.server.domain.operating_system.operating_system import (
 from st_server.context.server.infrastructure.mysql.operating_system.operating_system import (
     OperatingSystemDbModel,
 )
-from st_server.shared.repository import FILTER_OPERATOR_MAPPER, Repository
-from st_server.shared.response import RepositoryResponse
+from st_server.shared.core.repository import FILTER_OPERATOR_MAPPER, Repository
+from st_server.shared.core.response import RepositoryResponse
 
 
 class OperatingSystemRepository(Repository):

@@ -23,7 +23,7 @@ from st_server.context.server.interface.api.connection_type.schema import (
     ConnectionTypeRead,
     ConnectionTypeUpdate,
 )
-from st_server.shared.exception import (
+from st_server.shared.core.exception import (
     AlreadyExists,
     AuthenticationError,
     FilterError,

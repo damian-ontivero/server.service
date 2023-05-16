@@ -2,7 +2,7 @@
 
 from functools import wraps
 
-from st_server.shared.exception import PaginationError
+from st_server.shared.core.exception import PaginationError
 
 
 def validate_pagination(func):
