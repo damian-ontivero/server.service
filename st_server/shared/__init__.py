@@ -1,1 +1,1 @@
-"""This module is used to share common code between multiple modules."""
+"""Shared module for the st_server package."""

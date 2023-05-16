@@ -22,4 +22,4 @@ RUN poetry export --with-credentials --without-hashes --output requirements.txt
 
 RUN pip install -r requirements.txt
 
-CMD ["uvicorn", "st_server.interface.api:app", "--host", "0.0.0.0", "--port", "16401"]
+CMD ["uvicorn", "st_server.context.server.interface.api:app", "--host", "0.0.0.0", "--port", "16401"]
