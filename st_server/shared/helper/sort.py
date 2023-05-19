@@ -1,4 +1,4 @@
-"""Exceptions and decorator to validate sort format."""
+"""Validates sort format."""
 
 from functools import wraps
 
@@ -6,7 +6,7 @@ from st_server.shared.core.exception import SortError
 
 
 def validate_sort(func):
-    """Decorator to validate sort format."""
+    """Validates sort format."""
 
     @wraps(func)
     def wrapped(*args, **kwargs):

@@ -1,5 +1,6 @@
 """Value object that represents the entity id."""
 
+from typing import Any
 from uuid import uuid4
 
 
@@ -13,9 +14,9 @@ class EntityId:
             value (`str`): Entity id. Defaults to None.
         """
         if value is None:
-            self._value = uuid4().hex
-        else:
-            self._value = value
+            value = uuid4().hex
+
+        self._value = value
 
     @property
     def value(self) -> str:
@@ -35,19 +36,19 @@ class EntityId:
         """
         raise AttributeError("The value attribute is read-only.")
 
-    def __eq__(self, other) -> bool:
-        """Compares two objects based on their value.
+    def __eq__(self, rhs: Any) -> bool:
+        """Compares two objects based on their access token.
 
         Args:
-            other (`object`): Object to compare.
+            rhs (`Any`): Right hand side object to compare.
 
         Returns:
             `bool`: True if both objects are equal.
         """
-        if not isinstance(other, self.__class__):
-            return False
+        if not isinstance(rhs, self.__class__):
+            return NotImplemented
 
-        return self._value == other._value
+        return self._value == rhs._value
 
     def __hash__(self) -> int:
         """Returns the hash value of the object.

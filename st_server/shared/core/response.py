@@ -15,10 +15,10 @@ class RepositoryResponse:
 class ServiceResponse:
     """Dataclass to represent the response from the Service with pagination."""
 
-    per_page: int | None = None
-    page: int | None = None
-    prev_page: int | None = None
-    next_page: int | None = None
-    last_page: int | None = None
-    first_page: int | None = None
+    limit: int | None = None
+    offset: int | None = None
+    prev_offset: int | None = None
+    next_offset: int | None = None
+    last_offset: int | None = None
+    first_offset: int | None = None
     items: list = field(default_factory=list)
