@@ -91,13 +91,13 @@ class OperatingSystemRepository(Repository):
                         )
                     )
 
-                # If the attribute is in the sort criteria, sort by it.
-                if sort and attr.key in sort:
-                    attr, direction = sort.split(":")
-                    sorting = getattr(
-                        getattr(OperatingSystemDbModel, attr), direction
-                    )
-                    query = query.order_by(sorting())
+            # If the attribute is in the sort criteria, sort by it.
+            for criteria in sort:
+                attr, direction = criteria.split(":")
+                sorting = getattr(
+                    getattr(OperatingSystemDbModel, attr), direction
+                )
+                query = query.order_by(sorting())
 
             total = query.count()
             query = query.limit(limit or total)
@@ -139,7 +139,7 @@ class OperatingSystemRepository(Repository):
                 if not fields:
                     query = query.options(joinedload("*"))
 
-                # If the attribute is in the fields, load it.
+                # Else if the attribute is in the fields, load it.
                 elif attr.key in fields:
                     if isinstance(attr, ColumnProperty):
                         query = query.options(
@@ -151,7 +151,7 @@ class OperatingSystemRepository(Repository):
                     if isinstance(attr, RelationshipProperty):
                         query = query.options(joinedload(attr))
 
-                # If the attribute is not in the fields, exclude it.
+                # Else if the attribute is not in the fields, exclude it.
                 else:
                     exclude.append(attr.key)
 
