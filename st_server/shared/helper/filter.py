@@ -1,15 +1,15 @@
-"""Exceptions and decorator to validate filter format."""
+"""Validates filter format."""
 
 from functools import wraps
 
 from st_server.shared.core.exception import FilterError
 
-KNOWN_PARAMS = ["fields", "per_page", "page", "sort", "access_token"]
+KNOWN_PARAMS = ["limit", "offset", "sort", "fields", "access_token"]
 OPERATORS = ["eq", "gt", "ge", "lt", "le", "in", "btw", "lk"]
 
 
 def validate_filter(func):
-    """Decorator to validate filter format."""
+    """Validates filter format."""
 
     @wraps(func)
     def wrapped(*args, **kwargs):

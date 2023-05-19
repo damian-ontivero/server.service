@@ -1,4 +1,4 @@
-"""Exceptions and decorator to validate pagination attributes."""
+"""Validates pagination attributes."""
 
 from functools import wraps
 
@@ -6,36 +6,38 @@ from st_server.shared.core.exception import PaginationError
 
 
 def validate_pagination(func):
-    """Decorator to validate pagination attributes."""
+    """Validates pagination attributes."""
 
     @wraps(func)
     def wrapped(*args, **kwargs):
         """Doc."""
-        per_page = kwargs.get("per_page", None)
-        page = kwargs.get("page", None)
+        limit = kwargs.get("limit", None)
+        offset = kwargs.get("offset", None)
 
-        if per_page is not None:
+        if limit is not None:
             try:
-                assert int(per_page) >= 0
+                assert int(limit) >= 0
+
             except ValueError:
                 raise PaginationError(
-                    message="The number of records per page must be an integer value."
-                )
-            except AssertionError:
-                raise PaginationError(
-                    message="The number of records per page cannot be less than 0."
+                    "The limit number must be an integer value"
                 )
 
-        if page is not None:
+            except AssertionError:
+                raise PaginationError("The limit number cannot be less than 1")
+
+        if offset is not None:
             try:
-                assert int(page) >= 1
+                assert int(offset) >= 1
+
             except ValueError:
                 raise PaginationError(
-                    message="The page number must be an integer value."
+                    "The offset number must be an integer value"
                 )
+
             except AssertionError:
                 raise PaginationError(
-                    message="The page number cannot be less than 1."
+                    "The offset number cannot be less than 1"
                 )
 
         return func(*args, **kwargs)

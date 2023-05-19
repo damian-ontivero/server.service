@@ -10,12 +10,15 @@ class NotFound(Exception):
         Args:
             message (`str` | `None`): Error message. Defaults to `None`.
         """
+        if message is None:
+            message = "Entity not found"
+
         super().__init__(message)
         self._message = message
 
     def __str__(self) -> str:
         """Returns the string representation of an object."""
-        return self._message or "Entity not found."
+        return self._message
 
 
 class AlreadyExists(Exception):
@@ -27,12 +30,15 @@ class AlreadyExists(Exception):
         Args:
             message (`str` | `None`): Error message. Defaults to `None`.
         """
+        if message is None:
+            message = "Entity already exists"
+
         super().__init__(message)
         self._message = message
 
     def __str__(self) -> str:
         """Returns the string representation of an object."""
-        return self._message or "Entity already exists."
+        return self._message
 
 
 class AuthenticationError(Exception):
@@ -44,12 +50,15 @@ class AuthenticationError(Exception):
         Args:
             message (`str` | `None`): Error message. Defaults to `None`.
         """
+        if message is None:
+            message = "Authentication failed"
+
         super().__init__(message)
         self._message = message
 
     def __str__(self) -> str:
         """Returns the string representation of an object."""
-        return self._message or "Authentication failed."
+        return self._message
 
 
 class PaginationError(Exception):
@@ -61,12 +70,15 @@ class PaginationError(Exception):
         Args:
             message (`str` | `None`): Error message. Defaults to `None`.
         """
+        if message is None:
+            message = "Pagination failed"
+
         super().__init__(message)
         self._message = message
 
     def __str__(self) -> str:
         """Returns the string representation of an object."""
-        return self._message or "Pagination failed."
+        return self._message
 
 
 class FilterError(Exception):
@@ -78,12 +90,14 @@ class FilterError(Exception):
         Args:
             message (`str` | `None`): Error message. Defaults to `None`.
         """
+        if message is None:
+            message = "Incorrect filter format"
         super().__init__(message)
         self._message = message
 
     def __str__(self) -> str:
         """Returns the string representation of an object."""
-        return self._message or "Incorrect filter format."
+        return self._message
 
 
 class SortError(Exception):
@@ -95,11 +109,12 @@ class SortError(Exception):
         Args:
             message (`str` | `None`): Error message. Defaults to `None`.
         """
+        if message is None:
+            message = "Incorrect sort format. Valid format: 'name:asc' or 'name:desc'"
+
+        super().__init__(message)
         self.message = message
 
     def __str__(self) -> str:
         """Returns the string representation of an object."""
-        return (
-            self.message
-            or "Incorrect sort format. Valid format: 'name:asc' or 'name:desc'."
-        )
+        return self.message

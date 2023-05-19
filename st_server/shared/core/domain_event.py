@@ -40,19 +40,19 @@ class DomainEvent:
 
         self.__dict__[name] = value
 
-    def __eq__(self, other: Any) -> bool:
-        """Compares two objects based on their attributes.
+    def __eq__(self, rhs: Any) -> bool:
+        """Compares two objects based on their access token.
 
         Args:
-            other (`Any`): Object to compare.
+            rhs (`Any`): Right hand side object to compare.
 
         Returns:
             `bool`: True if both objects are equal.
         """
-        if type(self) is not type(other):
+        if not isinstance(rhs, self.__class__):
             return NotImplemented
 
-        return self.__dict__ == other.__dict__
+        return self.__dict__ == rhs.__dict__
 
     def __hash__(self) -> int:
         """Returns the hash value of the object.

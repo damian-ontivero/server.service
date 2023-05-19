@@ -1,6 +1,7 @@
 """Abstract base class for entities."""
 
 from abc import ABCMeta, abstractmethod
+from typing import Any
 
 from st_server.shared.core.domain_event import DomainEvent
 from st_server.shared.core.entity_id import EntityId
@@ -53,19 +54,19 @@ class Entity(metaclass=ABCMeta):
         """
         return self._discarded
 
-    def __eq__(self, other) -> bool:
-        """Compares two objects based on their id.
+    def __eq__(self, rhs: Any) -> bool:
+        """Compares two objects based on their access token.
 
         Args:
-            other (`object`): Object to compare.
+            rhs (`Any`): Right hand side object to compare.
 
         Returns:
             `bool`: True if both objects are equal.
         """
-        if not isinstance(other, self.__class__):
-            return False
+        if not isinstance(rhs, self.__class__):
+            return NotImplemented
 
-        return self._id == other._id
+        return self._id == rhs._id
 
     def __hash__(self) -> int:
         """Returns the hash value of the object.

@@ -1,1 +1,1 @@
-"""Shared helper package for the st_server package."""
+"""Shared helper package for the st_support package."""
