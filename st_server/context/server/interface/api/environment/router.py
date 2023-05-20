@@ -72,8 +72,8 @@ def get_environment_service(
 
 @router.get("", response_model=list[EnvironmentRead])
 def get_all(
-    per_page: int = Query(default=25),
-    page: int = Query(default=1),
+    limit: int = Query(default=25),
+    offset: int = Query(default=1),
     sort: list[str] | None = Query(default=None),
     filter: ServerQueryParameter = Depends(),
     fields: list[str] | None = Query(default=None),
@@ -85,8 +85,8 @@ def get_all(
     try:
         environments = environment_service.find_many(
             fields=fields,
-            per_page=per_page,
-            page=page,
+            limit=limit,
+            offset=offset,
             sort=sort,
             **filter.dict(exclude_none=True),
             access_token=authorization.credentials,
@@ -98,21 +98,21 @@ def get_all(
         base_url = request.base_url
         link = ""
 
-        if environments.prev_page:
-            prev_page = f'<{base_url}support/environments?per_page={environments.per_page}&page={environments.prev_page}>; rel="prev", '
-            link += prev_page
+        if environments.prev_offset:
+            prev_offset = f'<{base_url}support/environments?limit={environments.limit}&offset={environments.prev_offset}>; rel="prev", '
+            link += prev_offset
 
-        if environments.next_page:
-            next_page = f'<{base_url}support/environments?per_page={environments.per_page}&page={environments.next_page}>; rel="next", '
-            link += next_page
+        if environments.next_offset:
+            next_offset = f'<{base_url}support/environments?limit={environments.limit}&offset={environments.next_offset}>; rel="next", '
+            link += next_offset
 
-        if environments.last_page:
-            last_page = f'<{base_url}support/environments?per_page={environments.per_page}&page={environments.last_page}>; rel="last", '
-            link += last_page
+        if environments.last_offset:
+            last_offset = f'<{base_url}support/environments?limit={environments.limit}&offset={environments.last_offset}>; rel="last", '
+            link += last_offset
 
-        if environments.first_page:
-            first_page = f'<{base_url}support/environments?per_page={environments.per_page}&page={environments.first_page}>; rel="first"'
-            link += first_page
+        if environments.first_offset:
+            first_offset = f'<{base_url}support/environments?limit={environments.limit}&offset={environments.first_offset}>; rel="first"'
+            link += first_offset
 
         response = JSONResponse(
             content=jsonable_encoder(

@@ -48,7 +48,7 @@ def get_session():
 def get_connection_type_repository(
     session: db.SessionLocal = Depends(get_session),
 ):
-    """Yield a connection type repository."""
+    """Yield a ConnectionType repository."""
     yield ConnectionTypeRepository(session=session)
 
 
@@ -68,14 +68,14 @@ def get_connection_type_service(
     ),
     message_bus: RabbitMQMessageBus = Depends(get_message_bus),
 ):
-    """Yield a connection type service."""
+    """Yield a ConnectionType service."""
     yield ConnectionTypeService(repository=repository, message_bus=message_bus)
 
 
 @router.get("", response_model=list[ConnectionTypeRead])
 def get_all(
-    per_page: int = Query(default=25),
-    page: int = Query(default=1),
+    limit: int = Query(default=25),
+    offset: int = Query(default=1),
     sort: list[str] | None = Query(default=None),
     filter: ConnectionTypeQueryParameter = Depends(),
     fields: list[str] | None = Query(default=None),
@@ -89,8 +89,8 @@ def get_all(
     try:
         connection_types = connection_type_service.find_many(
             fields=fields,
-            per_page=per_page,
-            page=page,
+            limit=limit,
+            offset=offset,
             sort=sort,
             **filter.dict(exclude_none=True),
             access_token=authorization.credentials,
@@ -102,21 +102,21 @@ def get_all(
         base_url = request.base_url
         link = ""
 
-        if connection_types.prev_page:
-            prev_page = f'<{base_url}support/connection-types?per_page={connection_types.per_page}&page={connection_types.prev_page}>; rel="prev", '
-            link += prev_page
+        if connection_types.prev_offset:
+            prev_offset = f'<{base_url}support/connection-types?limit={connection_types.limit}&offset={connection_types.prev_offset}>; rel="prev", '
+            link += prev_offset
 
-        if connection_types.next_page:
-            next_page = f'<{base_url}support/connection-types?per_page={connection_types.per_page}&page={connection_types.next_page}>; rel="next", '
-            link += next_page
+        if connection_types.next_offset:
+            next_offset = f'<{base_url}support/connection-types?limit={connection_types.limit}&offset={connection_types.next_offset}>; rel="next", '
+            link += next_offset
 
-        if connection_types.last_page:
-            last_page = f'<{base_url}support/connection-types?per_page={connection_types.per_page}&page={connection_types.last_page}>; rel="last", '
-            link += last_page
+        if connection_types.last_offset:
+            last_offset = f'<{base_url}support/connection-types?limit={connection_types.limit}&offset={connection_types.last_offset}>; rel="last", '
+            link += last_offset
 
-        if connection_types.first_page:
-            first_page = f'<{base_url}support/connection-types?per_page={connection_types.per_page}&page={connection_types.first_page}>; rel="first"'
-            link += first_page
+        if connection_types.first_offset:
+            first_offset = f'<{base_url}support/connection-types?limit={connection_types.limit}&offset={connection_types.first_offset}>; rel="first"'
+            link += first_offset
 
         response = JSONResponse(
             content=jsonable_encoder(
@@ -298,7 +298,7 @@ def discard(
 
         return JSONResponse(
             content=jsonable_encoder(
-                obj={"message": "Connection type deleted"}
+                obj={"message": "ConnectionType deleted"}
             ),
             status_code=status.HTTP_200_OK,
         )

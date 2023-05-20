@@ -33,49 +33,63 @@ class EnvironmentService:
     @validate_filter
     def find_many(
         self,
-        fields: list[str] | None = None,
-        per_page: int | None = None,
-        page: int | None = None,
+        limit: int | None = None,
+        offset: int | None = None,
         sort: list[str] | None = None,
+        fields: list[str] | None = None,
         access_token: str | None = None,
         **kwargs,
     ) -> ServiceResponse:
         """Returns all environments that match the provided conditions.
 
-        If a `None` value is provided to per_page, there will be no pagination.
+        If a `None` value is provided to limit, there will be no pagination.
 
-        If a `Zero` value is provided to per_page, no environment will be returned.
+        If a `Zero` value is provided to limit, no environment will be returned.
 
-        If a `None` value is provided to page, the first page will be returned.
+        If a `None` value is provided to offset, the first offset will be returned.
 
         If a `None` value is provided to kwargs, all environments will be returned.
 
         Args:
             fields (`list[str]` | `None`): List of fields to return. Defaults to `None`.
-            per_page (`int` | `None`): Number of records per page. Defaults to `None`.
-            page (`int` | `None`): Page number. Defaults to `None`.
+            limit (`int` | `None`): Number of records per offset. Defaults to `None`.
+            offset (`int` | `None`): offset number. Defaults to `None`.
             sort (`list[str]` | `None`): Sort criteria. Defaults to `None`.
             access_token (`str` | `None`): Access token. Defaults to `None`.
 
         Returns:
             `ServiceResponse`: Environments found.
         """
+        if fields is None:
+            fields = []
+
+        if limit is None:
+            limit = 0
+
+        if offset is None:
+            offset = 0
+
+        if sort is None:
+            sort = []
+
+        if kwargs is None:
+            kwargs = {}
+
         environments = self._repository.find_many(
-            fields=fields, limit=per_page, offset=page, sort=sort, **kwargs
+            limit=limit, offset=offset, sort=sort, fields=fields, **kwargs
         )
         total = environments.total_items
 
         return ServiceResponse(
-            per_page=per_page,
-            page=(page or 1),
-            prev_page=((page or 1) - 1) if (page or 1) > 1 else None,
-            next_page=((page or 1) + 1)
-            if (page or 1) > 0
-            and (page or 1)
-            < math.ceil(float(total) / float(per_page or total))
+            limit=limit,
+            offset=(offset or 1),
+            prev_offset=((offset or 1) - 1) if (offset or 1) > 1 else None,
+            next_offset=((offset or 1) + 1)
+            if (offset or 1) > 0
+            and (offset or 1) < math.ceil(float(total) / float(limit or total))
             else None,
-            last_page=math.ceil(float(total) / float(per_page or total)),
-            first_page=1,
+            last_offset=math.ceil(float(total) / float(limit or total)),
+            first_offset=1,
             items=environments.items,
         )
 

@@ -1,4 +1,4 @@
-"""Operating system schema."""
+"""OperatingSystem schema."""
 
 from dataclasses import asdict, dataclass
 

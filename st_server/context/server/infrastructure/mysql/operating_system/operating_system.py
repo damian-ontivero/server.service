@@ -1,4 +1,4 @@
-"""Operating system database model."""
+"""OperatingSystem database model."""
 
 import sqlalchemy as sa
 
@@ -6,7 +6,7 @@ from st_server.context.server.infrastructure.mysql import db
 
 
 class OperatingSystemDbModel(db.Base):
-    """Operating system database model."""
+    """OperatingSystem database model."""
 
     __tablename__ = "operating_system"
 

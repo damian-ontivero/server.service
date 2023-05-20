@@ -1,4 +1,4 @@
-"""Server Application database model."""
+"""ServerApplication database model."""
 
 import sqlalchemy as sa
 from sqlalchemy.orm import relationship
@@ -7,7 +7,7 @@ from st_server.context.server.infrastructure.mysql import db
 
 
 class ServerApplicationDbModel(db.Base):
-    """Server Application database model."""
+    """ServerApplication database model."""
 
     __tablename__ = "server_application"
 

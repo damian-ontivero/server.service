@@ -1,4 +1,4 @@
-"""Operating system repository implementation."""
+"""OperatingSystem repository implementation."""
 
 from sqlalchemy import inspect
 from sqlalchemy.orm import (
@@ -20,10 +20,10 @@ from st_server.shared.core.response import RepositoryResponse
 
 
 class OperatingSystemRepository(Repository):
-    """Operating system repository implementation."""
+    """OperatingSystem repository implementation."""
 
     def __init__(self, session: Session) -> None:
-        """Operating system repository.
+        """OperatingSystem repository.
 
         Args:
             session (`Session`): SQLAlchemy session object.
@@ -38,7 +38,7 @@ class OperatingSystemRepository(Repository):
         fields: list[str] | None = None,
         **kwargs,
     ) -> RepositoryResponse:
-        """Returns all operating system that match the provided conditions.
+        """Returns all OperatinSystem that match the provided conditions.
 
         If a `None` value is provided to limit, there will be no pagination.
 
@@ -55,7 +55,7 @@ class OperatingSystemRepository(Repository):
             fields (`list[str]` | `None`): List of fields to return. Defaults to `None`.
 
         Returns:
-            `RepositoryResponse`: Operating system found.
+            `RepositoryResponse`: OperatingSystem found.
         """
         with self._session as session:
             query = session.query(OperatingSystemDbModel)
@@ -117,16 +117,16 @@ class OperatingSystemRepository(Repository):
     def find_one(
         self, id: int, fields: list[str] | None = None
     ) -> OperatingSystem | None:
-        """Returns the operating system that matches the provided id.
+        """Returns the OperatinSystem that matches the provided id.
 
         If no operating systems match, the value `None` is returned.
 
         Args:
-            id (`int`): Operating system id.
+            id (`int`): OperatingSystem id.
             fields (`list[str]`): List of fields to return. Defaults to `None`.
 
         Returns:
-            `OperatingSystem` | `None`: Operating system found.
+            `OperatingSystem` | `None`: OperatingSystem found.
         """
         with self._session as session:
             query = session.query(OperatingSystemDbModel).filter(
@@ -164,10 +164,10 @@ class OperatingSystemRepository(Repository):
             )
 
     def add_one(self, aggregate: OperatingSystem) -> None:
-        """Adds the provided operating system.
+        """Adds the provided OperatinSystem.
 
         Args:
-            aggregate (`OperatingSystem`): Operating system to add.
+            aggregate (`OperatingSystem`): OperatingSystem to add.
         """
         with self._session as session:
             model = OperatingSystemDbModel.from_dict(aggregate.to_dict())
@@ -175,10 +175,10 @@ class OperatingSystemRepository(Repository):
             session.commit()
 
     def update_one(self, aggregate: OperatingSystem) -> None:
-        """Updates the provided operating system.
+        """Updates the provided OperatinSystem.
 
         Args:
-            aggregate (`OperatingSystem`): Operating system to update.
+            aggregate (`OperatingSystem`): OperatingSystem to update.
         """
         with self._session as session:
             model = OperatingSystemDbModel.from_dict(aggregate.to_dict())
@@ -186,10 +186,10 @@ class OperatingSystemRepository(Repository):
             session.commit()
 
     def delete_one(self, id: int) -> None:
-        """Deletes the operating system that matches the provided id.
+        """Deletes the OperatinSystem that matches the provided id.
 
         Args:
-            id (`int`): Operating system id.
+            id (`int`): OperatingSystem id.
         """
         with self._session as session:
             model = session.get(entity=OperatingSystemDbModel, ident=id)

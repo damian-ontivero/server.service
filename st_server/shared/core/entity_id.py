@@ -37,7 +37,7 @@ class EntityId:
         raise AttributeError("The value attribute is read-only.")
 
     def __eq__(self, rhs: Any) -> bool:
-        """Compares two objects based on their access token.
+        """Compares two objects based on their values.
 
         Args:
             rhs (`Any`): Right hand side object to compare.
@@ -64,7 +64,10 @@ class EntityId:
         Returns:
             `str`: String representation of the object.
         """
-        return f"{self.__class__.__name__}(value={self._value})"
+        return "{c}(value={value})".format(
+            c=self.__class__.__name__,
+            value=self._value,
+        )
 
     def __dict__(self) -> dict:
         """Returns the dictionary representation of the object.

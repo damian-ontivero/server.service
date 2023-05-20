@@ -183,7 +183,7 @@ class Application(AggregateRoot):
             data (`dict`): Dictionary representation of the object.
 
         Returns:
-            `Application`: Instance of the class.
+            `Application`: New Application instance.
         """
         return Application(**data)
 
@@ -202,7 +202,7 @@ class Application(AggregateRoot):
             architect (`str`): Application architect.
 
         Returns:
-            `Application`: Application instance.
+            `Application`: New Application.
         """
         application = Application(
             id=EntityId().value,

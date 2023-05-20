@@ -1,4 +1,4 @@
-"""Connection type service."""
+"""ConnectionType service."""
 
 import math
 
@@ -15,7 +15,7 @@ from st_server.shared.helper.sort import validate_sort
 
 
 class ConnectionTypeService:
-    """Connection type service."""
+    """ConnectionType service."""
 
     def __init__(
         self, repository: Repository, message_bus: MessageBus
@@ -23,7 +23,7 @@ class ConnectionTypeService:
         """Initializes the service.
 
         Args:
-            repository (`Repository`): Connection type repository.
+            repository (`Repository`): ConnectionType repository.
             message_bus (`MessageBus`): Message bus.
         """
         self._repository = repository
@@ -35,49 +35,63 @@ class ConnectionTypeService:
     @validate_filter
     def find_many(
         self,
-        fields: list[str] | None = None,
-        per_page: int | None = None,
-        page: int | None = None,
+        limit: int | None = None,
+        offset: int | None = None,
         sort: list[str] | None = None,
+        fields: list[str] | None = None,
         access_token: str | None = None,
         **kwargs,
     ) -> ServiceResponse:
         """Returns all connection types that match the provided conditions.
 
-        If a `None` value is provided to per_page, there will be no pagination.
+        If a `None` value is provided to limit, there will be no pagination.
 
-        If a `Zero` value is provided to per_page, no connection type will be returned.
+        If a `Zero` value is provided to limit, no ConnectionType will be returned.
 
-        If a `None` value is provided to page, the first page will be returned.
+        If a `None` value is provided to offset, the first offset will be returned.
 
         If a `None` value is provided to kwargs, all connection types will be returned.
 
         Args:
             fields (`list[str]` | `None`): List of fields to return. Defaults to `None`.
-            per_page (`int` | `None`): Number of records per page. Defaults to `None`.
-            page (`int` | `None`): Page number. Defaults to `None`.
+            limit (`int` | `None`): Number of records per offset. Defaults to `None`.
+            offset (`int` | `None`): offset number. Defaults to `None`.
             sort (`list[str]` | `None`): Sort criteria. Defaults to `None`.
             access_token (`str` | `None`): Access token. Defaults to `None`.
 
         Returns:
             `ServiceResponse`: Connection types found.
         """
+        if fields is None:
+            fields = []
+
+        if limit is None:
+            limit = 0
+
+        if offset is None:
+            offset = 0
+
+        if sort is None:
+            sort = []
+
+        if kwargs is None:
+            kwargs = {}
+
         connection_types = self._repository.find_many(
-            fields=fields, limit=per_page, offset=page, sort=sort, **kwargs
+            limit=limit, offset=offset, sort=sort, fields=fields, **kwargs
         )
         total = connection_types.total_items
 
         return ServiceResponse(
-            per_page=per_page,
-            page=(page or 1),
-            prev_page=((page or 1) - 1) if (page or 1) > 1 else None,
-            next_page=((page or 1) + 1)
-            if (page or 1) > 0
-            and (page or 1)
-            < math.ceil(float(total) / float(per_page or total))
+            limit=limit,
+            offset=(offset or 1),
+            prev_offset=((offset or 1) - 1) if (offset or 1) > 1 else None,
+            next_offset=((offset or 1) + 1)
+            if (offset or 1) > 0
+            and (offset or 1) < math.ceil(float(total) / float(limit or total))
             else None,
-            last_page=math.ceil(float(total) / float(per_page or total)),
-            first_page=1,
+            last_offset=math.ceil(float(total) / float(limit or total)),
+            first_offset=1,
             items=connection_types.items,
         )
 
@@ -88,24 +102,24 @@ class ConnectionTypeService:
         fields: list[str] | None = None,
         access_token: str | None = None,
     ) -> ConnectionType:
-        """Returns the connection type that matches the provided id.
+        """Returns the ConnectionType that matches the provided id.
 
         Args:
-            id (`int`): connection type id.
+            id (`int`): ConnectionType id.
             fields (`list[str]` | `None`): List of fields to return. Defaults to `None`.
             access_token (`str` | `None`): Access token. Defaults to `None`.
 
         Raises:
-            `NotFound`: No connection type found with the provided id.
+            `NotFound`: No ConnectionType found with the provided id.
 
         Returns:
-            `ConnectionType`: Connection type found.
+            `ConnectionType`: ConnectionType found.
         """
         connection_type = self._repository.find_one(id=id, fields=fields)
 
         if connection_type is None:
             raise NotFound(
-                "Connection type with id {id!r} not found.".format(id=id)
+                "ConnectionType with id {id!r} not found.".format(id=id)
             )
 
         return connection_type
@@ -114,17 +128,17 @@ class ConnectionTypeService:
     def add_one(
         self, data: dict, access_token: str | None = None
     ) -> ConnectionType:
-        """Adds the provided connection type and publishes the connection type events.
+        """Adds the provided ConnectionType and publishes the ConnectionType events.
 
         Args:
-            data (`dict`): Dictionary with the connection type data.
+            data (`dict`): Dictionary with the ConnectionType data.
             access_token (`str` | `None`): Access token. Defaults to `None`.
 
         Raises:
-            `AlreadyExists`: A connection type with the provided name already exists.
+            `AlreadyExists`: A ConnectionType with the provided name already exists.
 
         Returns:
-            `ConnectionType`: Connection type added.
+            `ConnectionType`: ConnectionType added.
         """
         connection_type = ConnectionType.create(**data)
         connection_types = self._repository.find_many(
@@ -133,7 +147,7 @@ class ConnectionTypeService:
 
         if connection_types.total_items:
             raise AlreadyExists(
-                "Connection type with name {name!r} already exists.".format(
+                "ConnectionType with name {name!r} already exists.".format(
                     name=connection_type.name
                 )
             )
@@ -148,25 +162,25 @@ class ConnectionTypeService:
     def update_one(
         self, id: str, data: dict, access_token: str | None = None
     ) -> ConnectionType:
-        """Updates the connection type that matches the provided id and publishes the events.
+        """Updates the ConnectionType that matches the provided id and publishes the events.
 
         Args:
-            id (`str`): Connection type id.
-            data (`dict`): Dictionary with the connection type data.
+            id (`str`): ConnectionType id.
+            data (`dict`): Dictionary with the ConnectionType data.
             access_token (`str` | `None`): Access token. Defaults to `None`.
 
         Raises:
-            `NotFound`: No connection type found with the provided id.
-            `AlreadyExists`: A connection type with the provided name already exists.
+            `NotFound`: No ConnectionType found with the provided id.
+            `AlreadyExists`: A ConnectionType with the provided name already exists.
 
         Returns:
-            `ConnectionType`: Connection type updated.
+            `ConnectionType`: ConnectionType updated.
         """
         connection_type = self._repository.find_one(id=id)
 
         if connection_type is None:
             raise NotFound(
-                "Connection type with id {id!r} not found.".format(id=id)
+                "ConnectionType with id {id!r} not found.".format(id=id)
             )
 
         for key, value in data.items():
@@ -180,20 +194,20 @@ class ConnectionTypeService:
 
     # @AuthService.access_token_required
     def discard_one(self, id: str, access_token: str | None = None) -> None:
-        """Discards the connection type that matches the provided id and publishes the events.
+        """Discards the ConnectionType that matches the provided id and publishes the events.
 
         Args:
-            id (`str`): Connection type id.
+            id (`str`): ConnectionType id.
             access_token (`str` | `None`): Access token. Defaults to `None`.
 
         Raises:
-            `NotFound`: No connection type found with the provided id.
+            `NotFound`: No ConnectionType found with the provided id.
         """
         connection_type = self._repository.find_one(id=id)
 
         if connection_type is None:
             raise NotFound(
-                "Connection type with id {id!r} not found.".format(id=id)
+                "ConnectionType with id {id!r} not found.".format(id=id)
             )
 
         connection_type.discard()
@@ -204,20 +218,20 @@ class ConnectionTypeService:
 
     # @AuthService.access_token_required
     def delete_one(self, id: str, access_token: str | None = None) -> None:
-        """Deletes the connection type that matches the provided id and publishes the events.
+        """Deletes the ConnectionType that matches the provided id and publishes the events.
 
         Args:
-            id (`str`): Connection type id.
+            id (`str`): ConnectionType id.
             access_token (`str` | `None`): Access token. Defaults to `None`.
 
         Raises:
-            `NotFound`: No connection type found with the provided id.
+            `NotFound`: No ConnectionType found with the provided id.
         """
         connection_type = self._repository.find_one(id=id)
 
         if connection_type is None:
             raise NotFound(
-                "Connection type with id {id!r} not found.".format(id=id)
+                "ConnectionType with id {id!r} not found.".format(id=id)
             )
 
         self._repository.delete_one(id=id)

@@ -1,4 +1,4 @@
-"""This is the Connection type aggregate entity package.
+"""This is the ConnectionType aggregate entity package.
 
-The aggregate root for this Connection type aggregate is the Connection type entity.
+The aggregate root for this ConnectionType aggregate is the ConnectionType entity.
 """

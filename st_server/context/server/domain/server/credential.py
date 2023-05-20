@@ -62,7 +62,7 @@ class Credential(Entity):
         Args:
             id (`EntityId`): Credential id.
             server_id (`EntityId`): Server id.
-            connection_type (`EntityId`): Connection type id.
+            connection_type (`EntityId`): ConnectionType id.
             username (`str`): Credential username.
             password (`str`): Credential password.
             local_ip (`str`): Credential local ip.
@@ -112,19 +112,19 @@ class Credential(Entity):
 
     @property
     def connection_type(self) -> ConnectionType:
-        """Returns the connection type of the credential.
+        """Returns the ConnectionType of the credential.
 
         Returns:
-            `ConnectionType`: Connection type of the credential.
+            `ConnectionType`: ConnectionType of the credential.
         """
         return self._connection_type
 
     @connection_type.setter
     def connection_type(self, value: ConnectionType) -> None:
-        """Sets the connection type of the credential.
+        """Sets the ConnectionType of the credential.
 
         Args:
-            value (`ConnectionType`): Connection type of the credential.
+            value (`ConnectionType`): ConnectionType of the credential.
         """
         if self._connection_type == value:
             return
@@ -308,7 +308,7 @@ class Credential(Entity):
             data (`dict`): Dictionary representation of the object.
 
         Returns:
-            `Credential`: Instance of the class.
+            `Credential`: New Credential instance.
         """
         return Credential(**data)
 
@@ -337,7 +337,7 @@ class Credential(Entity):
             public_port (`int`): Public port of the credential.
 
         Returns:
-            `Credential`: Credential instance.
+            `Credential`: New Credential.
         """
         credential = Credential(
             id=EntityId(),

@@ -1,4 +1,4 @@
-"""Server application relationship."""
+"""ServerApplication relationship."""
 
 from st_server.context.server.domain.application.application import Application
 from st_server.shared.core.aggregate_root import AggregateRoot
@@ -7,7 +7,7 @@ from st_server.shared.core.entity_id import EntityId
 
 
 class ServerApplication:
-    """Server application relationship."""
+    """ServerApplication relationship."""
 
     def __init__(
         self,
@@ -162,7 +162,7 @@ class ServerApplication:
             data (`dict`): Dictionary representation of the object.
 
         Returns:
-            `ServerApplication`: Instance of the class.
+            `ServerApplication`: New ServerApplication instance.
         """
         for k, v in data.items():
             if k == "application":
