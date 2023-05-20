@@ -39,7 +39,7 @@ app.include_router(
 app.include_router(
     router=connection_type_router,
     prefix="/server/connection-types",
-    tags=["Connection Type"],
+    tags=["ConnectionType"],
 )
 
 app.include_router(
@@ -51,7 +51,7 @@ app.include_router(
 app.include_router(
     router=operating_system_router,
     prefix="/server/operating-systems",
-    tags=["Operating System"],
+    tags=["OperatinSystem"],
 )
 
 app.include_router(

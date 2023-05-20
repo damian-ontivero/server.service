@@ -45,7 +45,7 @@ class Server(AggregateRoot):
         pass
 
     class OperatingSystemChanged(DomainEvent):
-        """Domain event for operating system changed."""
+        """Domain event for OperatinSystem changed."""
 
         pass
 
@@ -87,7 +87,7 @@ class Server(AggregateRoot):
             ram (`str`): Server ram.
             hdd (`str`): Server hdd.
             environment (`Environment`): Server environment.
-            operating_system (`OperatingSystem`): Server operating system.
+            operating_system (`OperatingSystem`): Server OperatinSystem.
             credentials (`list[Credential]`): Server credentials.
             applications (`list[ServerApplication]`): Server applications.
             discarded (`bool`): Indicates if the server is discarded.
@@ -249,19 +249,19 @@ class Server(AggregateRoot):
 
     @property
     def operating_system_id(self) -> EntityId:
-        """Returns the operating system id of the server.
+        """Returns the OperatinSystem id of the server.
 
         Returns:
-            `EntityId`: Operating system id of the server.
+            `EntityId`: OperatingSystem id of the server.
         """
         return self._operating_system_id
 
     @operating_system_id.setter
     def operating_system_id(self, value: EntityId) -> None:
-        """Sets the operating system id of the server.
+        """Sets the OperatinSystem id of the server.
 
         Args:
-            value (`EntityId`): Operating system id of the server.
+            value (`EntityId`): OperatingSystem id of the server.
         """
         if self._operating_system_id == value:
             return
@@ -394,7 +394,7 @@ class Server(AggregateRoot):
             data (`dict`): Dictionary representation of the object.
 
         Returns:
-            `Server`: Instance of the class.
+            `Server`: New Server instance.
         """
         for k, v in data.items():
             if k == "credentials":
@@ -434,12 +434,12 @@ class Server(AggregateRoot):
             ram (`str`): Server ram.
             hdd (`str`): Server hdd.
             environment_id (`EntityId`): Server environment id.
-            operating_system_id (`EntityId`): Server operating system id.
+            operating_system_id (`EntityId`): Server OperatinSystem id.
             credentials (`list[Credential]`): Server credentials.
             applications (`list[ServerApplication]`): Server applications.
 
         Returns:
-            `Server`: Server instance.
+            `Server`: New Server.
         """
         server = Server(
             id=EntityId().value,

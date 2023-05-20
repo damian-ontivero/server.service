@@ -72,8 +72,8 @@ def get_application_service(
 
 @router.get("", response_model=list[ApplicationRead])
 def get_all(
-    per_page: int = Query(default=25),
-    page: int = Query(default=1),
+    limit: int = Query(default=25),
+    offset: int = Query(default=1),
     sort: list[str] | None = Query(default=None),
     filter: ApplicationQueryParameter = Depends(),
     fields: list[str] | None = Query(default=None),
@@ -85,8 +85,8 @@ def get_all(
     try:
         applications = application_service.find_many(
             fields=fields,
-            per_page=per_page,
-            page=page,
+            limit=limit,
+            offset=offset,
             sort=sort,
             **filter.dict(exclude_none=True),
             access_token=authorization.credentials,
@@ -98,21 +98,21 @@ def get_all(
         base_url = request.base_url
         link = ""
 
-        if applications.prev_page:
-            prev_page = f'<{base_url}support/applications?per_page={applications.per_page}&page={applications.prev_page}>; rel="prev", '
-            link += prev_page
+        if applications.prev_offset:
+            prev_offset = f'<{base_url}support/applications?limit={applications.limit}&offset={applications.prev_offset}>; rel="prev", '
+            link += prev_offset
 
-        if applications.next_page:
-            next_page = f'<{base_url}support/applications?per_page={applications.per_page}&page={applications.next_page}>; rel="next", '
-            link += next_page
+        if applications.next_offset:
+            next_offset = f'<{base_url}support/applications?limit={applications.limit}&offset={applications.next_offset}>; rel="next", '
+            link += next_offset
 
-        if applications.last_page:
-            last_page = f'<{base_url}support/applications?per_page={applications.per_page}&page={applications.last_page}>; rel="last", '
-            link += last_page
+        if applications.last_offset:
+            last_offset = f'<{base_url}support/applications?limit={applications.limit}&offset={applications.last_offset}>; rel="last", '
+            link += last_offset
 
-        if applications.first_page:
-            first_page = f'<{base_url}support/applications?per_page={applications.per_page}&page={applications.first_page}>; rel="first"'
-            link += first_page
+        if applications.first_offset:
+            first_offset = f'<{base_url}support/applications?limit={applications.limit}&offset={applications.first_offset}>; rel="first"'
+            link += first_offset
 
         response = JSONResponse(
             content=jsonable_encoder(

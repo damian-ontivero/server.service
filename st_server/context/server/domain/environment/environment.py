@@ -97,7 +97,7 @@ class Environment(AggregateRoot):
             data (`dict`): Dictionary representation of the object.
 
         Returns:
-            `Environment`: Instance of the class.
+            `Environment`: New Environment instance.
         """
         return Environment(**data)
 
@@ -114,7 +114,7 @@ class Environment(AggregateRoot):
             name (`str`): Environment name.
 
         Returns:
-            `Environment`: Environment instance.
+            `Environment`: New Environment.
         """
         environment = Environment(
             id=EntityId().value,

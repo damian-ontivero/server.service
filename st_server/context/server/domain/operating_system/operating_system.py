@@ -1,6 +1,6 @@
-"""Operating system entity.
+"""OperatingSystem entity.
 
-This is the aggregate root entity of the Operating system aggregate.
+This is the aggregate root entity of the OperatingSystem aggregate.
 """
 
 from st_server.shared.core.aggregate_root import AggregateRoot
@@ -9,7 +9,7 @@ from st_server.shared.core.entity_id import EntityId
 
 
 class OperatingSystem(AggregateRoot):
-    """Operating system entity."""
+    """OperatingSystem entity."""
 
     class NameChanged(DomainEvent):
         """Domain event for name changed."""
@@ -34,20 +34,20 @@ class OperatingSystem(AggregateRoot):
         architect: str | None = None,
         discarded: bool | None = None,
     ) -> None:
-        """Constructor of the operating system entity.
+        """Constructor of the OperatinSystem entity.
 
         Important:
             This constructor should not be used directly to generate the entity.
             It should be used only by the repository to instantiate the entity from the database.
 
-            In order to create/generate/register a new operating system, use the `OperatingSystem.create` method.
+            In order to create/generate/register a new OperatinSystem, use the `OperatingSystem.create` method.
 
         Args:
-            id (`EntityId`): Operating system id.
-            name (`str`): Operating system name.
-            version (`str`): Operating system version.
-            architect (`str`): Operating system architect.
-            discarded (`bool`): Indicates if the operating system is discarded.
+            id (`EntityId`): OperatingSystem id.
+            name (`str`): OperatingSystem name.
+            version (`str`): OperatingSystem version.
+            architect (`str`): OperatingSystem architect.
+            discarded (`bool`): Indicates if the OperatinSystem is discarded.
         """
         super().__init__(id=id, discarded=discarded)
         self._name = name
@@ -56,19 +56,19 @@ class OperatingSystem(AggregateRoot):
 
     @property
     def name(self) -> str:
-        """Returns the Operating system name.
+        """Returns the OperatingSystem name.
 
         Returns:
-            `str`: Operating system name.
+            `str`: OperatingSystem name.
         """
         return self._name
 
     @name.setter
     def name(self, value: str) -> None:
-        """Sets the name of the Operating system.
+        """Sets the name of the OperatingSystem.
 
         Args:
-            value (`str`): Name of the Operating system.
+            value (`str`): Name of the OperatingSystem.
         """
         if self._name == value:
             return
@@ -85,19 +85,19 @@ class OperatingSystem(AggregateRoot):
 
     @property
     def version(self) -> str:
-        """Returns the Operating system name.
+        """Returns the OperatingSystem name.
 
         Returns:
-            `str`: Operating system name.
+            `str`: OperatingSystem name.
         """
         return self._version
 
     @version.setter
     def version(self, value: str) -> None:
-        """Sets the name of the Operating system.
+        """Sets the name of the OperatingSystem.
 
         Args:
-            value (`str`): Name of the Operating system.
+            value (`str`): Name of the OperatingSystem.
         """
         if self._version == value:
             return
@@ -114,19 +114,19 @@ class OperatingSystem(AggregateRoot):
 
     @property
     def architect(self) -> str:
-        """Returns the Operating system name.
+        """Returns the OperatingSystem name.
 
         Returns:
-            `str`: Operating system name.
+            `str`: OperatingSystem name.
         """
         return self._architect
 
     @architect.setter
     def architect(self, value: str) -> None:
-        """Sets the name of the Operating system.
+        """Sets the name of the OperatingSystem.
 
         Args:
-            value (`str`): Name of the Operating system.
+            value (`str`): Name of the OperatingSystem.
         """
         if self._architect == value:
             return
@@ -179,26 +179,26 @@ class OperatingSystem(AggregateRoot):
             data (`dict`): Dictionary representation of the object.
 
         Returns:
-            `OperatingSystem`: Instance of the class.
+            `OperatingSystem`: New OperatingSystem instance.
         """
         return OperatingSystem(**data)
 
     @staticmethod
     def create(name: str, version: str, architect: str) -> "OperatingSystem":
-        """Operating system factory method.
+        """OperatingSystem factory method.
 
         Important:
-            This method is only used to create a new Operating system.
-            When creating a new Operating system, the id is automatically generated
+            This method is only used to create a new OperatingSystem.
+            When creating a new OperatingSystem, the id is automatically generated
             and a domain event is registered.
 
         Args:
-            name (`str`): Operating system name.
-            version (`str`): Operating system version.
-            architect (`str`): Operating system architect.
+            name (`str`): OperatingSystem name.
+            version (`str`): OperatingSystem version.
+            architect (`str`): OperatingSystem architect.
 
         Returns:
-            `OperatingSystem`: Operating system instance.
+            `OperatingSystem`: New OperatinSystem.
         """
         operating_system = OperatingSystem(
             id=EntityId().value,
@@ -215,11 +215,11 @@ class OperatingSystem(AggregateRoot):
         return operating_system
 
     def discard(self) -> None:
-        """Operating system discard method.
+        """OperatingSystem discard method.
 
         Important:
-            This method is only used to discard a Operating system.
-            When discarding a Operating system, the discarded attribute is set to True
+            This method is only used to discard a OperatingSystem.
+            When discarding a OperatingSystem, the discarded attribute is set to True
             and a domain event is registered.
         """
         domain_event = OperatingSystem.Discarded(

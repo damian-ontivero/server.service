@@ -48,7 +48,7 @@ def get_session():
 def get_operating_system_repository(
     session: db.SessionLocal = Depends(get_session),
 ):
-    """Yield a operating system repository."""
+    """Yield a OperatinSystem repository."""
     yield OperatingSystemRepository(session=session)
 
 
@@ -68,7 +68,7 @@ def get_operating_system_service(
     ),
     message_bus: RabbitMQMessageBus = Depends(get_message_bus),
 ):
-    """Yield a operating system service."""
+    """Yield a OperatinSystem service."""
     yield OperatingSystemService(
         repository=repository, message_bus=message_bus
     )
@@ -76,8 +76,8 @@ def get_operating_system_service(
 
 @router.get("", response_model=list[OperatingSystemRead])
 def get_all(
-    per_page: int = Query(default=25),
-    page: int = Query(default=1),
+    limit: int = Query(default=25),
+    offset: int = Query(default=1),
     sort: list[str] | None = Query(default=None),
     filter: ServerQueryParameter = Depends(),
     fields: list[str] | None = Query(default=None),
@@ -91,8 +91,8 @@ def get_all(
     try:
         operating_systems = operating_system_service.find_many(
             fields=fields,
-            per_page=per_page,
-            page=page,
+            limit=limit,
+            offset=offset,
             sort=sort,
             **filter.dict(exclude_none=True),
             access_token=authorization.credentials,
@@ -104,21 +104,21 @@ def get_all(
         base_url = request.base_url
         link = ""
 
-        if operating_systems.prev_page:
-            prev_page = f'<{base_url}support/operating-systems?per_page={operating_systems.per_page}&page={operating_systems.prev_page}>; rel="prev", '
-            link += prev_page
+        if operating_systems.prev_offset:
+            prev_offset = f'<{base_url}support/operating-systems?limit={operating_systems.limit}&offset={operating_systems.prev_offset}>; rel="prev", '
+            link += prev_offset
 
-        if operating_systems.next_page:
-            next_page = f'<{base_url}support/operating-systems?per_page={operating_systems.per_page}&page={operating_systems.next_page}>; rel="next", '
-            link += next_page
+        if operating_systems.next_offset:
+            next_offset = f'<{base_url}support/operating-systems?limit={operating_systems.limit}&offset={operating_systems.next_offset}>; rel="next", '
+            link += next_offset
 
-        if operating_systems.last_page:
-            last_page = f'<{base_url}support/operating-systems?per_page={operating_systems.per_page}&page={operating_systems.last_page}>; rel="last", '
-            link += last_page
+        if operating_systems.last_offset:
+            last_offset = f'<{base_url}support/operating-systems?limit={operating_systems.limit}&offset={operating_systems.last_offset}>; rel="last", '
+            link += last_offset
 
-        if operating_systems.first_page:
-            first_page = f'<{base_url}support/operating-systems?per_page={operating_systems.per_page}&page={operating_systems.first_page}>; rel="first"'
-            link += first_page
+        if operating_systems.first_offset:
+            first_offset = f'<{base_url}support/operating-systems?limit={operating_systems.limit}&offset={operating_systems.first_offset}>; rel="first"'
+            link += first_offset
 
         response = JSONResponse(
             content=jsonable_encoder(
@@ -300,7 +300,7 @@ def discard(
 
         return JSONResponse(
             content=jsonable_encoder(
-                obj={"message": "Operating system deleted"}
+                obj={"message": "OperatingSystem deleted"}
             ),
             status_code=status.HTTP_200_OK,
         )

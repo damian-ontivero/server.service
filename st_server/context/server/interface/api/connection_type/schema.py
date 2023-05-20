@@ -1,4 +1,4 @@
-"""Connection type schema."""
+"""ConnectionType schema."""
 
 from dataclasses import asdict, dataclass
 

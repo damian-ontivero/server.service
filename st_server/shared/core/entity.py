@@ -112,19 +112,22 @@ class Entity(metaclass=ABCMeta):
             data (`dict`): Dictionary representation of the object.
 
         Returns:
-            `Entity`: Instance of the class.
+            `Entity`: New Entity instance.
         """
         raise NotImplementedError
 
     @staticmethod
     @abstractmethod
-    def create() -> None:
+    def create() -> "Entity":
         """Entity factory method.
 
         Important:
             This method is only used to create a new entity.
             When creating a new entity, the id is automatically generated
             and a domain event is registered.
+
+        Returns:
+            `Entity`: New entity.
         """
         raise NotImplementedError
 

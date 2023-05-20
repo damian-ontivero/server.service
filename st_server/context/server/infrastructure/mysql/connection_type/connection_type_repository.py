@@ -1,4 +1,4 @@
-"""Connection type repository implementation."""
+"""ConnectionType repository implementation."""
 
 from sqlalchemy import inspect
 from sqlalchemy.orm import (
@@ -20,10 +20,10 @@ from st_server.shared.core.response import RepositoryResponse
 
 
 class ConnectionTypeRepository(Repository):
-    """Connection type repository implementation."""
+    """ConnectionType repository implementation."""
 
     def __init__(self, session: Session) -> None:
-        """Connection type repository.
+        """ConnectionType repository.
 
         Args:
             session (`Session`): SQLAlchemy session object.
@@ -115,16 +115,16 @@ class ConnectionTypeRepository(Repository):
     def find_one(
         self, id: int, fields: list[str] | None = None
     ) -> ConnectionType | None:
-        """Returns the connection type that matches the provided id.
+        """Returns the ConnectionType that matches the provided id.
 
         If no connection types match, the value `None` is returned.
 
         Args:
-            id (`int`): Connection type id.
+            id (`int`): ConnectionType id.
             fields (`list[str]`): List of fields to return. Defaults to `None`.
 
         Returns:
-            `ConnectionType` | `None`: Connection type found.
+            `ConnectionType` | `None`: ConnectionType found.
         """
         with self._session as session:
             query = session.query(ConnectionTypeDbModel).filter(
@@ -160,10 +160,10 @@ class ConnectionTypeRepository(Repository):
             )
 
     def add_one(self, aggregate: ConnectionType) -> None:
-        """Adds the provided connection type.
+        """Adds the provided ConnectionType.
 
         Args:
-            aggregate (`ConnectionType`): Connection type to add.
+            aggregate (`ConnectionType`): ConnectionType to add.
         """
         with self._session as session:
             model = ConnectionTypeDbModel.from_dict(aggregate.to_dict())
@@ -171,10 +171,10 @@ class ConnectionTypeRepository(Repository):
             session.commit()
 
     def update_one(self, aggregate: ConnectionType) -> None:
-        """Updates the provided connection type.
+        """Updates the provided ConnectionType.
 
         Args:
-            aggregate (`ConnectionType`): Connection type to update.
+            aggregate (`ConnectionType`): ConnectionType to update.
         """
         with self._session as session:
             model = ConnectionTypeDbModel.from_dict(aggregate.to_dict())
@@ -182,10 +182,10 @@ class ConnectionTypeRepository(Repository):
             session.commit()
 
     def delete_one(self, id: int) -> None:
-        """Deletes the connection type that matches the provided id.
+        """Deletes the ConnectionType that matches the provided id.
 
         Args:
-            id (`int`): Connection type id.
+            id (`int`): ConnectionType id.
         """
         with self._session as session:
             model = session.get(entity=ConnectionTypeDbModel, ident=id)

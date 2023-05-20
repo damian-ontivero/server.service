@@ -1,4 +1,4 @@
-"""Operating system service."""
+"""OperatingSystem service."""
 
 import math
 
@@ -15,7 +15,7 @@ from st_server.shared.helper.sort import validate_sort
 
 
 class OperatingSystemService:
-    """Operating system service."""
+    """OperatingSystem service."""
 
     def __init__(
         self, repository: Repository, message_bus: MessageBus
@@ -23,7 +23,7 @@ class OperatingSystemService:
         """Initializes the service.
 
         Args:
-            repository (`Repository`): Operating system repository.
+            repository (`Repository`): OperatingSystem repository.
             message_bus (`MessageBus`): Message bus.
         """
         self._repository = repository
@@ -35,49 +35,63 @@ class OperatingSystemService:
     @validate_filter
     def find_many(
         self,
-        fields: list[str] | None = None,
-        per_page: int | None = None,
-        page: int | None = None,
+        limit: int | None = None,
+        offset: int | None = None,
         sort: list[str] | None = None,
+        fields: list[str] | None = None,
         access_token: str | None = None,
         **kwargs,
     ) -> ServiceResponse:
         """Returns all operating systems that match the provided conditions.
 
-        If a `None` value is provided to per_page, there will be no pagination.
+        If a `None` value is provided to limit, there will be no pagination.
 
-        If a `Zero` value is provided to per_page, no operating system will be returned.
+        If a `Zero` value is provided to limit, no OperatinSystem will be returned.
 
-        If a `None` value is provided to page, the first page will be returned.
+        If a `None` value is provided to offset, the first offset will be returned.
 
         If a `None` value is provided to kwargs, all operating systems will be returned.
 
         Args:
             fields (`list[str]` | `None`): List of fields to return. Defaults to `None`.
-            per_page (`int` | `None`): Number of records per page. Defaults to `None`.
-            page (`int` | `None`): Page number. Defaults to `None`.
+            limit (`int` | `None`): Number of records per offset. Defaults to `None`.
+            offset (`int` | `None`): offset number. Defaults to `None`.
             sort (`list[str]` | `None`): Sort criteria. Defaults to `None`.
             access_token (`str` | `None`): Access token. Defaults to `None`.
 
         Returns:
             `ServiceResponse`: Operating systems found.
         """
+        if fields is None:
+            fields = []
+
+        if limit is None:
+            limit = 0
+
+        if offset is None:
+            offset = 0
+
+        if sort is None:
+            sort = []
+
+        if kwargs is None:
+            kwargs = {}
+
         operating_systems = self._repository.find_many(
-            fields=fields, limit=per_page, offset=page, sort=sort, **kwargs
+            limit=limit, offset=offset, sort=sort, fields=fields, **kwargs
         )
         total = operating_systems.total_items
 
         return ServiceResponse(
-            per_page=per_page,
-            page=(page or 1),
-            prev_page=((page or 1) - 1) if (page or 1) > 1 else None,
-            next_page=((page or 1) + 1)
-            if (page or 1) > 0
-            and (page or 1)
-            < math.ceil(float(total) / float(per_page or total))
+            limit=limit,
+            offset=(offset or 1),
+            prev_offset=((offset or 1) - 1) if (offset or 1) > 1 else None,
+            next_offset=((offset or 1) + 1)
+            if (offset or 1) > 0
+            and (offset or 1) < math.ceil(float(total) / float(limit or total))
             else None,
-            last_page=math.ceil(float(total) / float(per_page or total)),
-            first_page=1,
+            last_offset=math.ceil(float(total) / float(limit or total)),
+            first_offset=1,
             items=operating_systems.items,
         )
 
@@ -88,24 +102,24 @@ class OperatingSystemService:
         fields: list[str] | None = None,
         access_token: str | None = None,
     ) -> OperatingSystem:
-        """Returns the operating system that matches the provided id.
+        """Returns the OperatinSystem that matches the provided id.
 
         Args:
-            id (`int`): Operating system id.
+            id (`int`): OperatingSystem id.
             fields (`list[str]` | `None`): List of fields to return. Defaults to `None`.
             access_token (`str` | `None`): Access token. Defaults to `None`.
 
         Raises:
-            `NotFound`: No operating system found with the provided id.
+            `NotFound`: No OperatinSystem found with the provided id.
 
         Returns:
-            `OperatingSystem`: Operating system found.
+            `OperatingSystem`: OperatingSystem found.
         """
         operating_system = self._repository.find_one(id=id, fields=fields)
 
         if operating_system is None:
             raise NotFound(
-                "Operating system with id {id!r} not found.".format(id=id)
+                "OperatingSystem with id {id!r} not found.".format(id=id)
             )
 
         return operating_system
@@ -114,17 +128,17 @@ class OperatingSystemService:
     def add_one(
         self, data: dict, access_token: str | None = None
     ) -> OperatingSystem:
-        """Adds the provided operating system and publishes the OperatingSystem events.
+        """Adds the provided OperatinSystem and publishes the OperatingSystem events.
 
         Args:
-            data (`dict`): Dictionary with the operating system data.
+            data (`dict`): Dictionary with the OperatinSystem data.
             access_token (`str` | `None`): Access token. Defaults to `None`.
 
         Raises:
-            `AlreadyExists`: An operating system with the provided name already exists.
+            `AlreadyExists`: An OperatinSystem with the provided name already exists.
 
         Returns:
-            `OperatingSystem`: Operating system added.
+            `OperatingSystem`: OperatingSystem added.
         """
         operating_system = OperatingSystem.create(**data)
         operating_systems = self._repository.find_many(
@@ -133,7 +147,7 @@ class OperatingSystemService:
 
         if operating_systems.total_items:
             raise AlreadyExists(
-                "Operating system with name {name!r} already exists.".format(
+                "OperatingSystem with name {name!r} already exists.".format(
                     name=operating_system.name
                 )
             )
@@ -148,25 +162,25 @@ class OperatingSystemService:
     def update_one(
         self, id: str, data: dict, access_token: str | None = None
     ) -> OperatingSystem:
-        """Updates the operating system that matches the provided id and publishes the events.
+        """Updates the OperatinSystem that matches the provided id and publishes the events.
 
         Args:
-            id (`str`): Operating system id.
-            data (`dict`): Dictionary with the operating system data.
+            id (`str`): OperatingSystem id.
+            data (`dict`): Dictionary with the OperatinSystem data.
             access_token (`str` | `None`): Access token. Defaults to `None`.
 
         Raises:
-            `NotFound`: No operating system found with the provided id.
-            `AlreadyExists`: A operating system with the provided name already exists.
+            `NotFound`: No OperatinSystem found with the provided id.
+            `AlreadyExists`: A OperatinSystem with the provided name already exists.
 
         Returns:
-            `OperatingSystem`: Operating system updated.
+            `OperatingSystem`: OperatingSystem updated.
         """
         operating_system = self._repository.find_one(id=id)
 
         if operating_system is None:
             raise NotFound(
-                "Operating system with id {id!r} not found.".format(id=id)
+                "OperatingSystem with id {id!r} not found.".format(id=id)
             )
 
         for key, value in data.items():
@@ -180,20 +194,20 @@ class OperatingSystemService:
 
     # @AuthService.access_token_required
     def discard_one(self, id: str, access_token: str | None = None) -> None:
-        """Discards the operating system that matches the provided id and publishes the events.
+        """Discards the OperatinSystem that matches the provided id and publishes the events.
 
         Args:
-            id (`str`): Operating system id.
+            id (`str`): OperatingSystem id.
             access_token (`str` | `None`): Access token. Defaults to `None`.
 
         Raises:
-            `NotFound`: No operating system found with the provided id.
+            `NotFound`: No OperatinSystem found with the provided id.
         """
         operating_system = self._repository.find_one(id=id)
 
         if operating_system is None:
             raise NotFound(
-                "Operating system with id {id!r} not found.".format(id=id)
+                "OperatingSystem with id {id!r} not found.".format(id=id)
             )
 
         operating_system.discard()
@@ -204,20 +218,20 @@ class OperatingSystemService:
 
     # @AuthService.access_token_required
     def delete_one(self, id: str, access_token: str | None = None) -> None:
-        """Deletes the operating system that matches the provided id and publishes the events.
+        """Deletes the OperatinSystem that matches the provided id and publishes the events.
 
         Args:
-            id (`str`): Operating system id.
+            id (`str`): OperatingSystem id.
             access_token (`str` | `None`): Access token. Defaults to `None`.
 
         Raises:
-            `NotFound`: No operating system found with the provided id.
+            `NotFound`: No OperatinSystem found with the provided id.
         """
         operating_system = self._repository.find_one(id=id)
 
         if operating_system is None:
             raise NotFound(
-                "Operating system with id {id!r} not found.".format(id=id)
+                "OperatingSystem with id {id!r} not found.".format(id=id)
             )
 
         self._repository.delete_one(id=id)

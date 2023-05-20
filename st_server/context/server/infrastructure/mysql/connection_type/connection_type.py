@@ -1,4 +1,4 @@
-"""Connection type database model."""
+"""ConnectionType database model."""
 
 import sqlalchemy as sa
 
@@ -6,7 +6,7 @@ from st_server.context.server.infrastructure.mysql import db
 
 
 class ConnectionTypeDbModel(db.Base):
-    """Connection type database model."""
+    """ConnectionType database model."""
 
     __tablename__ = "connection_type"
 

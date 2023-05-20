@@ -1,10 +1,10 @@
-"""Operating system query parameter."""
+"""OperatingSystem query parameter."""
 
 from pydantic import BaseModel
 
 
 class OperatingSystemQueryParameter(BaseModel):
-    """Operating system query parameter."""
+    """OperatingSystem query parameter."""
 
     id: str | None = None
     name: str | None = None
