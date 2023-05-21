@@ -57,7 +57,7 @@ class ConnectionType(AggregateRoot):
             return
 
         domain_event = ConnectionType.NameChanged(
-            type_="connection_type_updated",
+            type_="updated",
             aggregate_id=self.id,
             old_value=self._name,
             new_value=value,
@@ -123,7 +123,7 @@ class ConnectionType(AggregateRoot):
         )
 
         domain_event = ConnectionType.Created(
-            type_="connection_type_created", aggregate_id=connection_type.id
+            type_="created", aggregate_id=connection_type.id
         )
         connection_type.register_domain_event(domain_event=domain_event)
 
@@ -138,7 +138,7 @@ class ConnectionType(AggregateRoot):
             and a domain event is registered.
         """
         domain_event = ConnectionType.Discarded(
-            type_="connection_type_discarded", aggregate_id=self._id
+            type_="discarded", aggregate_id=self._id
         )
 
         self._discarded = True

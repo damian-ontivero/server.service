@@ -101,7 +101,7 @@ class Credential(Entity):
             return
 
         domain_event = Credential.ServerIdChanged(
-            type_="credential_updated",
+            type_="updated",
             aggregate_id=self.id,
             old_value=self._server_id,
             new_value=value,
@@ -130,7 +130,7 @@ class Credential(Entity):
             return
 
         domain_event = Credential.ConnectionTypeChanged(
-            type_="credential_updated",
+            type_="updated",
             aggregate_id=self.id,
             old_value=self._connection_type,
             new_value=value,
@@ -159,7 +159,7 @@ class Credential(Entity):
             return
 
         domain_event = Credential.UsernameChanged(
-            type_="credential_updated",
+            type_="updated",
             aggregate_id=self.id,
             old_value=self._username,
             new_value=value,
@@ -188,7 +188,7 @@ class Credential(Entity):
             return
 
         domain_event = Credential.PasswordChanged(
-            type_="credential_updated",
+            type_="updated",
             aggregate_id=self.id,
             old_value=self._password,
             new_value=value,
@@ -217,7 +217,7 @@ class Credential(Entity):
             return
 
         domain_event = Credential.LocalIpChanged(
-            type_="credential_updated",
+            type_="updated",
             aggregate_id=self.id,
             old_value=self._local_ip,
             new_value=value,
@@ -246,7 +246,7 @@ class Credential(Entity):
             return
 
         domain_event = Credential.LocalPortChanged(
-            type_="credential_updated",
+            type_="updated",
             aggregate_id=self.id,
             old_value=self._local_port,
             new_value=value,
@@ -351,7 +351,7 @@ class Credential(Entity):
         )
 
         domain_event = Credential.Created(
-            type_="credential_created", aggregate_id=credential.id
+            type_="created", aggregate_id=credential.id
         )
         credential.register_domain_event(domain_event=domain_event)
 
@@ -366,7 +366,7 @@ class Credential(Entity):
             and a domain event is registered.
         """
         domain_event = Credential.Discarded(
-            type_="credential_discarded", aggregate_id=self._id
+            type_="discarded", aggregate_id=self._id
         )
 
         self._discarded = True

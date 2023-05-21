@@ -4,9 +4,9 @@ from datetime import datetime
 
 
 def now() -> datetime:
-    """Returns the current datetime.
+    """Returns the current UTC datetime.
 
     Returns:
-        `datetime`: Current datetime.
+        `datetime`: Current UTC datetime.
     """
-    return datetime.now()
+    return datetime.utcnow()
