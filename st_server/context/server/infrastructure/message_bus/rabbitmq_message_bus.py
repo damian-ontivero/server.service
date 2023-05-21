@@ -39,40 +39,12 @@ class RabbitMQMessageBus(MessageBus):
         Args:
             domain_events (`list[DomainEvent]`): Domain events to publish.
         """
-        cfg_ = {
-            "user_updated": {
-                "exchange": "user_exchange",
-                "routing_key": "user.updated",
-            },
-            "user_created": {
-                "exchange": "user_exchange",
-                "routing_key": "user.created",
-            },
-            "user_discarded": {
-                "exchange": "user_exchange",
-                "routing_key": "user.discarded",
-            },
-            "role_updated": {
-                "exchange": "role_exchange",
-                "routing_key": "role.updated",
-            },
-            "role_created": {
-                "exchange": "role_exchange",
-                "routing_key": "role.created",
-            },
-            "role_discarded": {
-                "exchange": "role_exchange",
-                "routing_key": "role.discarded",
-            },
-        }
-
         for domain_event in domain_events:
-            exchange_ = cfg_[domain_event.__dict__["type"]]["exchange"]
-            routing_key_ = cfg_[domain_event.__dict__["type"]]["routing_key"]
+            qualname = domain_event.__class__.__qualname__
 
             self._channel.basic_publish(
-                exchange=exchange_,
-                routing_key=routing_key_,
+                exchange=qualname.split(".")[0].lower(),
+                routing_key=domain_event.__dict__["type_"],
                 body=json.dumps(domain_event.__dict__, default=str),
             )
 

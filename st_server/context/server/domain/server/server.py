@@ -122,7 +122,7 @@ class Server(AggregateRoot):
             return
 
         domain_event = Server.NameChanged(
-            type_="server_updated",
+            type_="updated",
             aggregate_id=self.id,
             old_value=self._name,
             new_value=value,
@@ -151,7 +151,7 @@ class Server(AggregateRoot):
             return
 
         domain_event = Server.CpuChanged(
-            type_="server_updated",
+            type_="updated",
             aggregate_id=self.id,
             old_value=self._cpu,
             new_value=value,
@@ -180,7 +180,7 @@ class Server(AggregateRoot):
             return
 
         domain_event = Server.RamChanged(
-            type_="server_updated",
+            type_="updated",
             aggregate_id=self.id,
             old_value=self._ram,
             new_value=value,
@@ -209,7 +209,7 @@ class Server(AggregateRoot):
             return
 
         domain_event = Server.HddChanged(
-            type_="server_updated",
+            type_="updated",
             aggregate_id=self.id,
             old_value=self._hdd,
             new_value=value,
@@ -238,7 +238,7 @@ class Server(AggregateRoot):
             return
 
         domain_event = Server.EnvironmentChanged(
-            type_="server_updated",
+            type_="updated",
             aggregate_id=self.id,
             old_value=self._environment_id,
             new_value=value,
@@ -267,7 +267,7 @@ class Server(AggregateRoot):
             return
 
         domain_event = Server.OperatingSystemChanged(
-            type_="server_updated",
+            type_="updated",
             aggregate_id=self.id,
             old_value=self._operating_system_id,
             new_value=value,
@@ -296,7 +296,7 @@ class Server(AggregateRoot):
             return
 
         domain_event = Server.CredentialChanged(
-            type_="server_updated",
+            type_="updated",
             aggregate_id=self.id,
             old_value=self._credentials,
             new_value=value,
@@ -325,7 +325,7 @@ class Server(AggregateRoot):
             return
 
         domain_event = Server.ApplicationChanged(
-            type_="server_updated",
+            type_="updated",
             aggregate_id=self.id,
             old_value=self._applications,
             new_value=value,
@@ -453,9 +453,7 @@ class Server(AggregateRoot):
             applications=applications or [],
         )
 
-        domain_event = Server.Created(
-            type_="server_created", aggregate_id=server.id
-        )
+        domain_event = Server.Created(type_="created", aggregate_id=server.id)
         server.register_domain_event(domain_event=domain_event)
 
         return server
@@ -469,7 +467,7 @@ class Server(AggregateRoot):
             and a domain event is registered.
         """
         domain_event = Server.Discarded(
-            type_="server_discarded", aggregate_id=self._id
+            type_="discarded", aggregate_id=self._id
         )
 
         self._discarded = True

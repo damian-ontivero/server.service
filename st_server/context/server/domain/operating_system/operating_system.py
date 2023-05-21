@@ -74,7 +74,7 @@ class OperatingSystem(AggregateRoot):
             return
 
         domain_event = OperatingSystem.NameChanged(
-            type_="operating_system_updated",
+            type_="updated",
             aggregate_id=self.id,
             name=value,
             version=self.version,
@@ -103,7 +103,7 @@ class OperatingSystem(AggregateRoot):
             return
 
         domain_event = OperatingSystem.VersionChanged(
-            type_="operating_system_updated",
+            type_="updated",
             aggregate_id=self.id,
             name=self.name,
             version=value,
@@ -132,7 +132,7 @@ class OperatingSystem(AggregateRoot):
             return
 
         domain_event = OperatingSystem.ArchitectChanged(
-            type_="operating_system_updated",
+            type_="updated",
             aggregate_id=self.id,
             name=self.name,
             version=self.version,
@@ -208,7 +208,7 @@ class OperatingSystem(AggregateRoot):
         )
 
         domain_event = OperatingSystem.Created(
-            type_="operating_system_created", aggregate_id=operating_system.id
+            type_="created", aggregate_id=operating_system.id
         )
         operating_system.register_domain_event(domain_event=domain_event)
 
@@ -223,7 +223,7 @@ class OperatingSystem(AggregateRoot):
             and a domain event is registered.
         """
         domain_event = OperatingSystem.Discarded(
-            type_="operating_system_discarded", aggregate_id=self._id
+            type_="discarded", aggregate_id=self._id
         )
 
         self._discarded = True

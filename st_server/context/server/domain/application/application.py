@@ -74,7 +74,7 @@ class Application(AggregateRoot):
             return
 
         domain_event = Application.NameChanged(
-            type_="application_updated",
+            type_="updated",
             aggregate_id=self.id,
             old_value=self._name,
             new_value=value,
@@ -103,7 +103,7 @@ class Application(AggregateRoot):
             return
 
         domain_event = Application.VersionChanged(
-            type_="application_updated",
+            type_="updated",
             aggregate_id=self.id,
             old_value=self._version,
             new_value=value,
@@ -132,7 +132,7 @@ class Application(AggregateRoot):
             return
 
         domain_event = Application.ArchitectChanged(
-            type_="application_updated",
+            type_="updated",
             aggregate_id=self.id,
             old_value=self._architect,
             new_value=value,
@@ -212,7 +212,7 @@ class Application(AggregateRoot):
         )
 
         domain_event = Application.Created(
-            type_="application_created", aggregate_id=application.id
+            type_="created", aggregate_id=application.id
         )
         application.register_domain_event(domain_event=domain_event)
 
@@ -227,7 +227,7 @@ class Application(AggregateRoot):
             and a domain event is registered.
         """
         domain_event = Application.Discarded(
-            type_="application_discarded", aggregate_id=self._id
+            type_="discarded", aggregate_id=self._id
         )
 
         self._discarded = True

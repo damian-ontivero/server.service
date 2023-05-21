@@ -57,7 +57,7 @@ class Environment(AggregateRoot):
             return
 
         domain_event = Environment.NameChanged(
-            type_="environment_updated",
+            type_="updated",
             aggregate_id=self._id,
             name=value,
         )
@@ -122,7 +122,7 @@ class Environment(AggregateRoot):
         )
 
         domain_event = Environment.Created(
-            type_="environment_created", aggregate_id=environment.id
+            type_="created", aggregate_id=environment.id
         )
         environment.register_domain_event(domain_event=domain_event)
 
@@ -137,7 +137,7 @@ class Environment(AggregateRoot):
             and a domain event is registered.
         """
         domain_event = Environment.Discarded(
-            type_="environment_discarded", aggregate_id=self._id
+            type_="discarded", aggregate_id=self._id
         )
 
         self._discarded = True
