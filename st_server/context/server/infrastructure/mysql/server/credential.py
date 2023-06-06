@@ -61,6 +61,9 @@ class CredentialDbModel(db.Base):
         Returns:
             `dict`: Dictionary representation of the object.
         """
+        if exclude is None:
+            exclude = []
+
         data = {
             "id": self.id,
             "server_id": self.server_id,
@@ -74,13 +77,10 @@ class CredentialDbModel(db.Base):
             "discarded": self.discarded,
         }
 
-        if exclude:
-            for attr in exclude:
-                del data[attr]
+        return {k: v for k, v in data.items() if k not in exclude}
 
-        return data
-
-    def from_dict(data: dict) -> "CredentialDbModel":
+    @classmethod
+    def from_dict(cls, data: dict) -> "CredentialDbModel":
         """Returns an instance of the class based on the provided dictionary.
 
         Args:
@@ -89,7 +89,7 @@ class CredentialDbModel(db.Base):
         Returns:
             `CredentialDbModel`: Instance of the class.
         """
-        return CredentialDbModel(
+        return cls(
             id=data.get("id"),
             server_id=data.get("server_id"),
             connection_type_id=data.get("connection_type_id"),

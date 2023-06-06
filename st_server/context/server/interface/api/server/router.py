@@ -69,7 +69,7 @@ def get_server_service(
 @router.get("", response_model=list[ServerRead])
 def get_all(
     limit: int = Query(default=25),
-    offset: int = Query(default=1),
+    offset: int = Query(default=0),
     sort: list[str] | None = Query(default=None),
     filter: ServerQueryParameter = Depends(),
     fields: list[str] | None = Query(default=None),
@@ -95,19 +95,19 @@ def get_all(
         link = ""
 
         if servers.prev_offset:
-            prev_offset = f'<{base_url}support/servers?limit={servers.limit}&offset={servers.prev_offset}>; rel="prev", '
+            prev_offset = f'<{base_url}server/servers?limit={servers.limit}&offset={servers.prev_offset}>; rel="prev", '
             link += prev_offset
 
         if servers.next_offset:
-            next_offset = f'<{base_url}support/servers?limit={servers.limit}&offset={servers.next_offset}>; rel="next", '
+            next_offset = f'<{base_url}server/servers?limit={servers.limit}&offset={servers.next_offset}>; rel="next", '
             link += next_offset
 
         if servers.last_offset:
-            last_offset = f'<{base_url}support/servers?limit={servers.limit}&offset={servers.last_offset}>; rel="last", '
+            last_offset = f'<{base_url}server/servers?limit={servers.limit}&offset={servers.last_offset}>; rel="last", '
             link += last_offset
 
         if servers.first_offset:
-            first_offset = f'<{base_url}support/servers?limit={servers.limit}&offset={servers.first_offset}>; rel="first"'
+            first_offset = f'<{base_url}server/servers?limit={servers.limit}&offset={servers.first_offset}>; rel="first"'
             link += first_offset
 
         response = JSONResponse(

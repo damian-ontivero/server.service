@@ -42,15 +42,15 @@ class OperatingSystemService:
         access_token: str | None = None,
         **kwargs,
     ) -> ServiceResponse:
-        """Returns all operating systems that match the provided conditions.
+        """Returns all OperatingSystems that match the provided conditions.
 
         If a `None` value is provided to limit, there will be no pagination.
 
-        If a `Zero` value is provided to limit, no OperatinSystem will be returned.
+        If a `Zero` value is provided to limit, no OperatingSystem will be returned.
 
         If a `None` value is provided to offset, the first offset will be returned.
 
-        If a `None` value is provided to kwargs, all operating systems will be returned.
+        If a `None` value is provided to kwargs, all OperatingSystems will be returned.
 
         Args:
             fields (`list[str]` | `None`): List of fields to return. Defaults to `None`.
@@ -60,7 +60,7 @@ class OperatingSystemService:
             access_token (`str` | `None`): Access token. Defaults to `None`.
 
         Returns:
-            `ServiceResponse`: Operating systems found.
+            `ServiceResponse`: OperatingSystems found.
         """
         if fields is None:
             fields = []
@@ -102,7 +102,7 @@ class OperatingSystemService:
         fields: list[str] | None = None,
         access_token: str | None = None,
     ) -> OperatingSystem:
-        """Returns the OperatinSystem that matches the provided id.
+        """Returns the OperatingSystem that matches the provided id.
 
         Args:
             id (`int`): OperatingSystem id.
@@ -110,17 +110,18 @@ class OperatingSystemService:
             access_token (`str` | `None`): Access token. Defaults to `None`.
 
         Raises:
-            `NotFound`: No OperatinSystem found with the provided id.
+            `NotFound`: No OperatingSystem found with the provided id.
 
         Returns:
             `OperatingSystem`: OperatingSystem found.
         """
+        if fields is None:
+            fields = []
+
         operating_system = self._repository.find_one(id=id, fields=fields)
 
         if operating_system is None:
-            raise NotFound(
-                "OperatingSystem with id {id!r} not found.".format(id=id)
-            )
+            raise NotFound(message=f"OperatingSystem with id {id} not found.")
 
         return operating_system
 
@@ -128,32 +129,41 @@ class OperatingSystemService:
     def add_one(
         self, data: dict, access_token: str | None = None
     ) -> OperatingSystem:
-        """Adds the provided OperatinSystem and publishes the OperatingSystem events.
+        """Adds the provided OperatingSystem and publishes the OperatingSystem events.
 
         Args:
-            data (`dict`): Dictionary with the OperatinSystem data.
+            data (`dict`): Dictionary with the OperatingSystem data.
             access_token (`str` | `None`): Access token. Defaults to `None`.
 
         Raises:
-            `AlreadyExists`: An OperatinSystem with the provided name already exists.
+            `AlreadyExists`: An OperatingSystem with the provided email already exists.
 
         Returns:
             `OperatingSystem`: OperatingSystem added.
         """
-        operating_system = OperatingSystem.create(**data)
+        operating_system = OperatingSystem.create(
+            name=data.get("name"),
+            version=data.get("version"),
+            architect=data.get("architect"),
+        )
+
         operating_systems = self._repository.find_many(
-            name="eq:{}".format(operating_system.name)
+            name="eq:{}".format(operating_system.name),
+            version="eq:{}".format(operating_system.version),
+            architect="eq:{}".format(operating_system.architect),
         )
 
         if operating_systems.total_items:
             raise AlreadyExists(
-                "OperatingSystem with name {name!r} already exists.".format(
-                    name=operating_system.name
+                "OperatingSystem with name: {name!r} version: {version!r} and architect: {architect!r} already exists".format(
+                    name=operating_system.name,
+                    version=operating_system.version,
+                    architect=operating_system.architect,
                 )
             )
 
         self._repository.add_one(aggregate=operating_system)
-        # self._message_bus.publish(domain_events=operating_system.domain_events)
+        self._message_bus.publish(domain_events=operating_system.domain_events)
         operating_system.clear_domain_events()
 
         return self._repository.find_one(id=operating_system.id)
@@ -162,16 +172,16 @@ class OperatingSystemService:
     def update_one(
         self, id: str, data: dict, access_token: str | None = None
     ) -> OperatingSystem:
-        """Updates the OperatinSystem that matches the provided id and publishes the events.
+        """Updates the OperatingSystem that matches the provided id and publishes the events.
 
         Args:
             id (`str`): OperatingSystem id.
-            data (`dict`): Dictionary with the OperatinSystem data.
+            data (`dict`): Dictionary with the OperatingSystem data.
             access_token (`str` | `None`): Access token. Defaults to `None`.
 
         Raises:
-            `NotFound`: No OperatinSystem found with the provided id.
-            `AlreadyExists`: A OperatinSystem with the provided name already exists.
+            `NotFound`: No OperatingSystem found with the provided id.
+            `AlreadyExists`: A OperatingSystem with the provided email already exists.
 
         Returns:
             `OperatingSystem`: OperatingSystem updated.
@@ -180,11 +190,14 @@ class OperatingSystemService:
 
         if operating_system is None:
             raise NotFound(
-                "OperatingSystem with id {id!r} not found.".format(id=id)
+                "OperatingSystem with id: {id!r} not found".format(id=id)
             )
 
-        for key, value in data.items():
-            setattr(operating_system, key, value)
+        operating_system = operating_system.update(
+            name=data.get("name"),
+            version=data.get("version"),
+            architect=data.get("architect"),
+        )
 
         self._repository.update_one(aggregate=operating_system)
         self._message_bus.publish(domain_events=operating_system.domain_events)
@@ -194,20 +207,20 @@ class OperatingSystemService:
 
     # @AuthService.access_token_required
     def discard_one(self, id: str, access_token: str | None = None) -> None:
-        """Discards the OperatinSystem that matches the provided id and publishes the events.
+        """Discards the OperatingSystem that matches the provided id and publishes the events.
 
         Args:
             id (`str`): OperatingSystem id.
             access_token (`str` | `None`): Access token. Defaults to `None`.
 
         Raises:
-            `NotFound`: No OperatinSystem found with the provided id.
+            `NotFound`: No OperatingSystem found with the provided id.
         """
         operating_system = self._repository.find_one(id=id)
 
         if operating_system is None:
             raise NotFound(
-                "OperatingSystem with id {id!r} not found.".format(id=id)
+                "OperatingSystem with id: {id!r} not found".format(id=id)
             )
 
         operating_system.discard()
@@ -218,20 +231,20 @@ class OperatingSystemService:
 
     # @AuthService.access_token_required
     def delete_one(self, id: str, access_token: str | None = None) -> None:
-        """Deletes the OperatinSystem that matches the provided id and publishes the events.
+        """Deletes the OperatingSystem that matches the provided id and publishes the events.
 
         Args:
             id (`str`): OperatingSystem id.
             access_token (`str` | `None`): Access token. Defaults to `None`.
 
         Raises:
-            `NotFound`: No OperatinSystem found with the provided id.
+            `NotFound`: No OperatingSystem found with the provided id.
         """
         operating_system = self._repository.find_one(id=id)
 
         if operating_system is None:
             raise NotFound(
-                "OperatingSystem with id {id!r} not found.".format(id=id)
+                "OperatingSystem with id: {id!r} not found".format(id=id)
             )
 
         self._repository.delete_one(id=id)

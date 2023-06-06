@@ -80,8 +80,6 @@ class ServerService:
         )
         total = servers.total_items
 
-        print("SERVERS: ", servers.items)
-
         return ServiceResponse(
             limit=limit,
             offset=(offset or 1),
@@ -115,10 +113,13 @@ class ServerService:
         Returns:
             `Server`: Server found.
         """
+        if fields is None:
+            fields = []
+
         server = self._repository.find_one(id=id, fields=fields)
 
         if server is None:
-            raise NotFound("Server with id {id!r} not found.".format(id=id))
+            raise NotFound(message=f"Server with id {id} not found.")
 
         return server
 
@@ -131,23 +132,33 @@ class ServerService:
             access_token (`str` | `None`): Access token. Defaults to `None`.
 
         Raises:
-            `AlreadyExists`: An Server with the provided name already exists.
+            `AlreadyExists`: An Server with the provided email already exists.
 
         Returns:
             `Server`: Server added.
         """
-        server = Server.create(**data)
+        server = Server.create(
+            name=data.get("name"),
+            cpu=data.get("cpu"),
+            ram=data.get("ram"),
+            hdd=data.get("hdd"),
+            environment_id=data.get("environment_id"),
+            operating_system_id=data.get("operating_system_id"),
+            credentials=data.get("credentials"),
+            applications=data.get("applications"),
+        )
+
         servers = self._repository.find_many(name="eq:{}".format(server.name))
 
         if servers.total_items:
             raise AlreadyExists(
-                "Server with name {name!r} already exists.".format(
+                "Server with name: {name!r} already exists".format(
                     name=server.name
                 )
             )
 
         self._repository.add_one(aggregate=server)
-        # self._message_bus.publish(domain_events=server.domain_events)
+        self._message_bus.publish(domain_events=server.domain_events)
         server.clear_domain_events()
 
         return self._repository.find_one(id=server.id)
@@ -165,7 +176,7 @@ class ServerService:
 
         Raises:
             `NotFound`: No Server found with the provided id.
-            `AlreadyExists`: A Server with the provided name already exists.
+            `AlreadyExists`: A Server with the provided email already exists.
 
         Returns:
             `Server`: Server updated.
@@ -173,10 +184,18 @@ class ServerService:
         server = self._repository.find_one(id=id)
 
         if server is None:
-            raise NotFound("Server with id {id!r} not found.".format(id=id))
+            raise NotFound("Server with id: {id!r} not found".format(id=id))
 
-        for key, value in data.items():
-            setattr(server, key, value)
+        server = server.update(
+            name=data.get("name"),
+            cpu=data.get("cpu"),
+            ram=data.get("ram"),
+            hdd=data.get("hdd"),
+            environment_id=data.get("environment_id"),
+            operating_system_id=data.get("operating_system_id"),
+            credentials=data.get("credentials"),
+            applications=data.get("applications"),
+        )
 
         self._repository.update_one(aggregate=server)
         self._message_bus.publish(domain_events=server.domain_events)
@@ -198,7 +217,7 @@ class ServerService:
         server = self._repository.find_one(id=id)
 
         if server is None:
-            raise NotFound("Server with id {id!r} not found.".format(id=id))
+            raise NotFound("Server with id: {id!r} not found".format(id=id))
 
         server.discard()
 
@@ -220,7 +239,7 @@ class ServerService:
         server = self._repository.find_one(id=id)
 
         if server is None:
-            raise NotFound("Server with id {id!r} not found.".format(id=id))
+            raise NotFound("Server with id: {id!r} not found".format(id=id))
 
         self._repository.delete_one(id=id)
         self._message_bus.publish(domain_events=server.domain_events)

@@ -42,7 +42,7 @@ class ConnectionTypeService:
         access_token: str | None = None,
         **kwargs,
     ) -> ServiceResponse:
-        """Returns all connection types that match the provided conditions.
+        """Returns all ConnectionTypes that match the provided conditions.
 
         If a `None` value is provided to limit, there will be no pagination.
 
@@ -50,7 +50,7 @@ class ConnectionTypeService:
 
         If a `None` value is provided to offset, the first offset will be returned.
 
-        If a `None` value is provided to kwargs, all connection types will be returned.
+        If a `None` value is provided to kwargs, all ConnectionTypes will be returned.
 
         Args:
             fields (`list[str]` | `None`): List of fields to return. Defaults to `None`.
@@ -60,7 +60,7 @@ class ConnectionTypeService:
             access_token (`str` | `None`): Access token. Defaults to `None`.
 
         Returns:
-            `ServiceResponse`: Connection types found.
+            `ServiceResponse`: ConnectionTypes found.
         """
         if fields is None:
             fields = []
@@ -115,12 +115,13 @@ class ConnectionTypeService:
         Returns:
             `ConnectionType`: ConnectionType found.
         """
+        if fields is None:
+            fields = []
+
         connection_type = self._repository.find_one(id=id, fields=fields)
 
         if connection_type is None:
-            raise NotFound(
-                "ConnectionType with id {id!r} not found.".format(id=id)
-            )
+            raise NotFound(message=f"ConnectionType with id {id} not found.")
 
         return connection_type
 
@@ -135,25 +136,26 @@ class ConnectionTypeService:
             access_token (`str` | `None`): Access token. Defaults to `None`.
 
         Raises:
-            `AlreadyExists`: A ConnectionType with the provided name already exists.
+            `AlreadyExists`: An ConnectionType with the provided email already exists.
 
         Returns:
             `ConnectionType`: ConnectionType added.
         """
-        connection_type = ConnectionType.create(**data)
+        connection_type = ConnectionType.create(name=data.get("name"))
+
         connection_types = self._repository.find_many(
             name="eq:{}".format(connection_type.name)
         )
 
         if connection_types.total_items:
             raise AlreadyExists(
-                "ConnectionType with name {name!r} already exists.".format(
+                "ConnectionType with name: {name!r} already exists".format(
                     name=connection_type.name
                 )
             )
 
         self._repository.add_one(aggregate=connection_type)
-        # self._message_bus.publish(domain_events=connection_type.domain_events)
+        self._message_bus.publish(domain_events=connection_type.domain_events)
         connection_type.clear_domain_events()
 
         return self._repository.find_one(id=connection_type.id)
@@ -171,7 +173,7 @@ class ConnectionTypeService:
 
         Raises:
             `NotFound`: No ConnectionType found with the provided id.
-            `AlreadyExists`: A ConnectionType with the provided name already exists.
+            `AlreadyExists`: A ConnectionType with the provided email already exists.
 
         Returns:
             `ConnectionType`: ConnectionType updated.
@@ -180,11 +182,10 @@ class ConnectionTypeService:
 
         if connection_type is None:
             raise NotFound(
-                "ConnectionType with id {id!r} not found.".format(id=id)
+                "ConnectionType with id: {id!r} not found".format(id=id)
             )
 
-        for key, value in data.items():
-            setattr(connection_type, key, value)
+        connection_type = connection_type.update(name=data.get("name"))
 
         self._repository.update_one(aggregate=connection_type)
         self._message_bus.publish(domain_events=connection_type.domain_events)
@@ -207,7 +208,7 @@ class ConnectionTypeService:
 
         if connection_type is None:
             raise NotFound(
-                "ConnectionType with id {id!r} not found.".format(id=id)
+                "ConnectionType with id: {id!r} not found".format(id=id)
             )
 
         connection_type.discard()
@@ -231,7 +232,7 @@ class ConnectionTypeService:
 
         if connection_type is None:
             raise NotFound(
-                "ConnectionType with id {id!r} not found.".format(id=id)
+                "ConnectionType with id: {id!r} not found".format(id=id)
             )
 
         self._repository.delete_one(id=id)

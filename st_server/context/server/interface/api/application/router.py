@@ -73,7 +73,7 @@ def get_application_service(
 @router.get("", response_model=list[ApplicationRead])
 def get_all(
     limit: int = Query(default=25),
-    offset: int = Query(default=1),
+    offset: int = Query(default=0),
     sort: list[str] | None = Query(default=None),
     filter: ApplicationQueryParameter = Depends(),
     fields: list[str] | None = Query(default=None),
@@ -99,19 +99,19 @@ def get_all(
         link = ""
 
         if applications.prev_offset:
-            prev_offset = f'<{base_url}support/applications?limit={applications.limit}&offset={applications.prev_offset}>; rel="prev", '
+            prev_offset = f'<{base_url}server/applications?limit={applications.limit}&offset={applications.prev_offset}>; rel="prev", '
             link += prev_offset
 
         if applications.next_offset:
-            next_offset = f'<{base_url}support/applications?limit={applications.limit}&offset={applications.next_offset}>; rel="next", '
+            next_offset = f'<{base_url}server/applications?limit={applications.limit}&offset={applications.next_offset}>; rel="next", '
             link += next_offset
 
         if applications.last_offset:
-            last_offset = f'<{base_url}support/applications?limit={applications.limit}&offset={applications.last_offset}>; rel="last", '
+            last_offset = f'<{base_url}server/applications?limit={applications.limit}&offset={applications.last_offset}>; rel="last", '
             link += last_offset
 
         if applications.first_offset:
-            first_offset = f'<{base_url}support/applications?limit={applications.limit}&offset={applications.first_offset}>; rel="first"'
+            first_offset = f'<{base_url}server/applications?limit={applications.limit}&offset={applications.first_offset}>; rel="first"'
             link += first_offset
 
         response = JSONResponse(

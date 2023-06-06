@@ -45,6 +45,9 @@ class ApplicationDbModel(db.Base):
         Returns:
             `dict`: Dictionary representation of the object.
         """
+        if exclude is None:
+            exclude = []
+
         data = {
             "id": self.id,
             "name": self.name,
@@ -53,13 +56,10 @@ class ApplicationDbModel(db.Base):
             "discarded": self.discarded,
         }
 
-        if exclude:
-            for attr in exclude:
-                del data[attr]
+        return {k: v for k, v in data.items() if k not in exclude}
 
-        return data
-
-    def from_dict(data: dict) -> "ApplicationDbModel":
+    @classmethod
+    def from_dict(cls, data: dict) -> "ApplicationDbModel":
         """Returns an instance of the class based on the provided dictionary.
 
         Args:
@@ -68,7 +68,7 @@ class ApplicationDbModel(db.Base):
         Returns:
             `ApplicationDbModel`: Instance of the class.
         """
-        return ApplicationDbModel(
+        return cls(
             id=data.get("id"),
             name=data.get("name"),
             version=data.get("version"),

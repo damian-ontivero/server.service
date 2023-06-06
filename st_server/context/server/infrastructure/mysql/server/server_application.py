@@ -50,6 +50,9 @@ class ServerApplicationDbModel(db.Base):
         Returns:
             `dict`: Dictionary representation of the object.
         """
+        if exclude is None:
+            exclude = []
+
         data = {
             "server_id": self.server_id,
             "application_id": self.application_id,
@@ -58,16 +61,18 @@ class ServerApplicationDbModel(db.Base):
             "application": self.application.to_dict(),
         }
 
-        if exclude:
-            for attr in exclude:
-                del data[attr]
+        return {k: v for k, v in data.items() if k not in exclude}
 
-        return data
-
-    def from_dict(data: dict) -> "ServerApplicationDbModel":
+    @classmethod
+    def from_dict(cls, data: dict) -> "ServerApplicationDbModel":
         """Returns an instance of the class based on the provided dictionary.
 
         Args:
             data (`dict`): Dictionary representation of the object.
         """
-        return ServerApplicationDbModel(**data)
+        return cls(
+            server_id=data.get("server_id"),
+            application_id=data.get("application_id"),
+            install_dir=data.get("install_dir"),
+            log_dir=data.get("log_dir"),
+        )

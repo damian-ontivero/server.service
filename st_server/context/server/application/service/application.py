@@ -113,6 +113,9 @@ class ApplicationService:
         Returns:
             `Application`: Application found.
         """
+        if fields is None:
+            fields = []
+
         application = self._repository.find_one(id=id, fields=fields)
 
         if application is None:
@@ -131,23 +134,34 @@ class ApplicationService:
             access_token (`str` | `None`): Access token. Defaults to `None`.
 
         Raises:
-            `AlreadyExists`: An Application with the provided name already exists.
+            `AlreadyExists`: An Application with the provided email already exists.
 
         Returns:
             `Application`: Application added.
         """
-        application = Application.create(**data)
+        application = Application.create(
+            name=data.get("name"),
+            version=data.get("version"),
+            architect=data.get("architect"),
+        )
+
         applications = self._repository.find_many(
-            name="eq:{}".format(application.name)
+            name="eq:{}".format(application.name),
+            version="eq:{}".format(application.version),
+            architect="eq:{}".format(application.architect),
         )
 
         if applications.total_items:
             raise AlreadyExists(
-                message=f"Application with name {application.name} already exists."
+                "Application with name: {name!r} version: {version!r} and architect: {architect!r} already exists".format(
+                    name=application.name,
+                    version=application.version,
+                    architect=application.architect,
+                )
             )
 
         self._repository.add_one(aggregate=application)
-        # self._message_bus.publish(domain_events=application.domain_events)
+        self._message_bus.publish(domain_events=application.domain_events)
         application.clear_domain_events()
 
         return self._repository.find_one(id=application.id)
@@ -165,7 +179,7 @@ class ApplicationService:
 
         Raises:
             `NotFound`: No Application found with the provided id.
-            `AlreadyExists`: A Application with the provided name already exists.
+            `AlreadyExists`: A Application with the provided email already exists.
 
         Returns:
             `Application`: Application updated.
@@ -173,10 +187,15 @@ class ApplicationService:
         application = self._repository.find_one(id=id)
 
         if application is None:
-            raise NotFound(message=f"Application with id {id} not found.")
+            raise NotFound(
+                "Application with id: {id!r} not found".format(id=id)
+            )
 
-        for key, value in data.items():
-            setattr(application, key, value)
+        application = application.update(
+            name=data.get("name"),
+            version=data.get("version"),
+            architect=data.get("architect"),
+        )
 
         self._repository.update_one(aggregate=application)
         self._message_bus.publish(domain_events=application.domain_events)
@@ -198,7 +217,9 @@ class ApplicationService:
         application = self._repository.find_one(id=id)
 
         if application is None:
-            raise NotFound(message=f"Application with id {id} not found.")
+            raise NotFound(
+                "Application with id: {id!r} not found".format(id=id)
+            )
 
         application.discard()
 
@@ -220,7 +241,9 @@ class ApplicationService:
         application = self._repository.find_one(id=id)
 
         if application is None:
-            raise NotFound(message=f"Application with id {id} not found.")
+            raise NotFound(
+                "Application with id: {id!r} not found".format(id=id)
+            )
 
         self._repository.delete_one(id=id)
         self._message_bus.publish(domain_events=application.domain_events)
