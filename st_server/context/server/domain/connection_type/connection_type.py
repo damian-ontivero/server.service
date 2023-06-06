@@ -11,6 +11,16 @@ from st_server.shared.core.entity_id import EntityId
 class ConnectionType(AggregateRoot):
     """ConnectionType entity."""
 
+    class Created(DomainEvent):
+        """Domain event for ConnectionType created."""
+
+        pass
+
+    class Discarded(DomainEvent):
+        """Domain event for ConnectionType discarded."""
+
+        pass
+
     class NameChanged(DomainEvent):
         """Domain event for name changed."""
 
@@ -22,10 +32,10 @@ class ConnectionType(AggregateRoot):
         name: str = None,
         discarded: bool | None = None,
     ) -> None:
-        """Constructor of the ConnectionType entity.
+        """Initializes a new instance of the ConnectionType entity.
 
         Important:
-            This constructor should not be used directly to generate the entity.
+            This initializer should not be used directly to generate the entity.
             It should be used only by the repository to instantiate the entity from the database.
 
             In order to create/generate/register a new ConnectionType, use the `ConnectionType.create` method.
@@ -53,11 +63,12 @@ class ConnectionType(AggregateRoot):
         Args:
             value (`str`): Name of the ConnectionType.
         """
+        self._check_not_discarded()
+
         if self._name == value:
             return
 
         domain_event = ConnectionType.NameChanged(
-            type_="updated",
             aggregate_id=self.id,
             old_value=self._name,
             new_value=value,
@@ -72,9 +83,10 @@ class ConnectionType(AggregateRoot):
         Returns:
             `str`: String representation of the object.
         """
-        return "{d}{c}(name={name!r})".format(
+        return "{d}{c}(id={id!r}, name={name!r})".format(
             d="*Discarded*" if self._discarded else "",
             c=self.__class__.__name__,
+            id=self._id.value,
             name=self._name,
         )
 
@@ -85,13 +97,13 @@ class ConnectionType(AggregateRoot):
             `dict`: Dictionary representation of the object.
         """
         return {
-            "id": self.id,
+            "id": self._id.value,
             "name": self._name,
             "discarded": self._discarded,
         }
 
-    @staticmethod
-    def from_dict(data: dict) -> "ConnectionType":
+    @classmethod
+    def from_dict(cls, data: dict) -> "ConnectionType":
         """Returns an instance of the class based on the provided dictionary.
 
         Args:
@@ -100,10 +112,14 @@ class ConnectionType(AggregateRoot):
         Returns:
             `ConnectionType`: New ConnectionType instance.
         """
-        return ConnectionType(**data)
+        return cls(
+            id=EntityId.from_string(value=data.get("id")),
+            name=data.get("name"),
+            discarded=data.get("discarded"),
+        )
 
-    @staticmethod
-    def create(name: str) -> "ConnectionType":
+    @classmethod
+    def create(cls, name: str) -> "ConnectionType":
         """ConnectionType factory method.
 
         Important:
@@ -117,17 +133,31 @@ class ConnectionType(AggregateRoot):
         Returns:
             `ConnectionType`: New ConnectionType instance.
         """
-        connection_type = ConnectionType(
-            id=EntityId().value,
+        connection_type = cls(
+            id=EntityId.generate(),
             name=name,
         )
 
-        domain_event = ConnectionType.Created(
-            type_="created", aggregate_id=connection_type.id
-        )
+        domain_event = ConnectionType.Created(aggregate_id=connection_type.id)
         connection_type.register_domain_event(domain_event=domain_event)
 
         return connection_type
+
+    def update(self, name: str | None = None) -> None:
+        """Updates the ConnectionType.
+
+        Important:
+            This method is only used to update a ConnectionType.
+            When updating the attributes, the domain events
+            are registered by setters.
+
+        Args:
+            name (`str`): ConnectionType name.
+        """
+        if name is not None:
+            self.name = name
+
+        return self
 
     def discard(self) -> None:
         """ConnectionType discard method.
@@ -137,9 +167,7 @@ class ConnectionType(AggregateRoot):
             When discarding a ConnectionType, the discarded attribute is set to True
             and a domain event is registered.
         """
-        domain_event = ConnectionType.Discarded(
-            type_="discarded", aggregate_id=self._id
-        )
+        domain_event = ConnectionType.Discarded(aggregate_id=self._id)
 
         self._discarded = True
         self.register_domain_event(domain_event=domain_event)

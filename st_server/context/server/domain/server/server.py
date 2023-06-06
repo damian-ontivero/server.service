@@ -19,6 +19,16 @@ from st_server.shared.core.entity_id import EntityId
 class Server(AggregateRoot):
     """Server entity."""
 
+    class Created(DomainEvent):
+        """Domain event for Server created."""
+
+        pass
+
+    class Discarded(DomainEvent):
+        """Domain event for Server discarded."""
+
+        pass
+
     class NameChanged(DomainEvent):
         """Domain event for name changed."""
 
@@ -72,10 +82,10 @@ class Server(AggregateRoot):
         applications: list[ServerApplication] | None = None,
         discarded: bool | None = None,
     ) -> None:
-        """Constructor of the server entity.
+        """Initializes a new instance of the Server class.
 
         Important:
-            This constructor should not be used directly to generate the entity.
+            This initializer should not be used directly to generate the entity.
             It should be used only by the repository to instantiate the entity from the database.
 
             In order to create/generate/register a new server, use the `Server.create` method.
@@ -118,11 +128,12 @@ class Server(AggregateRoot):
         Args:
             value (`str`): Name of the server.
         """
+        self._check_not_discarded()
+
         if self._name == value:
             return
 
         domain_event = Server.NameChanged(
-            type_="updated",
             aggregate_id=self.id,
             old_value=self._name,
             new_value=value,
@@ -147,11 +158,12 @@ class Server(AggregateRoot):
         Args:
             value (`str`): Cpu of the server.
         """
+        self._check_not_discarded()
+
         if self._cpu == value:
             return
 
         domain_event = Server.CpuChanged(
-            type_="updated",
             aggregate_id=self.id,
             old_value=self._cpu,
             new_value=value,
@@ -176,11 +188,12 @@ class Server(AggregateRoot):
         Args:
             value (`str`): Ram of the server.
         """
+        self._check_not_discarded()
+
         if self._ram == value:
             return
 
         domain_event = Server.RamChanged(
-            type_="updated",
             aggregate_id=self.id,
             old_value=self._ram,
             new_value=value,
@@ -205,11 +218,12 @@ class Server(AggregateRoot):
         Args:
             value (`str`): Hdd of the server.
         """
+        self._check_not_discarded()
+
         if self._hdd == value:
             return
 
         domain_event = Server.HddChanged(
-            type_="updated",
             aggregate_id=self.id,
             old_value=self._hdd,
             new_value=value,
@@ -234,11 +248,12 @@ class Server(AggregateRoot):
         Args:
             value (`EntityId`): Environment id of the server.
         """
+        self._check_not_discarded()
+
         if self._environment_id == value:
             return
 
         domain_event = Server.EnvironmentChanged(
-            type_="updated",
             aggregate_id=self.id,
             old_value=self._environment_id,
             new_value=value,
@@ -263,11 +278,12 @@ class Server(AggregateRoot):
         Args:
             value (`EntityId`): OperatingSystem id of the server.
         """
+        self._check_not_discarded()
+
         if self._operating_system_id == value:
             return
 
         domain_event = Server.OperatingSystemChanged(
-            type_="updated",
             aggregate_id=self.id,
             old_value=self._operating_system_id,
             new_value=value,
@@ -292,11 +308,12 @@ class Server(AggregateRoot):
         Args:
             value (`list[Credential]`): Credentials of the server.
         """
+        self._check_not_discarded()
+
         if self._credentials == value:
             return
 
         domain_event = Server.CredentialChanged(
-            type_="updated",
             aggregate_id=self.id,
             old_value=self._credentials,
             new_value=value,
@@ -321,11 +338,12 @@ class Server(AggregateRoot):
         Args:
             value (`list[ServerApplication]`): Applications of the server.
         """
+        self._check_not_discarded()
+
         if self._applications == value:
             return
 
         domain_event = Server.ApplicationChanged(
-            type_="updated",
             aggregate_id=self.id,
             old_value=self._applications,
             new_value=value,
@@ -351,13 +369,13 @@ class Server(AggregateRoot):
         ).format(
             d="*Discarded*" if self._discarded else "",
             c=self.__class__.__name__,
-            id=self.id,
+            id=self._id.value,
             name=self._name,
             cpu=self._cpu,
             ram=self._ram,
             hdd=self._hdd,
-            environment_id=self._environment_id,
-            operating_system_id=self._operating_system_id,
+            environment_id=self._environment_id.value,
+            operating_system_id=self._operating_system_id.value,
             credentials=self._credentials,
             applications=self._applications,
             discarded=self._discarded,
@@ -370,13 +388,13 @@ class Server(AggregateRoot):
             `dict`: Dictionary representation of the object.
         """
         return {
-            "id": self.id,
+            "id": self._id.value,
             "name": self._name,
             "cpu": self._cpu,
             "ram": self._ram,
             "hdd": self._hdd,
-            "environment_id": self._environment_id,
-            "operating_system_id": self._operating_system_id,
+            "environment_id": self._environment_id.value,
+            "operating_system_id": self._operating_system_id.value,
             "credentials": [
                 credential.to_dict() for credential in self._credentials
             ],
@@ -386,8 +404,8 @@ class Server(AggregateRoot):
             "discarded": self._discarded,
         }
 
-    @staticmethod
-    def from_dict(data: dict) -> "Server":
+    @classmethod
+    def from_dict(cls, data: dict) -> "Server":
         """Returns an instance of the class based on the provided dictionary.
 
         Args:
@@ -408,10 +426,26 @@ class Server(AggregateRoot):
                     for application in v
                 ]
 
-        return Server(**data)
+        return cls(
+            id=EntityId.from_string(value=data.get("id")),
+            name=data.get("name"),
+            cpu=data.get("cpu"),
+            ram=data.get("ram"),
+            hdd=data.get("hdd"),
+            environment_id=EntityId.from_string(
+                value=data.get("environment_id")
+            ),
+            operating_system_id=EntityId.from_string(
+                value=data.get("operating_system_id")
+            ),
+            credentials=data.get("credentials"),
+            applications=data.get("applications"),
+            discarded=data.get("discarded"),
+        )
 
-    @staticmethod
+    @classmethod
     def create(
+        cls,
         name: str,
         cpu: str,
         ram: str,
@@ -441,22 +475,78 @@ class Server(AggregateRoot):
         Returns:
             `Server`: New Server.
         """
-        server = Server(
-            id=EntityId().value,
+        server = cls(
+            id=EntityId.generate(),
             name=name,
             cpu=cpu,
             ram=ram,
             hdd=hdd,
-            environment_id=environment_id,
-            operating_system_id=operating_system_id,
+            environment_id=EntityId(value=environment_id),
+            operating_system_id=EntityId(value=operating_system_id),
             credentials=credentials or [],
             applications=applications or [],
         )
 
-        domain_event = Server.Created(type_="created", aggregate_id=server.id)
+        domain_event = Server.Created(aggregate_id=server.id)
         server.register_domain_event(domain_event=domain_event)
 
         return server
+
+    def update(
+        self,
+        name: str | None = None,
+        cpu: str | None = None,
+        ram: str | None = None,
+        hdd: str | None = None,
+        environment_id: EntityId | None = None,
+        operating_system_id: EntityId | None = None,
+        credentials: list[Credential] | None = None,
+        applications: list[ServerApplication] | None = None,
+    ) -> "Server":
+        """Server update method.
+
+        Important:
+            This method is only used to update a server.
+            When updating the attributes, the domain events
+            are registered by setters.
+
+        Args:
+            name (`str`): Server name.
+            cpu (`str`): Server cpu.
+            ram (`str`): Server ram.
+            hdd (`str`): Server hdd.
+            environment_id (`EntityId`): Server environment id.
+            operating_system_id (`EntityId`): Server OperatinSystem id.
+            credentials (`list[Credential]`): Server
+
+        Returns:
+            `Server`: Updated Server.
+        """
+        if name is not None:
+            self.name = name
+
+        if cpu is not None:
+            self.cpu = cpu
+
+        if ram is not None:
+            self.ram = ram
+
+        if hdd is not None:
+            self.hdd = hdd
+
+        if environment_id is not None:
+            self.environment_id = environment_id
+
+        if operating_system_id is not None:
+            self.operating_system_id = operating_system_id
+
+        if credentials is not None:
+            self.credentials = credentials
+
+        if applications is not None:
+            self.applications = applications
+
+        return self
 
     def discard(self) -> None:
         """Server discard method.
@@ -466,9 +556,7 @@ class Server(AggregateRoot):
             When discarding a server, the discarded attribute is set to True
             and a domain event is registered.
         """
-        domain_event = Server.Discarded(
-            type_="discarded", aggregate_id=self._id
-        )
+        domain_event = Server.Discarded(aggregate_id=self._id)
 
         self._discarded = True
         self.register_domain_event(domain_event=domain_event)
