@@ -2,6 +2,13 @@
 
 from dataclasses import asdict, dataclass
 
+from st_server.context.server.interface.api.environment.schema import (
+    EnvironmentRead,
+)
+from st_server.context.server.interface.api.operating_system.schema import (
+    OperatingSystemRead,
+)
+
 
 @dataclass
 class ServerBase:
@@ -10,7 +17,9 @@ class ServerBase:
     ram: str | None = None
     hdd: str | None = None
     environment_id: str | None = None
+    environment: EnvironmentRead | None = None
     operating_system_id: str | None = None
+    operating_system: OperatingSystemRead | None = None
     credentials: list | None = None
     applications: list | None = None
 

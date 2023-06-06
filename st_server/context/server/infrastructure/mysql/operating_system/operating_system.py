@@ -46,6 +46,9 @@ class OperatingSystemDbModel(db.Base):
         Returns:
             `dict`: Dictionary representation of the object.
         """
+        if exclude is None:
+            exclude = []
+
         data = {
             "id": self.id,
             "name": self.name,
@@ -54,13 +57,10 @@ class OperatingSystemDbModel(db.Base):
             "discarded": self.discarded,
         }
 
-        if exclude:
-            for attr in exclude:
-                del data[attr]
+        return {k: v for k, v in data.items() if k not in exclude}
 
-        return data
-
-    def from_dict(data: dict) -> "OperatingSystemDbModel":
+    @classmethod
+    def from_dict(cls, data: dict) -> "OperatingSystemDbModel":
         """Returns an instance of the class based on the provided dictionary.
 
         Args:
@@ -69,7 +69,7 @@ class OperatingSystemDbModel(db.Base):
         Returns:
             `OperatingSystemDbModel`: Instance of the class.
         """
-        return OperatingSystemDbModel(
+        return cls(
             id=data.get("id"),
             name=data.get("name"),
             version=data.get("version"),

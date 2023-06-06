@@ -55,6 +55,21 @@ class ApplicationRepository(Repository):
         Returns:
             `RepositoryResponse`: Applications found.
         """
+        if limit is None:
+            limit = 0
+
+        if offset is None:
+            offset = 0
+
+        if sort is None:
+            sort = []
+
+        if fields is None:
+            fields = []
+
+        if kwargs is None:
+            kwargs = {}
+
         with self._session as session:
             query = session.query(ApplicationDbModel)
 
@@ -79,7 +94,7 @@ class ApplicationRepository(Repository):
                     exclude.append(attr.key)
 
                 # If the attribute is in the kwargs, filter by it.
-                if kwargs and attr.key in kwargs:
+                if attr.key in kwargs:
                     op, val = kwargs[attr.key].split(":")
                     query = query.filter(
                         FILTER_OPERATOR_MAPPER[op](
@@ -94,15 +109,15 @@ class ApplicationRepository(Repository):
                 query = query.order_by(sorting())
 
             total = query.count()
-            query = query.limit(limit or total)
-            query = query.offset(((offset or 1) - 1) * (limit or total))
-            applications = query.all()
+            query = query.limit(limit=limit or total)
+            query = query.offset(offset=offset)
+            users = query.all()
 
             return RepositoryResponse(
                 total_items=total,
                 items=[
-                    Application.from_dict(application.to_dict(exclude=exclude))
-                    for application in applications
+                    Application.from_dict(user.to_dict(exclude=exclude))
+                    for user in users
                 ],
             )
 
@@ -120,6 +135,9 @@ class ApplicationRepository(Repository):
         Returns:
             `Application` | `None`: Application found.
         """
+        if fields is None:
+            fields = []
+
         with self._session as session:
             query = session.query(ApplicationDbModel).filter(
                 ApplicationDbModel.id == id
@@ -131,7 +149,7 @@ class ApplicationRepository(Repository):
                 if not fields:
                     query = query.options(joinedload("*"))
 
-                # Else if the attribute is in the fields, load it.
+                # If the attribute is in the fields, load it.
                 elif attr.key in fields:
                     if isinstance(attr, ColumnProperty):
                         query = query.options(
@@ -141,15 +159,15 @@ class ApplicationRepository(Repository):
                     if isinstance(attr, RelationshipProperty):
                         query = query.options(joinedload(attr))
 
-                # Else if the attribute is not in the fields, exclude it.
+                # If the attribute is not in the fields, exclude it.
                 else:
                     exclude.append(attr.key)
 
-            application = query.one_or_none()
+            user = query.one_or_none()
 
             return (
-                Application.from_dict(application.to_dict(exclude=exclude))
-                if application
+                Application.from_dict(user.to_dict(exclude=exclude))
+                if user
                 else None
             )
 

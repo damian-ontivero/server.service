@@ -4,12 +4,6 @@ import sqlalchemy as sa
 from sqlalchemy.orm import relationship
 
 from st_server.context.server.infrastructure.mysql import db
-from st_server.context.server.infrastructure.mysql.server.credential import (
-    CredentialDbModel,
-)
-from st_server.context.server.infrastructure.mysql.server.server_application import (
-    ServerApplicationDbModel,
-)
 
 
 class ServerDbModel(db.Base):
@@ -30,8 +24,14 @@ class ServerDbModel(db.Base):
     )
     discarded = sa.Column(sa.Boolean, nullable=False, default=False)
 
-    credentials = relationship(CredentialDbModel, lazy="noload")
-    applications = relationship(ServerApplicationDbModel, lazy="noload")
+    environment = relationship(
+        "EnvironmentDbModel", lazy="noload", viewonly=True
+    )
+    operating_system = relationship(
+        "OperatingSystemDbModel", lazy="noload", viewonly=True
+    )
+    credentials = relationship("CredentialDbModel", lazy="noload")
+    applications = relationship("ServerApplicationDbModel", lazy="noload")
 
     def __repr__(self) -> str:
         """Returns the string representation of the object.
@@ -41,8 +41,11 @@ class ServerDbModel(db.Base):
         """
         return (
             "{c}(id={id!r}, name={name!r}, cpu={cpu!r}, "
-            "ram={ram!r}, hdd={hdd!r}, environment_id={environment_id!r}, "
+            "ram={ram!r}, hdd={hdd!r}, "
+            "environment_id={environment_id!r}, "
+            "environment={environment!r}, "
             "operating_system_id={operating_system_id!r}, "
+            "operating_system={operating_system!r}, "
             "credentials={credentials!r}, "
             "applications={applications!r}, "
             "discarded={discarded!r})"
@@ -54,7 +57,9 @@ class ServerDbModel(db.Base):
             ram=self.ram,
             hdd=self.hdd,
             environment_id=self.environment_id,
+            environment=self.environment,
             operating_system_id=self.operating_system_id,
+            operating_system=self.operating_system,
             credentials=self.credentials,
             applications=self.applications,
             discarded=self.discarded,
@@ -69,6 +74,9 @@ class ServerDbModel(db.Base):
         Returns:
             `dict`: Dictionary representation of the object.
         """
+        if exclude is None:
+            exclude = []
+
         data = {
             "id": self.id,
             "name": self.name,
@@ -76,7 +84,13 @@ class ServerDbModel(db.Base):
             "ram": self.ram,
             "hdd": self.hdd,
             "environment_id": self.environment_id,
+            "environment": self.environment.to_dict()
+            if self.environment
+            else None,
             "operating_system_id": self.operating_system_id,
+            "operating_system": self.operating_system.to_dict()
+            if self.operating_system
+            else None,
             "credentials": [
                 credential.to_dict() for credential in self.credentials
             ],
@@ -86,13 +100,10 @@ class ServerDbModel(db.Base):
             "discarded": self.discarded,
         }
 
-        if exclude:
-            for attr in exclude:
-                del data[attr]
+        return {k: v for k, v in data.items() if k not in exclude}
 
-        return data
-
-    def from_dict(data: dict) -> "ServerDbModel":
+    @classmethod
+    def from_dict(cls, data: dict) -> "ServerDbModel":
         """Returns an instance of the class based on the provided dictionary.
 
         Args:
@@ -101,7 +112,7 @@ class ServerDbModel(db.Base):
         Returns:
             `ServerDbModel`: Instance of the class.
         """
-        return ServerDbModel(
+        return cls(
             id=data.get("id"),
             name=data.get("name"),
             cpu=data.get("cpu"),

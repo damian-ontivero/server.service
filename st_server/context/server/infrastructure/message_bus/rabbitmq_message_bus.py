@@ -27,7 +27,7 @@ class RabbitMQMessageBus(MessageBus):
                 host=host,
                 port=port,
                 credentials=pika.PlainCredentials(username, password),
-                virtual_host="support",
+                virtual_host="server",
             )
         )
 

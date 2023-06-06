@@ -40,15 +40,15 @@ class EnvironmentService:
         access_token: str | None = None,
         **kwargs,
     ) -> ServiceResponse:
-        """Returns all environments that match the provided conditions.
+        """Returns all Environments that match the provided conditions.
 
         If a `None` value is provided to limit, there will be no pagination.
 
-        If a `Zero` value is provided to limit, no environment will be returned.
+        If a `Zero` value is provided to limit, no Environment will be returned.
 
         If a `None` value is provided to offset, the first offset will be returned.
 
-        If a `None` value is provided to kwargs, all environments will be returned.
+        If a `None` value is provided to kwargs, all Environments will be returned.
 
         Args:
             fields (`list[str]` | `None`): List of fields to return. Defaults to `None`.
@@ -100,7 +100,7 @@ class EnvironmentService:
         fields: list[str] | None = None,
         access_token: str | None = None,
     ) -> Environment:
-        """Returns the environment that matches the provided id.
+        """Returns the Environment that matches the provided id.
 
         Args:
             id (`int`): Environment id.
@@ -108,11 +108,14 @@ class EnvironmentService:
             access_token (`str` | `None`): Access token. Defaults to `None`.
 
         Raises:
-            `NotFound`: No environment found with the provided id.
+            `NotFound`: No Environment found with the provided id.
 
         Returns:
             `Environment`: Environment found.
         """
+        if fields is None:
+            fields = []
+
         environment = self._repository.find_one(id=id, fields=fields)
 
         if environment is None:
@@ -124,30 +127,33 @@ class EnvironmentService:
     def add_one(
         self, data: dict, access_token: str | None = None
     ) -> Environment:
-        """Adds the provided environment and publishes the environment events.
+        """Adds the provided Environment and publishes the Environment events.
 
         Args:
-            data (`dict`): Dictionary with the environment data.
+            data (`dict`): Dictionary with the Environment data.
             access_token (`str` | `None`): Access token. Defaults to `None`.
 
         Raises:
-            `AlreadyExists`: An environment with the provided name already exists.
+            `AlreadyExists`: An Environment with the provided email already exists.
 
         Returns:
             `Environment`: Environment added.
         """
-        environment = Environment.create(**data)
+        environment = Environment.create(name=data.get("name"))
+
         environments = self._repository.find_many(
             name="eq:{}".format(environment.name)
         )
 
         if environments.total_items:
             raise AlreadyExists(
-                message=f"Environment with name {environment.name} already exists."
+                "Environment with name: {name!r} already exists".format(
+                    name=environment.name
+                )
             )
 
         self._repository.add_one(aggregate=environment)
-        # self._message_bus.publish(domain_events=environment.domain_events)
+        self._message_bus.publish(domain_events=environment.domain_events)
         environment.clear_domain_events()
 
         return self._repository.find_one(id=environment.id)
@@ -156,16 +162,16 @@ class EnvironmentService:
     def update_one(
         self, id: str, data: dict, access_token: str | None = None
     ) -> Environment:
-        """Updates the environment that matches the provided id and publishes the events.
+        """Updates the Environment that matches the provided id and publishes the events.
 
         Args:
             id (`str`): Environment id.
-            data (`dict`): Dictionary with the environment data.
+            data (`dict`): Dictionary with the Environment data.
             access_token (`str` | `None`): Access token. Defaults to `None`.
 
         Raises:
-            `NotFound`: No environment found with the provided id.
-            `AlreadyExists`: A environment with the provided name already exists.
+            `NotFound`: No Environment found with the provided id.
+            `AlreadyExists`: A Environment with the provided email already exists.
 
         Returns:
             `Environment`: Environment updated.
@@ -173,10 +179,11 @@ class EnvironmentService:
         environment = self._repository.find_one(id=id)
 
         if environment is None:
-            raise NotFound(message=f"Environment with id {id} not found.")
+            raise NotFound(
+                "Environment with id: {id!r} not found".format(id=id)
+            )
 
-        for key, value in data.items():
-            setattr(environment, key, value)
+        environment = environment.update(name=data.get("name"))
 
         self._repository.update_one(aggregate=environment)
         self._message_bus.publish(domain_events=environment.domain_events)
@@ -186,19 +193,21 @@ class EnvironmentService:
 
     # @AuthService.access_token_required
     def discard_one(self, id: str, access_token: str | None = None) -> None:
-        """Discards the environment that matches the provided id and publishes the events.
+        """Discards the Environment that matches the provided id and publishes the events.
 
         Args:
             id (`str`): Environment id.
             access_token (`str` | `None`): Access token. Defaults to `None`.
 
         Raises:
-            `NotFound`: No environment found with the provided id.
+            `NotFound`: No Environment found with the provided id.
         """
         environment = self._repository.find_one(id=id)
 
         if environment is None:
-            raise NotFound(message=f"Environment with id {id} not found.")
+            raise NotFound(
+                "Environment with id: {id!r} not found".format(id=id)
+            )
 
         environment.discard()
 
@@ -208,19 +217,21 @@ class EnvironmentService:
 
     # @AuthService.access_token_required
     def delete_one(self, id: str, access_token: str | None = None) -> None:
-        """Deletes the environment that matches the provided id and publishes the events.
+        """Deletes the Environment that matches the provided id and publishes the events.
 
         Args:
             id (`str`): Environment id.
             access_token (`str` | `None`): Access token. Defaults to `None`.
 
         Raises:
-            `NotFound`: No environment found with the provided id.
+            `NotFound`: No Environment found with the provided id.
         """
         environment = self._repository.find_one(id=id)
 
         if environment is None:
-            raise NotFound(message=f"Environment with id {id} not found.")
+            raise NotFound(
+                "Environment with id: {id!r} not found".format(id=id)
+            )
 
         self._repository.delete_one(id=id)
         self._message_bus.publish(domain_events=environment.domain_events)

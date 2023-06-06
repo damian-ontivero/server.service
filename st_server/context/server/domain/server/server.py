@@ -77,7 +77,9 @@ class Server(AggregateRoot):
         ram: str | None = None,
         hdd: str | None = None,
         environment_id: EntityId | None = None,
+        environment: Environment | None = None,
         operating_system_id: EntityId | None = None,
+        operating_system: OperatingSystem | None = None,
         credentials: list[Credential] | None = None,
         applications: list[ServerApplication] | None = None,
         discarded: bool | None = None,
@@ -108,7 +110,9 @@ class Server(AggregateRoot):
         self._ram = ram
         self._hdd = hdd
         self._environment_id = environment_id
+        self._environment = environment
         self._operating_system_id = operating_system_id
+        self._operating_system = operating_system
         self._credentials = credentials
         self._applications = applications
 
@@ -263,6 +267,15 @@ class Server(AggregateRoot):
         self.register_domain_event(domain_event=domain_event)
 
     @property
+    def environment(self) -> Environment:
+        """Returns the environment of the server.
+
+        Returns:
+            `Environment`: Environment of the server.
+        """
+        return self._environment
+
+    @property
     def operating_system_id(self) -> EntityId:
         """Returns the OperatinSystem id of the server.
 
@@ -291,6 +304,15 @@ class Server(AggregateRoot):
 
         self._operating_system_id = value
         self.register_domain_event(domain_event=domain_event)
+
+    @property
+    def operating_system(self) -> OperatingSystem:
+        """Returns the operating system of the server.
+
+        Returns:
+            `OperatingSystem`: Operating system of the server.
+        """
+        return self._operating_system
 
     @property
     def credentials(self) -> list[Credential]:
@@ -362,7 +384,9 @@ class Server(AggregateRoot):
             "{d}{c}(id={id!r}, name={name!r}, "
             "cpu={cpu!r}, ram={ram!r}, hdd={hdd!r}, "
             "environment_id={environment_id!r}, "
+            "environment={environment!r}, "
             "operating_system_id={operating_system_id!r}, "
+            "operating_system={operating_system!r}, "
             "credentials={credentials!r}, "
             "applications={applications!r}, "
             "discarded={discarded!r})"
@@ -375,7 +399,9 @@ class Server(AggregateRoot):
             ram=self._ram,
             hdd=self._hdd,
             environment_id=self._environment_id.value,
+            environment=self._environment,
             operating_system_id=self._operating_system_id.value,
+            operating_system=self._operating_system,
             credentials=self._credentials,
             applications=self._applications,
             discarded=self._discarded,
@@ -394,7 +420,13 @@ class Server(AggregateRoot):
             "ram": self._ram,
             "hdd": self._hdd,
             "environment_id": self._environment_id.value,
+            "environment": self._environment.to_dict()
+            if self._environment
+            else None,
             "operating_system_id": self._operating_system_id.value,
+            "operating_system": self._operating_system.to_dict()
+            if self._operating_system
+            else None,
             "credentials": [
                 credential.to_dict() for credential in self._credentials
             ],
@@ -414,17 +446,16 @@ class Server(AggregateRoot):
         Returns:
             `Server`: New Server instance.
         """
-        for k, v in data.items():
-            if k == "credentials":
-                data[k] = [
-                    Credential.from_dict(data=credential) for credential in v
-                ]
-
-            elif k == "applications":
-                data[k] = [
-                    ServerApplication.from_dict(data=application)
-                    for application in v
-                ]
+        environment = (
+            Environment.from_dict(data=data.get("environment"))
+            if data.get("environment")
+            else None
+        )
+        operating_system = (
+            OperatingSystem.from_dict(data=data.get("operating_system"))
+            if data.get("operating_system")
+            else None
+        )
 
         return cls(
             id=EntityId.from_string(value=data.get("id")),
@@ -435,9 +466,11 @@ class Server(AggregateRoot):
             environment_id=EntityId.from_string(
                 value=data.get("environment_id")
             ),
+            environment=environment,
             operating_system_id=EntityId.from_string(
                 value=data.get("operating_system_id")
             ),
+            operating_system=operating_system,
             credentials=data.get("credentials"),
             applications=data.get("applications"),
             discarded=data.get("discarded"),

@@ -75,7 +75,7 @@ def get_connection_type_service(
 @router.get("", response_model=list[ConnectionTypeRead])
 def get_all(
     limit: int = Query(default=25),
-    offset: int = Query(default=1),
+    offset: int = Query(default=0),
     sort: list[str] | None = Query(default=None),
     filter: ConnectionTypeQueryParameter = Depends(),
     fields: list[str] | None = Query(default=None),
@@ -103,19 +103,19 @@ def get_all(
         link = ""
 
         if connection_types.prev_offset:
-            prev_offset = f'<{base_url}support/connection-types?limit={connection_types.limit}&offset={connection_types.prev_offset}>; rel="prev", '
+            prev_offset = f'<{base_url}server/connection-types?limit={connection_types.limit}&offset={connection_types.prev_offset}>; rel="prev", '
             link += prev_offset
 
         if connection_types.next_offset:
-            next_offset = f'<{base_url}support/connection-types?limit={connection_types.limit}&offset={connection_types.next_offset}>; rel="next", '
+            next_offset = f'<{base_url}server/connection-types?limit={connection_types.limit}&offset={connection_types.next_offset}>; rel="next", '
             link += next_offset
 
         if connection_types.last_offset:
-            last_offset = f'<{base_url}support/connection-types?limit={connection_types.limit}&offset={connection_types.last_offset}>; rel="last", '
+            last_offset = f'<{base_url}server/connection-types?limit={connection_types.limit}&offset={connection_types.last_offset}>; rel="last", '
             link += last_offset
 
         if connection_types.first_offset:
-            first_offset = f'<{base_url}support/connection-types?limit={connection_types.limit}&offset={connection_types.first_offset}>; rel="first"'
+            first_offset = f'<{base_url}server/connection-types?limit={connection_types.limit}&offset={connection_types.first_offset}>; rel="first"'
             link += first_offset
 
         response = JSONResponse(
