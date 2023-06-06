@@ -40,11 +40,36 @@ class RabbitMQMessageBus(MessageBus):
             domain_events (`list[DomainEvent]`): Domain events to publish.
         """
         for domain_event in domain_events:
-            qualname = domain_event.__class__.__qualname__
+            """
+            Exchange:
+                Aggregate root which published the event.
+                    User.FirstNameChanged -> user
+
+            Routing key:
+                If the domain event is a property changed event:
+                    User.FirstNameChanged -> firstname.changed
+
+                If the domain event is not a property changed event:
+                    User.Created -> created
+
+            Body:
+                User.FirstNameChanged -> {
+                    "occurred_on": "2023-06-05 22:06:19.683588",
+                    "aggregate_id": "3af25ebdf13a421080910ef6b4b8b474",
+                    "old_value": "John",
+                    "new_value": "Johny"
+                }
+            """
+            aggregate, event = domain_event.__class__.__qualname__.split(".")
+            routing_key = (
+                ".".join([event.lower()[:-7], event.lower()[-7:]])
+                if "Changed" in event
+                else event.lower()
+            )
 
             self._channel.basic_publish(
-                exchange=qualname.split(".")[0].lower(),
-                routing_key=domain_event.__dict__["type_"],
+                exchange=aggregate.lower(),
+                routing_key=routing_key,
                 body=json.dumps(domain_event.__dict__, default=str),
             )
 

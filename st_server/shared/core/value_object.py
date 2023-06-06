@@ -1,29 +1,15 @@
-"""Base class for domain events."""
+"""Abstract base class for value objects."""
 
+from abc import ABCMeta
 from typing import Any
 
-from st_server.shared.helper.time import now
 
+class ValueObject(metaclass=ABCMeta):
+    """Abstract base class for value objects.
 
-class DomainEvent:
-    """Base class for domain events.
-
-    Domain Events are value objects that represent something that happened in
-    the domain. They are used to notify other parts of the application about
-    something that happened in the domain.
-
-    Attributes are specified as keyword arguments and can be added
-    but not modified. This is to ensure that the domain events are immutable.
+    Value objects are immutable objects that represent a concept in the domain.
+    They are used to encapsulate data and behavior that belongs together.
     """
-
-    def __init__(self, **kwargs) -> None:
-        """Initializes a new instance of the DomainEvent class.
-
-        Args:
-            **kwargs: Arbitrary keyword arguments.
-        """
-        self.__dict__["occurred_on"] = now()
-        self.__dict__.update(kwargs)
 
     def __setattr__(self, name: str, value: Any) -> None:
         """Sets an attribute.
@@ -33,12 +19,9 @@ class DomainEvent:
             value (`Any`): Attribute value.
 
         Raises:
-            `AttributeError`: If the attribute already exists.
+            `AttributeError`: Always raised.
         """
-        if hasattr(self, name):
-            raise AttributeError("Attributes can be added but not modified")
-
-        self.__dict__[name] = value
+        raise AttributeError("Value objects are immutable")
 
     def __eq__(self, rhs: Any) -> bool:
         """Compares two objects based on their values.
@@ -54,11 +37,22 @@ class DomainEvent:
 
         return self.__dict__ == rhs.__dict__
 
+    def __ne__(self, rhs: Any) -> bool:
+        """Compares two objects based on their values.
+
+        Args:
+            rhs (`Any`): Right hand side object to compare.
+
+        Returns:
+            `bool`: True if both objects are not equal.
+        """
+        return not self.__eq__(rhs)
+
     def __hash__(self) -> int:
         """Returns the hash value of the object.
 
         Returns:
-            `int`: Hash value of the object.
+            `int`: Hash value.
         """
         return hash(tuple(sorted(self.__dict__.items())))
 

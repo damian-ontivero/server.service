@@ -11,6 +11,16 @@ from st_server.shared.core.entity_id import EntityId
 class Environment(AggregateRoot):
     """Environment entity."""
 
+    class Created(DomainEvent):
+        """Domain event for Environment created."""
+
+        pass
+
+    class Discarded(DomainEvent):
+        """Domain event for Environment discarded."""
+
+        pass
+
     class NameChanged(DomainEvent):
         """Domain event for name changed."""
 
@@ -22,10 +32,10 @@ class Environment(AggregateRoot):
         name: str = None,
         discarded: bool | None = None,
     ) -> None:
-        """Constructor of the environment entity.
+        """Initializes a new instance of the Environment class.
 
         Important:
-            This constructor should not be used directly to generate the entity.
+            This initializer should not be used directly to generate the entity.
             It should be used only by the repository to instantiate the entity from the database.
 
             In order to create/generate/register a new environment, use the `Environment.create` method.
@@ -53,11 +63,12 @@ class Environment(AggregateRoot):
         Args:
             value (`str`): Name of the environment.
         """
+        self._check_not_discarded()
+
         if self._name == value:
             return
 
         domain_event = Environment.NameChanged(
-            type_="updated",
             aggregate_id=self._id,
             name=value,
         )
@@ -71,9 +82,10 @@ class Environment(AggregateRoot):
         Returns:
             `str`: String representation of the object.
         """
-        return "{d}{c}(name={name!r})".format(
+        return "{d}{c}(id={id!r}, name={name!r})".format(
             d="*Discarded*" if self._discarded else "",
             c=self.__class__.__name__,
+            id=self._id.value,
             name=self._name,
         )
 
@@ -84,13 +96,13 @@ class Environment(AggregateRoot):
             `dict`: Dictionary representation of the object.
         """
         return {
-            "id": self.id,
+            "id": self._id.value,
             "name": self._name,
             "discarded": self._discarded,
         }
 
-    @staticmethod
-    def from_dict(data: dict) -> "Environment":
+    @classmethod
+    def from_dict(cls, data: dict) -> "Environment":
         """Returns an instance of the class based on the provided dictionary.
 
         Args:
@@ -99,10 +111,14 @@ class Environment(AggregateRoot):
         Returns:
             `Environment`: New Environment instance.
         """
-        return Environment(**data)
+        return cls(
+            id=EntityId.from_string(value=data["id"]),
+            name=data.get("name"),
+            discarded=data.get("discarded"),
+        )
 
-    @staticmethod
-    def create(name: str) -> "Environment":
+    @classmethod
+    def create(cls, name: str) -> "Environment":
         """Environment factory method.
 
         Important:
@@ -116,17 +132,31 @@ class Environment(AggregateRoot):
         Returns:
             `Environment`: New Environment.
         """
-        environment = Environment(
-            id=EntityId().value,
+        environment = cls(
+            id=EntityId.generate(),
             name=name,
         )
 
-        domain_event = Environment.Created(
-            type_="created", aggregate_id=environment.id
-        )
+        domain_event = Environment.Created(aggregate_id=environment.id)
         environment.register_domain_event(domain_event=domain_event)
 
         return environment
+
+    def update(self, name: str | None = None) -> None:
+        """Environment update method.
+
+        Important:
+            This method is only used to update a environment.
+            When updating the attributes, the domain events
+            are registered by setters.
+
+        Args:
+            name (`str`): Environment name.
+        """
+        if name is not None:
+            self.name = name
+
+        return self
 
     def discard(self) -> None:
         """Environment discard method.
@@ -136,9 +166,7 @@ class Environment(AggregateRoot):
             When discarding a environment, the discarded attribute is set to True
             and a domain event is registered.
         """
-        domain_event = Environment.Discarded(
-            type_="discarded", aggregate_id=self._id
-        )
+        domain_event = Environment.Discarded(aggregate_id=self._id)
 
         self._discarded = True
         self.register_domain_event(domain_event=domain_event)

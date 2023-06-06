@@ -17,7 +17,7 @@ class ServerApplication:
         log_dir: str | None = None,
         application: Application | None = None,
     ) -> None:
-        """Constructor of the relationship.
+        """Initializes a new instance of the ServerApplication class.
 
         Args:
             server_id (`EntityId`): Server id of the relationship.
@@ -133,8 +133,8 @@ class ServerApplication:
             "install_dir={install_dir!r}, log_dir={log_dir!r}, application={application!r})"
         ).format(
             c=self.__class__.__name__,
-            server_id=self._server_id,
-            application_id=self._application_id,
+            server_id=self._server_id.value,
+            application_id=self._application_id.value,
             install_dir=self._install_dir,
             log_dir=self._log_dir,
             application=self._application,
@@ -147,15 +147,15 @@ class ServerApplication:
             `dict`: Dictionary representation of the object.
         """
         return {
-            "server_id": self._server_id,
-            "application_id": self._application_id,
+            "server_id": self._server_id.value,
+            "application_id": self._application_id.value,
             "install_dir": self._install_dir,
             "log_dir": self._log_dir,
             "application": self._application.to_dict(),
         }
 
-    @staticmethod
-    def from_dict(data: dict) -> "ServerApplication":
+    @classmethod
+    def from_dict(cls, data: dict) -> "ServerApplication":
         """Returns an instance of the class based on the provided dictionary.
 
         Args:
@@ -168,4 +168,12 @@ class ServerApplication:
             if k == "application":
                 data[k] = Application.from_dict(data=v)
 
-        return ServerApplication(**data)
+        return cls(
+            server_id=EntityId.from_string(value=data.get("server_id")),
+            application_id=EntityId.from_string(
+                value=data.get("application_id")
+            ),
+            install_dir=data.get("install_dir"),
+            log_dir=data.get("log_dir"),
+            application=data.get("application"),
+        )

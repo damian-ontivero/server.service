@@ -28,7 +28,7 @@ def validate_pagination(func):
 
         if offset is not None:
             try:
-                assert int(offset) >= 1
+                assert int(offset) >= 0
 
             except ValueError:
                 raise PaginationError(
@@ -37,7 +37,7 @@ def validate_pagination(func):
 
             except AssertionError:
                 raise PaginationError(
-                    "The offset number cannot be less than 1"
+                    "The offset number cannot be less than 0"
                 )
 
         return func(*args, **kwargs)

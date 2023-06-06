@@ -1,78 +1,53 @@
 """Value object that represents the entity id."""
 
-from typing import Any
 from uuid import uuid4
 
+from st_server.shared.core.value_object import ValueObject
 
-class EntityId:
+
+class EntityId(ValueObject):
     """Value object that represents the entity id."""
 
-    def __init__(self, value: str = None) -> None:
-        """Constructor.
+    @classmethod
+    def generate(cls) -> "EntityId":
+        """Generates a new entity id.
+
+        Important:
+            This method is used to create new entity id instances.
+
+        Returns:
+            `EntityId`: New entity id.
+        """
+        return cls(value=uuid4().hex)
+
+    @classmethod
+    def from_string(cls, value: str) -> "EntityId":
+        """Creates an entity id from string.
+
+        Important:
+            This method is used to create new entity id instance.
 
         Args:
-            value (`str`): Entity id. Defaults to None.
-        """
-        if value is None:
-            value = uuid4().hex
+            value (`str`): Entity id value.
 
-        self._value = value
+        Returns:
+            `EntityId`: New entity id instance.
+        """
+        return cls(value=value)
+
+    def __init__(self, value: str) -> None:
+        """Initializes a new instance of the EntityId class.
+
+        Args:
+            value (`str`): Entity id value. Defaults to None.
+        """
+        self.__dict__["value"] = value
 
     @property
     def value(self) -> str:
-        """Returns the entity id.
+        """Returns the entity id value.
 
         Returns:
-            `str`: Entity id.
+            `str`: Entity id value.
         """
-        return self._value
-
-    @value.setter
-    def value(self, value: str) -> None:
-        """Raises an exception.
-
-        Raises:
-            `AttributeError`: The value attribute is read-only.
-        """
-        raise AttributeError("The value attribute is read-only.")
-
-    def __eq__(self, rhs: Any) -> bool:
-        """Compares two objects based on their values.
-
-        Args:
-            rhs (`Any`): Right hand side object to compare.
-
-        Returns:
-            `bool`: True if both objects are equal.
-        """
-        if not isinstance(rhs, self.__class__):
-            return NotImplemented
-
-        return self._value == rhs._value
-
-    def __hash__(self) -> int:
-        """Returns the hash value of the object.
-
-        Returns:
-            `int`: Hash value of the object.
-        """
-        return hash((self.__class__.__name__, self._value))
-
-    def __repr__(self) -> str:
-        """Returns the string representation of the object.
-
-        Returns:
-            `str`: String representation of the object.
-        """
-        return "{c}(value={value})".format(
-            c=self.__class__.__name__,
-            value=self._value,
-        )
-
-    def __dict__(self) -> dict:
-        """Returns the dictionary representation of the object.
-
-        Returns:
-            `dict`: Dictionary representation of the object.
-        """
-        return {"value": self._value}
+        return self.__dict__["value"]

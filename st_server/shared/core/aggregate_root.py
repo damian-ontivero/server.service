@@ -16,7 +16,7 @@ class AggregateRoot(Entity):
     """
 
     def __init__(self, id: EntityId, discarded: bool = False) -> None:
-        """Initializes the aggregate root.
+        """Initializes a new instance of the AggregateRoot class.
 
         Args:
             id (`EntityId`): Aggregate root Id.
