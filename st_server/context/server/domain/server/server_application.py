@@ -28,7 +28,7 @@ class ServerApplication:
         self._application = application
 
     @property
-    def server_id(self) -> str:
+    def server_id(self) -> EntityId:
         return self._server_id
 
     @server_id.setter
@@ -73,20 +73,20 @@ class ServerApplication:
             "install_dir={install_dir!r}, log_dir={log_dir!r}, application={application!r})"
         ).format(
             c=self.__class__.__name__,
-            server_id=self._server_id.value,
-            application_id=self._application_id.value,
-            install_dir=self._install_dir,
-            log_dir=self._log_dir,
-            application=self._application,
+            server_id=self.server_id,
+            application_id=self.application_id,
+            install_dir=self.install_dir,
+            log_dir=self.log_dir,
+            application=self.application,
         )
 
     def to_dict(self) -> dict:
         return {
-            "server_id": self._server_id.value,
-            "application_id": self._application_id.value,
-            "install_dir": self._install_dir,
-            "log_dir": self._log_dir,
-            "application": self._application.to_dict(),
+            "server_id": self.server_id.value,
+            "application_id": self.application_id.value,
+            "install_dir": self.install_dir,
+            "log_dir": self.log_dir,
+            "application": self.application.to_dict(),
         }
 
     @classmethod

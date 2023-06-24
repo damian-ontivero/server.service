@@ -42,25 +42,29 @@ class Environment(AggregateRoot):
     def name(self, value: str) -> None:
         self._check_not_discarded()
         domain_event = Environment.NameChanged(
-            aggregate_id=self._id,
-            name=value,
+            aggregate_id=self.id.value,
+            old_value=self.name,
+            new_value=value,
         )
         self._name = value
         self.register_domain_event(domain_event=domain_event)
 
     def __repr__(self) -> str:
-        return "{d}{c}(id={id!r}, name={name!r})".format(
-            d="*Discarded*" if self._discarded else "",
-            c=self.__class__.__name__,
-            id=self._id.value,
-            name=self._name,
+        return (
+            "{d}{c}(id={id!r}, name={name!r}, discarded={discarded!r})".format(
+                d="*Discarded*" if self.discarded else "",
+                c=self.__class__.__name__,
+                id=self.id,
+                name=self.name,
+                discarded=self.discarded,
+            )
         )
 
     def to_dict(self) -> dict:
         return {
-            "id": self._id.value,
-            "name": self._name,
-            "discarded": self._discarded,
+            "id": self.id.value,
+            "name": self.name,
+            "discarded": self.discarded,
         }
 
     @classmethod
@@ -99,6 +103,6 @@ class Environment(AggregateRoot):
         return self
 
     def discard(self) -> None:
-        domain_event = Environment.Discarded(aggregate_id=self._id)
-        self._discarded = True
+        domain_event = Environment.Discarded(aggregate_id=self.id.value)
+        self.discarded = True
         self.register_domain_event(domain_event=domain_event)

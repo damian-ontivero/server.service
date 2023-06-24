@@ -89,8 +89,8 @@ class Server(AggregateRoot):
     def name(self, value: str) -> None:
         self._check_not_discarded()
         domain_event = Server.NameChanged(
-            aggregate_id=self._id.value,
-            old_value=self._name,
+            aggregate_id=self.id.value,
+            old_value=self.name,
             new_value=value,
         )
         self._name = value
@@ -104,8 +104,8 @@ class Server(AggregateRoot):
     def cpu(self, value: str) -> None:
         self._check_not_discarded()
         domain_event = Server.CpuChanged(
-            aggregate_id=self._id.value,
-            old_value=self._cpu,
+            aggregate_id=self.id.value,
+            old_value=self.cpu,
             new_value=value,
         )
         self._cpu = value
@@ -119,8 +119,8 @@ class Server(AggregateRoot):
     def ram(self, value: str) -> None:
         self._check_not_discarded()
         domain_event = Server.RamChanged(
-            aggregate_id=self._id.value,
-            old_value=self._ram,
+            aggregate_id=self.id.value,
+            old_value=self.ram,
             new_value=value,
         )
         self._ram = value
@@ -134,27 +134,26 @@ class Server(AggregateRoot):
     def hdd(self, value: str) -> None:
         self._check_not_discarded()
         domain_event = Server.HddChanged(
-            aggregate_id=self._id.value,
-            old_value=self._hdd,
+            aggregate_id=self.id.value,
+            old_value=self.hdd,
             new_value=value,
         )
         self._hdd = value
         self.register_domain_event(domain_event=domain_event)
 
     @property
-    def environment_id(self) -> str:
-        return self._environment_id.value
+    def environment_id(self) -> EntityId:
+        return self._environment_id
 
     @environment_id.setter
-    def environment_id(self, value: str) -> None:
+    def environment_id(self, value: EntityId) -> None:
         self._check_not_discarded()
-        environment_id = EntityId.from_string(value=value)
         domain_event = Server.EnvironmentChanged(
-            aggregate_id=self._id.value,
-            old_value=self._environment_id.value,
-            new_value=environment_id.value,
+            aggregate_id=self.id.value,
+            old_value=self.environment_id.__dict__,
+            new_value=value.__dict__,
         )
-        self._environment_id = environment_id
+        self._environment_id = value
         self.register_domain_event(domain_event=domain_event)
 
     @property
@@ -162,19 +161,18 @@ class Server(AggregateRoot):
         return self._environment
 
     @property
-    def operating_system_id(self) -> str:
-        return self._operating_system_id.value
+    def operating_system_id(self) -> EntityId:
+        return self._operating_system_id
 
     @operating_system_id.setter
-    def operating_system_id(self, value: str) -> None:
+    def operating_system_id(self, value: EntityId) -> None:
         self._check_not_discarded()
-        operating_system_id = EntityId.from_string(value=value)
         domain_event = Server.OperatingSystemChanged(
             aggregate_id=self._id.value,
-            old_value=self._operating_system_id.value,
-            new_value=operating_system_id.value,
+            old_value=self.operating_system_id.__dict__,
+            new_value=value.__dict__,
         )
-        self._operating_system_id = operating_system_id
+        self._operating_system_id = value
         self.register_domain_event(domain_event=domain_event)
 
     @property
@@ -223,44 +221,44 @@ class Server(AggregateRoot):
             "applications={applications!r}, "
             "discarded={discarded!r})"
         ).format(
-            d="*Discarded*" if self._discarded else "",
+            d="*Discarded*" if self.discarded else "",
             c=self.__class__.__name__,
-            id=self._id.value,
-            name=self._name,
-            cpu=self._cpu,
-            ram=self._ram,
-            hdd=self._hdd,
-            environment_id=self._environment_id.value,
-            environment=self._environment,
-            operating_system_id=self._operating_system_id.value,
-            operating_system=self._operating_system,
-            credentials=self._credentials,
-            applications=self._applications,
-            discarded=self._discarded,
+            id=self.id,
+            name=self.name,
+            cpu=self.cpu,
+            ram=self.ram,
+            hdd=self.hdd,
+            environment_id=self.environment_id,
+            environment=self.environment,
+            operating_system_id=self.operating_system_id,
+            operating_system=self.operating_system,
+            credentials=self.credentials,
+            applications=self.applications,
+            discarded=self.discarded,
         )
 
     def to_dict(self) -> dict:
         return {
-            "id": self._id.value,
-            "name": self._name,
-            "cpu": self._cpu,
-            "ram": self._ram,
-            "hdd": self._hdd,
-            "environment_id": self._environment_id.value,
-            "environment": self._environment.to_dict()
-            if self._environment
+            "id": self.id.value,
+            "name": self.name,
+            "cpu": self.cpu,
+            "ram": self.ram,
+            "hdd": self.hdd,
+            "environment_id": self.environment_id.value,
+            "environment": self.environment.to_dict()
+            if self.environment
             else None,
-            "operating_system_id": self._operating_system_id.value,
-            "operating_system": self._operating_system.to_dict()
-            if self._operating_system
+            "operating_system_id": self.operating_system_id.value,
+            "operating_system": self.operating_system.to_dict()
+            if self.operating_system
             else None,
             "credentials": [
-                credential.to_dict() for credential in self._credentials
+                credential.to_dict() for credential in self.credentials
             ],
             "applications": [
-                application.to_dict() for application in self._applications
+                application.to_dict() for application in self.applications
             ],
-            "discarded": self._discarded,
+            "discarded": self.discarded,
         }
 
     @classmethod
@@ -371,6 +369,6 @@ class Server(AggregateRoot):
             When discarding a server, the discarded attribute is set to True
             and a domain event is registered.
         """
-        domain_event = Server.Discarded(aggregate_id=self._id)
-        self._discarded = True
+        domain_event = Server.Discarded(aggregate_id=self.id.value)
+        self.discarded = True
         self.register_domain_event(domain_event=domain_event)
