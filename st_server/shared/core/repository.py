@@ -18,7 +18,40 @@ FILTER_OPERATOR_MAPPER = {
 
 
 class Repository(metaclass=ABCMeta):
-    """Repository interface."""
+    """Repository interface.
+
+    Repositories are responsible for retrieving and storing aggregates.
+
+    In the `find_many` method, the `kwargs` parameter is a dictionary of filters. The
+    key is the field name and the value is a string with the filter operator and
+    the value separated by a colon.
+
+    The available filter operators are:
+    - `eq`: equal
+    - `gt`: greater than
+    - `ge`: greater than or equal
+    - `lt`: less than
+    - `le`: less than or equal
+    - `in`: in
+    - `btw`: between
+    - `lk`: like
+
+        Example: `{"name": "lk:John"}`
+
+    In the `find_many` method, the `sort` parameter is a list of strings with the
+    field name and the sort criteria separated by a colon.
+
+    The available sort criteria are:
+    - asc: ascending
+    - desc: descending
+
+        Example: `["name:asc", "age:desc"]`
+
+    If a `None` value is provided to limit, there will be no pagination.
+    If a `Zero` value is provided to limit, no aggregates will be returned.
+    If a `None` value is provided to offset, the first offset will be returned.
+    If a `None` value is provided to kwargs, all aggregates will be returned.
+    """
 
     @abstractmethod
     def find_many(
@@ -29,67 +62,24 @@ class Repository(metaclass=ABCMeta):
         fields: list[str] | None = None,
         **kwargs,
     ) -> RepositoryResponse:
-        """Returns all aggregates that match the provided conditions.
-
-        If a `None` value is provided to limit, there will be no pagination.
-
-        If a `Zero` value is provided to limit, no aggregates will be returned.
-
-        If a `None` value is provided to offset, the first offset will be returned.
-
-        If a `None` value is provided to kwargs, all aggregates will be returned.
-
-        Args:
-            limit (`int` | `None`): Number of records per offset. Defaults to `None`.
-            offset (`int` | `None`): Offset number. Defaults to `None`.
-            sort (`list[str]` | `None`): Sort criteria. Defaults to `None`.
-            fields (`list[str]` | `None`): List of fields to return. Defaults to `None`.
-
-        Returns:
-            `RepositoryResponse`: Aggregates found.
-        """
         raise NotImplementedError
 
     @abstractmethod
     def find_one(
-        self, id: int, fields: list[str] | None = None
-    ) -> AggregateRoot:
-        """Returns the aggregate that matches the provided id.
-
-        If no aggregates match, the value `None` is returned.
-
-        Args:
-            id (`int`): Aggregate id.
-            fields (`list[str]` | `None`): List of fields to return. Defaults to `None`.
-
-        Returns:
-            `AggregateRoot`: Aggregate found.
-        """
+        self,
+        id: int,
+        fields: list[str] | None = None,
+    ) -> AggregateRoot | None:
         raise NotImplementedError
 
     @abstractmethod
     def add_one(self, aggregate: AggregateRoot) -> None:
-        """Adds the provided aggregate.
-
-        Args:
-            aggregate (`AggregateRoot`): Aggregate to add.
-        """
         raise NotImplementedError
 
     @abstractmethod
     def update_one(self, aggregate: AggregateRoot) -> None:
-        """Updates the provided aggregate.
-
-        Args:
-            aggregate (`AggregateRoot`): Aggregate to update.
-        """
         raise NotImplementedError
 
     @abstractmethod
     def delete_one(self, id: int) -> None:
-        """Deletes the aggregate that matches the provided id.
-
-        Args:
-            id (`int`): Aggregate id.
-        """
         raise NotImplementedError

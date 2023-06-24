@@ -9,11 +9,8 @@ OPERATORS = ["eq", "gt", "ge", "lt", "le", "in", "btw", "lk"]
 
 
 def validate_filter(func):
-    """Validates filter format."""
-
     @wraps(func)
     def wrapped(*args, **kwargs):
-        """Doc."""
         filters = [(k, v) for k, v in kwargs.items() if k not in KNOWN_PARAMS]
 
         if filters:

@@ -6,11 +6,8 @@ from st_server.shared.core.exception import SortError
 
 
 def validate_sort(func):
-    """Validates sort format."""
-
     @wraps(func)
     def wrapped(*args, **kwargs):
-        """Doc."""
         sort = kwargs.get("sort", None)
 
         if sort:
