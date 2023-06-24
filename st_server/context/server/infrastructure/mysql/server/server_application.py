@@ -23,11 +23,6 @@ class ServerApplicationDbModel(db.Base):
     application = relationship("ApplicationDbModel", lazy="joined")
 
     def __repr__(self) -> str:
-        """Returns the string representation of the object.
-
-        Returns:
-            `str`: String representation of the object.
-        """
         return (
             "{c}(server_id={server_id!r}, application_id={application_id!r}, "
             "install_dir={install_dir!r}, log_dir={log_dir!r}, "
@@ -42,17 +37,8 @@ class ServerApplicationDbModel(db.Base):
         )
 
     def to_dict(self, exclude: list[str] | None = None) -> dict:
-        """Returns a dictionary representation of the object.
-
-        Args:
-            exclude (`list[str]`): List of attributes to exclude.
-
-        Returns:
-            `dict`: Dictionary representation of the object.
-        """
         if exclude is None:
             exclude = []
-
         data = {
             "server_id": self.server_id,
             "application_id": self.application_id,
@@ -60,16 +46,10 @@ class ServerApplicationDbModel(db.Base):
             "log_dir": self.log_dir,
             "application": self.application.to_dict(),
         }
-
         return {k: v for k, v in data.items() if k not in exclude}
 
     @classmethod
     def from_dict(cls, data: dict) -> "ServerApplicationDbModel":
-        """Returns an instance of the class based on the provided dictionary.
-
-        Args:
-            data (`dict`): Dictionary representation of the object.
-        """
         return cls(
             server_id=data.get("server_id"),
             application_id=data.get("application_id"),

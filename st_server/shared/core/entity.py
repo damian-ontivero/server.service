@@ -16,140 +16,54 @@ class Entity(metaclass=ABCMeta):
 
     @abstractmethod
     def __init__(self, id: EntityId, discarded: bool = False) -> None:
-        """Initializes a new instance of the Entity class.
-
-        Args:
-            id (`EntityId`): Entity id.
-            discarded (`bool`): Indicates if the entity is discarded.
-        """
         self._id = id
         self._discarded = discarded
 
     @property
-    def id(self) -> str:
-        """Returns the entity id value.
-
-        Returns:
-            `str`: Entity id value.
-        """
-        return self._id.value
+    def id(self) -> EntityId:
+        return self._id
 
     @property
     def discarded(self) -> bool:
-        """Returns True if the entity is discarded.
-
-        Returns:
-            `bool`: True if the entity is discarded.
-        """
         return self._discarded
 
     def __eq__(self, rhs: Any) -> bool:
-        """Compares two objects based on their id.
-
-        Args:
-            rhs (`Any`): Right hand side object to compare.
-
-        Returns:
-            `bool`: True if both objects are equal.
-        """
         if not isinstance(rhs, self.__class__):
             return NotImplemented
-
-        return self._id == rhs._id
+        return self._id == rhs.id
 
     def __ne__(self, rhs: Any) -> bool:
-        """Compares two objects based on their id.
-
-        Args:
-            rhs (`Any`): Right hand side object to compare.
-
-        Returns:
-            `bool`: True if both objects are not equal.
-        """
         return not self.__eq__(rhs)
 
     def __hash__(self) -> int:
-        """Returns the hash value of the object.
-
-        Returns:
-            `int`: Hash value of the object.
-        """
         return hash((self.__class__.__name__, self._id))
 
     @abstractmethod
     def __repr__(self) -> str:
-        """Returns the string representation of the object.
-
-        Returns:
-            `str`: String representation of the object.
-        """
         raise NotImplementedError
 
     def _check_not_discarded(self) -> None:
-        """Raises an exception if the entity is discarded.
-
-        Raises:
-            `ValueError`: If the entity is discarded.
-        """
         if self._discarded:
             raise ValueError("The entity is discarded")
 
     @abstractmethod
     def to_dict(self) -> dict:
-        """Returns a dictionary representation of the object.
-
-        Returns:
-            `dict`: Dictionary representation of the object.
-        """
         raise NotImplementedError
 
     @classmethod
     @abstractmethod
     def from_dict(data: dict) -> "Entity":
-        """Returns an instance of the class based on the provided dictionary.
-
-        Args:
-            data (`dict`): Dictionary representation of the object.
-
-        Returns:
-            `Entity`: New Entity instance.
-        """
         raise NotImplementedError
 
     @classmethod
     @abstractmethod
     def create() -> "Entity":
-        """Entity factory method.
-
-        Important:
-            This method is only used to create a new entity.
-            When creating a new entity, the id is automatically generated
-            and a domain event is registered.
-
-        Returns:
-            `Entity`: New entity.
-        """
         raise NotImplementedError
 
     @abstractmethod
     def update(self) -> "Entity":
-        """Entity update method.
-
-        Important:
-            This method is only used to update an entity.
-
-        Returns:
-            `Entity`: Updated entity.
-        """
         raise NotImplementedError
 
     @abstractmethod
     def discard(self) -> None:
-        """Entity discard method.
-
-        Important:
-            This method is only used to discard an entity.
-            When discarding an entity, the discarded attribute is set to True
-            and a domain event is registered.
-        """
         raise NotImplementedError

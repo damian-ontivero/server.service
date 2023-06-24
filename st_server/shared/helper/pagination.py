@@ -6,11 +6,8 @@ from st_server.shared.core.exception import PaginationError
 
 
 def validate_pagination(func):
-    """Validates pagination attributes."""
-
     @wraps(func)
     def wrapped(*args, **kwargs):
-        """Doc."""
         limit = kwargs.get("limit", None)
         offset = kwargs.get("offset", None)
 

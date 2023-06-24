@@ -26,11 +26,6 @@ class CredentialDbModel(db.Base):
     discarded = sa.Column(sa.Boolean, nullable=False, default=False)
 
     def __repr__(self) -> str:
-        """Returns the string representation of the object.
-
-        Returns:
-            `str`: String representation of the object.
-        """
         return (
             "{c}(id={id!r}, server_id={server_id!r}, "
             "connection_type_id={connection_type_id!r}, "
@@ -40,7 +35,7 @@ class CredentialDbModel(db.Base):
             "discarded={discarded!r})"
         ).format(
             c=self.__class__.__name__,
-            id=self.id,
+            id=self._id.value,
             server_id=self.server_id,
             connection_type_id=self.connection_type_id,
             local_ip=self.local_ip,
@@ -53,19 +48,10 @@ class CredentialDbModel(db.Base):
         )
 
     def to_dict(self, exclude: list[str] | None = None) -> dict:
-        """Returns a dictionary representation of the object.
-
-        Args:
-            exclude (`list[str]`): List of attributes to exclude.
-
-        Returns:
-            `dict`: Dictionary representation of the object.
-        """
         if exclude is None:
             exclude = []
-
         data = {
-            "id": self.id,
+            "id": self._id.value,
             "server_id": self.server_id,
             "connection_type_id": self.connection_type_id,
             "local_ip": self.local_ip,
@@ -76,19 +62,10 @@ class CredentialDbModel(db.Base):
             "password": self.password,
             "discarded": self.discarded,
         }
-
         return {k: v for k, v in data.items() if k not in exclude}
 
     @classmethod
     def from_dict(cls, data: dict) -> "CredentialDbModel":
-        """Returns an instance of the class based on the provided dictionary.
-
-        Args:
-            data (`dict`): Dictionary representation of the object.
-
-        Returns:
-            `CredentialDbModel`: Instance of the class.
-        """
         return cls(
             id=data.get("id"),
             server_id=data.get("server_id"),

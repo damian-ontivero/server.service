@@ -15,53 +15,33 @@ class Credential(Entity):
     """Credential entity."""
 
     class Created(DomainEvent):
-        """Domain event for Credential created."""
-
         pass
 
     class Discarded(DomainEvent):
-        """Domain event for Credential discarded."""
-
         pass
 
     class ServerIdChanged(DomainEvent):
-        """Domain event for name changed."""
-
         pass
 
     class ConnectionTypeChanged(DomainEvent):
-        """Domain event for ConnectionType changed."""
-
         pass
 
     class UsernameChanged(DomainEvent):
-        """Domain event for username changed."""
-
         pass
 
     class PasswordChanged(DomainEvent):
-        """Domain event for password changed."""
-
         pass
 
     class LocalIpChanged(DomainEvent):
-        """Domain event for local ip changed."""
-
         pass
 
     class LocalPortChanged(DomainEvent):
-        """Domain event for local port changed."""
-
         pass
 
     class PublicIpChanged(DomainEvent):
-        """Domain event for public ip changed."""
-
         pass
 
     class PublicPortChanged(DomainEvent):
-        """Domain event for public port changed."""
-
         pass
 
     def __init__(
@@ -77,25 +57,10 @@ class Credential(Entity):
         public_port: str | None = None,
         discarded: bool | None = None,
     ) -> None:
-        """Initializes a new instance of the Credential class.
-
+        """
         Important:
-            This initializer should not be used directly to generate the entity.
-            It should be used only by the repository to instantiate the entity from the database.
-
-            In order to create/generate/register a new credential, use the `Credential.create` method.
-
-        Args:
-            id (`EntityId`): Credential id.
-            server_id (`EntityId`): Server id.
-            connection_type (`EntityId`): ConnectionType id.
-            username (`str`): Credential username.
-            password (`str`): Credential password.
-            local_ip (`str`): Credential local ip.
-            local_port (`str`): Credential local port.
-            public_ip (`str`): Credential public ip.
-            public_port (`str`): Credential public port.
-            discarded (`bool`): Indicates if the credential is discarded.
+            Do not use directly to create a new Credential.
+            Use the factory method `Credential.create` instead.
         """
         super().__init__(id=id, discarded=discarded)
         self._server_id = server_id
@@ -108,191 +73,97 @@ class Credential(Entity):
         self._public_port = public_port
 
     @property
-    def server_id(self) -> EntityId:
-        """Returns the server id of the credential.
-
-        Returns:
-            `EntityId`: Server id of the credential.
-        """
-        return self._server_id
+    def server_id(self) -> str:
+        return self._server_id.value
 
     @server_id.setter
-    def server_id(self, value: EntityId) -> None:
-        """Sets the server id of the credential.
-
-        Args:
-            value (`EntityId`): Server id of the credential.
-        """
+    def server_id(self, value: str) -> None:
         self._check_not_discarded()
-
-        if self._server_id == value:
-            return
-
+        server_id = EntityId.from_string(value=value)
         domain_event = Credential.ServerIdChanged(
-            aggregate_id=self.id,
-            old_value=self._server_id,
-            new_value=value,
+            aggregate_id=self._id.value,
+            old_value=self._server_id.value,
+            new_value=server_id.value,
         )
-
-        self._server_id = value
+        self._server_id = server_id
         self.register_domain_event(domain_event=domain_event)
 
     @property
     def connection_type(self) -> ConnectionType:
-        """Returns the ConnectionType of the credential.
-
-        Returns:
-            `ConnectionType`: ConnectionType of the credential.
-        """
         return self._connection_type
 
     @connection_type.setter
     def connection_type(self, value: ConnectionType) -> None:
-        """Sets the ConnectionType of the credential.
-
-        Args:
-            value (`ConnectionType`): ConnectionType of the credential.
-        """
         self._check_not_discarded()
-
-        if self._connection_type == value:
-            return
-
         domain_event = Credential.ConnectionTypeChanged(
-            aggregate_id=self.id,
+            aggregate_id=self._id.value,
             old_value=self._connection_type,
             new_value=value,
         )
-
         self._connection_type = value
         self.register_domain_event(domain_event=domain_event)
 
     @property
     def username(self) -> str:
-        """Returns the username of the credential.
-
-        Returns:
-            `str`: Username of the credential.
-        """
         return self._username
 
     @username.setter
     def username(self, value: str) -> None:
-        """Sets the username of the credential.
-
-        Args:
-            value (`str`): Username of the credential.
-        """
         self._check_not_discarded()
-
-        if self._username == value:
-            return
-
         domain_event = Credential.UsernameChanged(
-            aggregate_id=self.id,
+            aggregate_id=self._id.value,
             old_value=self._username,
             new_value=value,
         )
-
         self._username = value
         self.register_domain_event(domain_event=domain_event)
 
     @property
     def password(self) -> str:
-        """Returns the password of the credential.
-
-        Returns:
-            `str`: Password of the credential.
-        """
         return self._password
 
     @password.setter
     def password(self, value: str) -> None:
-        """Sets the password of the credential.
-
-        Args:
-            value (`str`): Password of the credential.
-        """
         self._check_not_discarded()
-
-        if self._password == value:
-            return
-
         domain_event = Credential.PasswordChanged(
-            aggregate_id=self.id,
+            aggregate_id=self._id.value,
             old_value=self._password,
             new_value=value,
         )
-
         self._password = value
         self.register_domain_event(domain_event=domain_event)
 
     @property
     def local_ip(self) -> str:
-        """Returns the local ip of the credential.
-
-        Returns:
-            `str`: Local ip of the credential.
-        """
         return self._local_ip
 
     @local_ip.setter
     def local_ip(self, value: str) -> None:
-        """Sets the local ip of the credential.
-
-        Args:
-            value (`str`): Local ip of the credential.
-        """
         self._check_not_discarded()
-
-        if self._local_ip == value:
-            return
-
         domain_event = Credential.LocalIpChanged(
-            aggregate_id=self.id,
+            aggregate_id=self._id.value,
             old_value=self._local_ip,
             new_value=value,
         )
-
         self._local_ip = value
         self.register_domain_event(domain_event=domain_event)
 
     @property
     def local_port(self) -> int:
-        """Returns the local port of the credential.
-
-        Returns:
-            `int`: Local port of the credential.
-        """
         return self._local_port
 
     @local_port.setter
     def local_port(self, value: int) -> None:
-        """Sets the local port of the credential.
-
-        Args:
-            value (`int`): Local port of the credential.
-        """
         self._check_not_discarded()
-
-        if self._local_port == value:
-            return
-
         domain_event = Credential.LocalPortChanged(
-            aggregate_id=self.id,
+            aggregate_id=self._id.value,
             old_value=self._local_port,
             new_value=value,
         )
-
         self._local_port = value
         self.register_domain_event(domain_event=domain_event)
 
     def __repr__(self) -> str:
-        """Returns the string representation of the object.
-
-        Returns:
-            `str`: String representation of the object.
-        """
         return (
             "{d}{c}(id={id!r}, server_id={server_id!r}, connection_type={connection_type!r}, "
             "username={username!r}, password={password!r}, local_ip={local_ip!r}, "
@@ -314,11 +185,6 @@ class Credential(Entity):
         )
 
     def to_dict(self) -> dict:
-        """Returns a dictionary representation of the object.
-
-        Returns:
-            `dict`: Dictionary representation of the object.
-        """
         return {
             "id": self._id.value,
             "server_id": self._server_id.value,
@@ -334,14 +200,6 @@ class Credential(Entity):
 
     @classmethod
     def from_dict(cls, data: dict) -> "Credential":
-        """Returns an instance of the class based on the provided dictionary.
-
-        Args:
-            data (`dict`): Dictionary representation of the object.
-
-        Returns:
-            `Credential`: New Credential instance.
-        """
         return cls(
             id=EntityId.from_string(value=data.get("id")),
             server_id=EntityId.from_string(value=data.get("server_id")),
@@ -365,23 +223,11 @@ class Credential(Entity):
         public_ip: str,
         public_port: int,
     ) -> "Credential":
-        """Credential factory method.
-
+        """
         Important:
             This method is only used to create a new credential.
             When creating a new credential, the id is automatically generated
             and a domain event is registered.
-
-        Args:
-            username (`str`): Username of the credential.
-            password (`str`): Password of the credential.
-            local_ip (`str`): Local ip of the credential.
-            local_port (`int`): Local port of the credential.
-            public_ip (`str`): Public ip of the credential.
-            public_port (`int`): Public port of the credential.
-
-        Returns:
-            `Credential`: New Credential.
         """
         credential = cls(
             id=EntityId.generate(),
@@ -393,10 +239,8 @@ class Credential(Entity):
             public_port=public_port,
             discarded=False,
         )
-
         domain_event = Credential.Created(aggregate_id=credential.id)
         credential.register_domain_event(domain_event=domain_event)
-
         return credential
 
     def update(
@@ -408,50 +252,33 @@ class Credential(Entity):
         public_ip: str | None = None,
         public_port: int | None = None,
     ) -> None:
-        """Credential update method.
-
+        """
         Important:
             This method is only used to update an credential.
             When updating the attributes, the domain events
             are registered by setters.
-
-        Args:
-            username (`str`): Username of the credential.
-            password (`str`): Password of the credential.
-            local_ip (`str`): Local ip of the credential.
-            local_port (`int`): Local port of the credential.
-            public_ip (`str`): Public ip of the credential.
-            public_port (`int`): Public port of the credential.
         """
-        if username is not None:
+        if not self.username == username:
             self.username = username
-
-        if password is not None:
+        if not self.password == password:
             self.password = password
-
-        if local_ip is not None:
+        if not self.local_ip == local_ip:
             self.local_ip = local_ip
-
-        if local_port is not None:
+        if not self.local_port == local_port:
             self.local_port = local_port
-
-        if public_ip is not None:
+        if not self.public_ip == public_ip:
             self.public_ip = public_ip
-
-        if public_port is not None:
+        if not self.public_port == public_port:
             self.public_port = public_port
-
         return self
 
     def discard(self) -> None:
-        """Credential discard method.
-
+        """
         Important:
             This method is only used to discard an credential.
             When discarding an credential, the discarded attribute is set to True
             and a domain event is registered.
         """
         domain_event = Credential.Discarded(aggregate_id=self._id)
-
         self._discarded = True
         self.register_domain_event(domain_event=domain_event)

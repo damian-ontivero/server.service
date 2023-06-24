@@ -12,28 +12,18 @@ class OperatingSystem(AggregateRoot):
     """OperatingSystem entity."""
 
     class Created(DomainEvent):
-        """Domain event for OperatingSystem created."""
-
         pass
 
     class Discarded(DomainEvent):
-        """Domain event OperatingSystem discarded."""
-
         pass
 
     class NameChanged(DomainEvent):
-        """Domain event for name changed."""
-
         pass
 
     class VersionChanged(DomainEvent):
-        """Domain event for version changed."""
-
         pass
 
     class ArchitectChanged(DomainEvent):
-        """Domain event for architect changed."""
-
         pass
 
     def __init__(
@@ -44,20 +34,10 @@ class OperatingSystem(AggregateRoot):
         architect: str | None = None,
         discarded: bool | None = None,
     ) -> None:
-        """Initializes a new instance of the OperatingSystem class.
-
+        """
         Important:
-            This initializer should not be used directly to generate the entity.
-            It should be used only by the repository to instantiate the entity from the database.
-
-            In order to create/generate/register a new OperatinSystem, use the `OperatingSystem.create` method.
-
-        Args:
-            id (`EntityId`): OperatingSystem id.
-            name (`str`): OperatingSystem name.
-            version (`str`): OperatingSystem version.
-            architect (`str`): OperatingSystem architect.
-            discarded (`bool`): Indicates if the OperatinSystem is discarded.
+            Do not use directly to create a new OperatingSystem.
+            Use the factory method `OperatingSystem.create` instead.
         """
         super().__init__(id=id, discarded=discarded)
         self._name = name
@@ -66,103 +46,53 @@ class OperatingSystem(AggregateRoot):
 
     @property
     def name(self) -> str:
-        """Returns the OperatingSystem name.
-
-        Returns:
-            `str`: OperatingSystem name.
-        """
         return self._name
 
     @name.setter
     def name(self, value: str) -> None:
-        """Sets the name of the OperatingSystem.
-
-        Args:
-            value (`str`): Name of the OperatingSystem.
-        """
         self._check_not_discarded()
-
-        if self._name == value:
-            return
-
         domain_event = OperatingSystem.NameChanged(
-            aggregate_id=self.id,
+            aggregate_id=self._id.value,
             name=value,
             version=self.version,
             architect=self.architect,
         )
-
         self._name = value
         self.register_domain_event(domain_event=domain_event)
 
     @property
     def version(self) -> str:
-        """Returns the OperatingSystem name.
-
-        Returns:
-            `str`: OperatingSystem name.
-        """
         return self._version
 
     @version.setter
     def version(self, value: str) -> None:
-        """Sets the name of the OperatingSystem.
-
-        Args:
-            value (`str`): Name of the OperatingSystem.
-        """
         self._check_not_discarded()
-
-        if self._version == value:
-            return
-
         domain_event = OperatingSystem.VersionChanged(
-            aggregate_id=self.id,
+            aggregate_id=self._id.value,
             name=self.name,
             version=value,
             architect=self.architect,
         )
-
         self._version = value
         self.register_domain_event(domain_event=domain_event)
 
     @property
     def architect(self) -> str:
-        """Returns the OperatingSystem name.
-
-        Returns:
-            `str`: OperatingSystem name.
-        """
         return self._architect
 
     @architect.setter
     def architect(self, value: str) -> None:
-        """Sets the name of the OperatingSystem.
-
-        Args:
-            value (`str`): Name of the OperatingSystem.
-        """
         self._check_not_discarded()
-
-        if self._architect == value:
-            return
-
         domain_event = OperatingSystem.ArchitectChanged(
-            aggregate_id=self.id,
+            aggregate_id=self._id.value,
             name=self.name,
             version=self.version,
             architect=value,
         )
-
         self._architect = value
         self.register_domain_event(domain_event=domain_event)
 
     def __repr__(self) -> str:
-        """Returns the string representation of the object.
-
-        Returns:
-            `str`: String representation of the object.
-        """
         return (
             "{d}{c}(id={id!r}, name={name!r}, "
             "version={version!r}, architect={architect!r}, "
@@ -178,11 +108,6 @@ class OperatingSystem(AggregateRoot):
         )
 
     def to_dict(self) -> dict:
-        """Returns a dictionary representation of the object.
-
-        Returns:
-            `dict`: Dictionary representation of the object.
-        """
         return {
             "id": self._id.value,
             "name": self._name,
@@ -193,14 +118,6 @@ class OperatingSystem(AggregateRoot):
 
     @classmethod
     def from_dict(cls, data: dict) -> "OperatingSystem":
-        """Returns an instance of the class based on the provided dictionary.
-
-        Args:
-            data (`dict`): Dictionary representation of the object.
-
-        Returns:
-            `OperatingSystem`: New OperatingSystem instance.
-        """
         return cls(
             id=EntityId.from_string(value=data["id"]),
             name=data.get("name"),
@@ -213,20 +130,11 @@ class OperatingSystem(AggregateRoot):
     def create(
         cls, name: str, version: str, architect: str
     ) -> "OperatingSystem":
-        """OperatingSystem factory method.
-
+        """
         Important:
             This method is only used to create a new OperatingSystem.
             When creating a new OperatingSystem, the id is automatically generated
             and a domain event is registered.
-
-        Args:
-            name (`str`): OperatingSystem name.
-            version (`str`): OperatingSystem version.
-            architect (`str`): OperatingSystem architect.
-
-        Returns:
-            `OperatingSystem`: New OperatinSystem.
         """
         operating_system = cls(
             id=EntityId.generate(),
@@ -234,12 +142,10 @@ class OperatingSystem(AggregateRoot):
             version=version,
             architect=architect,
         )
-
         domain_event = OperatingSystem.Created(
             aggregate_id=operating_system.id
         )
         operating_system.register_domain_event(domain_event=domain_event)
-
         return operating_system
 
     def update(
@@ -248,38 +154,27 @@ class OperatingSystem(AggregateRoot):
         version: str | None = None,
         architect: str | None = None,
     ) -> None:
-        """OperatingSystem update method.
-
+        """
         Important:
             This method is only used to update a OperatingSystem.
             When updating the attributes, the domain events
             are registered by setters.
-
-        Args:
-            name (`str`): OperatingSystem name.
-            version (`str`): OperatingSystem version.
-            architect (`str`): OperatingSystem architect.
         """
-        if name is not None:
+        if not self.name == name:
             self.name = name
-
-        if version is not None:
+        if not self.version == version:
             self.version = version
-
-        if architect is not None:
+        if not self.architect == architect:
             self.architect = architect
-
         return self
 
     def discard(self) -> None:
-        """OperatingSystem discard method.
-
+        """
         Important:
             This method is only used to discard a OperatingSystem.
             When discarding a OperatingSystem, the discarded attribute is set to True
             and a domain event is registered.
         """
         domain_event = OperatingSystem.Discarded(aggregate_id=self._id)
-
         self._discarded = True
         self.register_domain_event(domain_event=domain_event)
