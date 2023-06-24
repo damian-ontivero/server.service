@@ -35,7 +35,7 @@ class CredentialDbModel(db.Base):
             "discarded={discarded!r})"
         ).format(
             c=self.__class__.__name__,
-            id=self._id.value,
+            id=self.id,
             server_id=self.server_id,
             connection_type_id=self.connection_type_id,
             local_ip=self.local_ip,
@@ -51,7 +51,7 @@ class CredentialDbModel(db.Base):
         if exclude is None:
             exclude = []
         data = {
-            "id": self._id.value,
+            "id": self.id,
             "server_id": self.server_id,
             "connection_type_id": self.connection_type_id,
             "local_ip": self.local_ip,

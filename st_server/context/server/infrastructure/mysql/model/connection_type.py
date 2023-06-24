@@ -21,7 +21,7 @@ class ConnectionTypeDbModel(db.Base):
             "{c}(id={id!r}, name={name!r}, discarded={discarded!r})"
         ).format(
             c=self.__class__.__name__,
-            id=self._id.value,
+            id=self.id,
             name=self.name,
             discarded=self.discarded,
         )
@@ -30,7 +30,7 @@ class ConnectionTypeDbModel(db.Base):
         if exclude is None:
             exclude = []
         data = {
-            "id": self._id.value,
+            "id": self.id,
             "name": self.name,
             "discarded": self.discarded,
         }
