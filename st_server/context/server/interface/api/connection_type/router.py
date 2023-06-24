@@ -12,7 +12,7 @@ from st_server.context.server.infrastructure.message_bus.rabbitmq_message_bus im
     RabbitMQMessageBus,
 )
 from st_server.context.server.infrastructure.mysql import db
-from st_server.context.server.infrastructure.mysql.connection_type.connection_type_repository import (
+from st_server.context.server.infrastructure.mysql.repository.connection_type_repository import (
     ConnectionTypeRepository,
 )
 from st_server.context.server.interface.api.connection_type.query_parameter import (
@@ -37,7 +37,6 @@ auth_scheme = HTTPBearer()
 
 
 def get_session():
-    """Yield a database session."""
     session = db.SessionLocal()
     try:
         yield session
@@ -48,12 +47,10 @@ def get_session():
 def get_connection_type_repository(
     session: db.SessionLocal = Depends(get_session),
 ):
-    """Yield a ConnectionType repository."""
     yield ConnectionTypeRepository(session=session)
 
 
 def get_message_bus():
-    """Yield a message bus."""
     yield RabbitMQMessageBus(
         host="localhost",
         port=5672,
@@ -68,7 +65,6 @@ def get_connection_type_service(
     ),
     message_bus: RabbitMQMessageBus = Depends(get_message_bus),
 ):
-    """Yield a ConnectionType service."""
     yield ConnectionTypeService(repository=repository, message_bus=message_bus)
 
 
@@ -85,7 +81,6 @@ def get_all(
         get_connection_type_service
     ),
 ):
-    """Doc."""
     try:
         connection_types = connection_type_service.find_many(
             fields=fields,
@@ -95,29 +90,22 @@ def get_all(
             **filter.dict(exclude_none=True),
             access_token=authorization.credentials,
         )
-
         if not connection_types.items:
             raise HTTPException(status_code=status.HTTP_204_NO_CONTENT)
-
         base_url = request.base_url
         link = ""
-
         if connection_types.prev_offset:
             prev_offset = f'<{base_url}server/connection-types?limit={connection_types.limit}&offset={connection_types.prev_offset}>; rel="prev", '
             link += prev_offset
-
         if connection_types.next_offset:
             next_offset = f'<{base_url}server/connection-types?limit={connection_types.limit}&offset={connection_types.next_offset}>; rel="next", '
             link += next_offset
-
         if connection_types.last_offset:
             last_offset = f'<{base_url}server/connection-types?limit={connection_types.limit}&offset={connection_types.last_offset}>; rel="last", '
             link += last_offset
-
         if connection_types.first_offset:
             first_offset = f'<{base_url}server/connection-types?limit={connection_types.limit}&offset={connection_types.first_offset}>; rel="first"'
             link += first_offset
-
         response = JSONResponse(
             content=jsonable_encoder(
                 obj=[
@@ -127,24 +115,19 @@ def get_all(
             )
         )
         response.headers["Link"] = link
-
         return response
-
     except AuthenticationError as e:
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN, detail=str(e)
         )
-
     except PaginationError as e:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST, detail=str(e)
         )
-
     except SortError as e:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST, detail=str(e)
         )
-
     except FilterError as e:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST, detail=str(e)
@@ -160,23 +143,19 @@ def get(
         get_connection_type_service
     ),
 ):
-    """Doc."""
     try:
         connection_type = connection_type_service.find_one(
             id=id, fields=fields, access_token=authorization.credentials
         )
-
         return JSONResponse(
             content=jsonable_encoder(
                 obj=ConnectionTypeRead(**connection_type.to_dict())
             )
         )
-
     except AuthenticationError as e:
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN, detail=str(e)
         )
-
     except NotFound as e:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail=str(e)
@@ -188,7 +167,6 @@ def create(
     connection_type_in: ConnectionTypeCreate,
     authorization: HTTPAuthorizationCredentials = Depends(auth_scheme),
 ):
-    """Doc."""
     try:
         session = db.SessionLocal()
         repository = ConnectionTypeRepository(session=session)
@@ -201,24 +179,20 @@ def create(
         connection_type_service = ConnectionTypeService(
             repository=repository, message_bus=message_bus
         )
-
         connection_type = connection_type_service.add_one(
             data=connection_type_in.to_dict(),
             access_token=authorization.credentials,
         )
-
         return JSONResponse(
             content=jsonable_encoder(
                 obj=ConnectionTypeRead(**connection_type.to_dict())
             ),
             status_code=status.HTTP_201_CREATED,
         )
-
     except AuthenticationError as e:
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN, detail=str(e)
         )
-
     except AlreadyExists as e:
         raise HTTPException(
             status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail=str(e)
@@ -231,7 +205,6 @@ def update(
     connection_type_in: ConnectionTypeUpdate,
     authorization: HTTPAuthorizationCredentials = Depends(auth_scheme),
 ):
-    """Doc."""
     try:
         session = db.SessionLocal()
         repository = ConnectionTypeRepository(session=session)
@@ -244,30 +217,25 @@ def update(
         connection_type_service = ConnectionTypeService(
             repository=repository, message_bus=message_bus
         )
-
         connection_type = connection_type_service.update_one(
             id=id,
             data=connection_type_in.to_dict(),
             access_token=authorization.credentials,
         )
-
         return JSONResponse(
             content=jsonable_encoder(
                 obj=ConnectionTypeRead(**connection_type.to_dict())
             ),
             status_code=status.HTTP_200_OK,
         )
-
     except AuthenticationError as e:
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN, detail=str(e)
         )
-
     except NotFound as e:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail=str(e)
         )
-
     except AlreadyExists as e:
         raise HTTPException(
             status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail=str(e)
@@ -278,7 +246,6 @@ def update(
 def discard(
     id: str, authorization: HTTPAuthorizationCredentials = Depends(auth_scheme)
 ):
-    """Doc."""
     try:
         session = db.SessionLocal()
         repository = ConnectionTypeRepository(session=session)
@@ -291,23 +258,19 @@ def discard(
         connection_type_service = ConnectionTypeService(
             repository=repository, message_bus=message_bus
         )
-
         connection_type_service.discard_one(
             id=id, access_token=authorization.credentials
         )
-
         return JSONResponse(
             content=jsonable_encoder(
                 obj={"message": "ConnectionType deleted"}
             ),
             status_code=status.HTTP_200_OK,
         )
-
     except AuthenticationError as e:
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN, detail=str(e)
         )
-
     except NotFound as e:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail=str(e)

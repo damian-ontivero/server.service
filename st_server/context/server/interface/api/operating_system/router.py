@@ -12,7 +12,7 @@ from st_server.context.server.infrastructure.message_bus.rabbitmq_message_bus im
     RabbitMQMessageBus,
 )
 from st_server.context.server.infrastructure.mysql import db
-from st_server.context.server.infrastructure.mysql.operating_system.operating_system_repository import (
+from st_server.context.server.infrastructure.mysql.repository.operating_system_repository import (
     OperatingSystemRepository,
 )
 from st_server.context.server.interface.api.operating_system.schema import (
@@ -37,7 +37,6 @@ auth_scheme = HTTPBearer()
 
 
 def get_session():
-    """Yield a database session."""
     session = db.SessionLocal()
     try:
         yield session
@@ -48,12 +47,10 @@ def get_session():
 def get_operating_system_repository(
     session: db.SessionLocal = Depends(get_session),
 ):
-    """Yield a OperatinSystem repository."""
     yield OperatingSystemRepository(session=session)
 
 
 def get_message_bus():
-    """Yield a message bus."""
     yield RabbitMQMessageBus(
         host="localhost",
         port=5672,
@@ -68,7 +65,6 @@ def get_operating_system_service(
     ),
     message_bus: RabbitMQMessageBus = Depends(get_message_bus),
 ):
-    """Yield a OperatinSystem service."""
     yield OperatingSystemService(
         repository=repository, message_bus=message_bus
     )
@@ -87,7 +83,6 @@ def get_all(
         get_operating_system_service
     ),
 ):
-    """Doc."""
     try:
         operating_systems = operating_system_service.find_many(
             fields=fields,
@@ -97,29 +92,22 @@ def get_all(
             **filter.dict(exclude_none=True),
             access_token=authorization.credentials,
         )
-
         if not operating_systems.items:
             raise HTTPException(status_code=status.HTTP_204_NO_CONTENT)
-
         base_url = request.base_url
         link = ""
-
         if operating_systems.prev_offset:
             prev_offset = f'<{base_url}server/operating-systems?limit={operating_systems.limit}&offset={operating_systems.prev_offset}>; rel="prev", '
             link += prev_offset
-
         if operating_systems.next_offset:
             next_offset = f'<{base_url}server/operating-systems?limit={operating_systems.limit}&offset={operating_systems.next_offset}>; rel="next", '
             link += next_offset
-
         if operating_systems.last_offset:
             last_offset = f'<{base_url}server/operating-systems?limit={operating_systems.limit}&offset={operating_systems.last_offset}>; rel="last", '
             link += last_offset
-
         if operating_systems.first_offset:
             first_offset = f'<{base_url}server/operating-systems?limit={operating_systems.limit}&offset={operating_systems.first_offset}>; rel="first"'
             link += first_offset
-
         response = JSONResponse(
             content=jsonable_encoder(
                 obj=[
@@ -129,24 +117,19 @@ def get_all(
             )
         )
         response.headers["Link"] = link
-
         return response
-
     except AuthenticationError as e:
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN, detail=str(e)
         )
-
     except PaginationError as e:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST, detail=str(e)
         )
-
     except SortError as e:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST, detail=str(e)
         )
-
     except FilterError as e:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST, detail=str(e)
@@ -162,23 +145,19 @@ def get(
         get_operating_system_service
     ),
 ):
-    """Doc."""
     try:
         operating_system = operating_system_service.find_one(
             id=id, fields=fields, access_token=authorization.credentials
         )
-
         return JSONResponse(
             content=jsonable_encoder(
                 obj=OperatingSystemRead(**operating_system.to_dict())
             )
         )
-
     except AuthenticationError as e:
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN, detail=str(e)
         )
-
     except NotFound as e:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail=str(e)
@@ -190,7 +169,6 @@ def create(
     operating_system_in: OperatingSystemCreate,
     authorization: HTTPAuthorizationCredentials = Depends(auth_scheme),
 ):
-    """Doc."""
     try:
         session = db.SessionLocal()
         repository = OperatingSystemRepository(session=session)
@@ -203,24 +181,20 @@ def create(
         operating_system_service = OperatingSystemService(
             repository=repository, message_bus=message_bus
         )
-
         operating_system = operating_system_service.add_one(
             data=operating_system_in.to_dict(),
             access_token=authorization.credentials,
         )
-
         return JSONResponse(
             content=jsonable_encoder(
                 obj=OperatingSystemRead(**operating_system.to_dict())
             ),
             status_code=status.HTTP_201_CREATED,
         )
-
     except AuthenticationError as e:
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN, detail=str(e)
         )
-
     except AlreadyExists as e:
         raise HTTPException(
             status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail=str(e)
@@ -233,7 +207,6 @@ def update(
     operating_system_in: OperatingSystemUpdate,
     authorization: HTTPAuthorizationCredentials = Depends(auth_scheme),
 ):
-    """Doc."""
     try:
         session = db.SessionLocal()
         repository = OperatingSystemRepository(session=session)
@@ -246,30 +219,25 @@ def update(
         operating_system_service = OperatingSystemService(
             repository=repository, message_bus=message_bus
         )
-
         operating_system = operating_system_service.update_one(
             id=id,
             data=operating_system_in.to_dict(),
             access_token=authorization.credentials,
         )
-
         return JSONResponse(
             content=jsonable_encoder(
                 obj=OperatingSystemRead(**operating_system.to_dict())
             ),
             status_code=status.HTTP_200_OK,
         )
-
     except AuthenticationError as e:
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN, detail=str(e)
         )
-
     except NotFound as e:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail=str(e)
         )
-
     except AlreadyExists as e:
         raise HTTPException(
             status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail=str(e)
@@ -280,7 +248,6 @@ def update(
 def discard(
     id: str, authorization: HTTPAuthorizationCredentials = Depends(auth_scheme)
 ):
-    """Doc."""
     try:
         session = db.SessionLocal()
         repository = OperatingSystemRepository(session=session)
@@ -293,23 +260,19 @@ def discard(
         operating_system_service = OperatingSystemService(
             repository=repository, message_bus=message_bus
         )
-
         operating_system_service.discard_one(
             id=id, access_token=authorization.credentials
         )
-
         return JSONResponse(
             content=jsonable_encoder(
                 obj={"message": "OperatingSystem deleted"}
             ),
             status_code=status.HTTP_200_OK,
         )
-
     except AuthenticationError as e:
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN, detail=str(e)
         )
-
     except NotFound as e:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail=str(e)

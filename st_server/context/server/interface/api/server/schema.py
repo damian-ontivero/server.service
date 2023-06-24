@@ -24,11 +24,6 @@ class ServerBase:
     applications: list | None = None
 
     def to_dict(self) -> dict:
-        """Returns a dictionary representation of the object.
-
-        Returns:
-            `dict`: Dictionary representation of the object.
-        """
         return asdict(self)
 
 

@@ -13,17 +13,45 @@ from st_server.shared.helper.sort import validate_sort
 
 
 class ServerService:
-    """Server service."""
+    """Server service implementation.
+
+    In the `find_many` method, the `kwargs` parameter is a dictionary of filters. The
+    key is the field name and the value is a string with the filter operator and
+    the value separated by a colon.
+
+    The available filter operators are:
+    - `eq`: equal
+    - `gt`: greater than
+    - `ge`: greater than or equal
+    - `lt`: less than
+    - `le`: less than or equal
+    - `in`: in
+    - `btw`: between
+    - `lk`: like
+
+        Example: `{"name": "lk:John"}`
+
+    In the `find_many` method, the `sort` parameter is a list of strings with the
+    field name and the sort criteria separated by a colon.
+
+    The available sort criteria are:
+    - asc: ascending
+    - desc: descending
+
+        Example: `["name:asc", "age:desc"]`
+
+    In the `find_many` method, the `fields` parameter is a list of strings with the
+    field names to be loaded.
+
+    If a `None` value is provided to limit, there will be no pagination.
+    If a `Zero` value is provided to limit, no aggregates will be returned.
+    If a `None` value is provided to offset, the first offset will be returned.
+    If a `None` value is provided to kwargs, all aggregates will be returned.
+    """
 
     def __init__(
         self, repository: Repository, message_bus: MessageBus
     ) -> None:
-        """Initializes the service.
-
-        Args:
-            repository (`Repository`): Server repository.
-            message_bus (`MessageBus`): Message bus.
-        """
         self._repository = repository
         self._message_bus = message_bus
 
@@ -40,46 +68,20 @@ class ServerService:
         access_token: str | None = None,
         **kwargs,
     ) -> ServiceResponse:
-        """Returns all Servers that match the provided conditions.
-
-        If a `None` value is provided to limit, there will be no pagination.
-
-        If a `Zero` value is provided to limit, no Server will be returned.
-
-        If a `None` value is provided to offset, the first offset will be returned.
-
-        If a `None` value is provided to kwargs, all Servers will be returned.
-
-        Args:
-            fields (`list[str]` | `None`): List of fields to return. Defaults to `None`.
-            limit (`int` | `None`): Number of records per offset. Defaults to `None`.
-            offset (`int` | `None`): offset number. Defaults to `None`.
-            sort (`list[str]` | `None`): Sort criteria. Defaults to `None`.
-            access_token (`str` | `None`): Access token. Defaults to `None`.
-
-        Returns:
-            `ServiceResponse`: Servers found.
-        """
         if fields is None:
             fields = []
-
         if limit is None:
             limit = 0
-
         if offset is None:
             offset = 0
-
         if sort is None:
             sort = []
-
         if kwargs is None:
             kwargs = {}
-
         servers = self._repository.find_many(
             limit=limit, offset=offset, sort=sort, fields=fields, **kwargs
         )
         total = servers.total_items
-
         return ServiceResponse(
             limit=limit,
             offset=(offset or 1),
@@ -100,43 +102,15 @@ class ServerService:
         fields: list[str] | None = None,
         access_token: str | None = None,
     ) -> Server:
-        """Returns the Server that matches the provided id.
-
-        Args:
-            id (`int`): Server id.
-            fields (`list[str]` | `None`): List of fields to return. Defaults to `None`.
-            access_token (`str` | `None`): Access token. Defaults to `None`.
-
-        Raises:
-            `NotFound`: No Server found with the provided id.
-
-        Returns:
-            `Server`: Server found.
-        """
         if fields is None:
             fields = []
-
         server = self._repository.find_one(id=id, fields=fields)
-
         if server is None:
             raise NotFound(message=f"Server with id {id} not found.")
-
         return server
 
     # @AuthService.access_token_required
     def add_one(self, data: dict, access_token: str | None = None) -> Server:
-        """Adds the provided Server and publishes the Server events.
-
-        Args:
-            data (`dict`): Dictionary with the Server data.
-            access_token (`str` | `None`): Access token. Defaults to `None`.
-
-        Raises:
-            `AlreadyExists`: An Server with the provided email already exists.
-
-        Returns:
-            `Server`: Server added.
-        """
         server = Server.create(
             name=data.get("name"),
             cpu=data.get("cpu"),
@@ -147,45 +121,25 @@ class ServerService:
             credentials=data.get("credentials"),
             applications=data.get("applications"),
         )
-
         servers = self._repository.find_many(name="eq:{}".format(server.name))
-
         if servers.total_items:
             raise AlreadyExists(
                 "Server with name: {name!r} already exists".format(
                     name=server.name
                 )
             )
-
         self._repository.add_one(aggregate=server)
         self._message_bus.publish(domain_events=server.domain_events)
         server.clear_domain_events()
-
         return self._repository.find_one(id=server.id)
 
     # @AuthService.access_token_required
     def update_one(
         self, id: str, data: dict, access_token: str | None = None
     ) -> Server:
-        """Updates the Server that matches the provided id and publishes the events.
-
-        Args:
-            id (`str`): Server id.
-            data (`dict`): Dictionary with the Server data.
-            access_token (`str` | `None`): Access token. Defaults to `None`.
-
-        Raises:
-            `NotFound`: No Server found with the provided id.
-            `AlreadyExists`: A Server with the provided email already exists.
-
-        Returns:
-            `Server`: Server updated.
-        """
         server = self._repository.find_one(id=id)
-
         if server is None:
             raise NotFound("Server with id: {id!r} not found".format(id=id))
-
         server = server.update(
             name=data.get("name"),
             cpu=data.get("cpu"),
@@ -196,51 +150,26 @@ class ServerService:
             credentials=data.get("credentials"),
             applications=data.get("applications"),
         )
-
         self._repository.update_one(aggregate=server)
         self._message_bus.publish(domain_events=server.domain_events)
         server.clear_domain_events()
-
         return self._repository.find_one(id=id)
 
     # @AuthService.access_token_required
     def discard_one(self, id: str, access_token: str | None = None) -> None:
-        """Discards the Server that matches the provided id and publishes the events.
-
-        Args:
-            id (`str`): Server id.
-            access_token (`str` | `None`): Access token. Defaults to `None`.
-
-        Raises:
-            `NotFound`: No Server found with the provided id.
-        """
         server = self._repository.find_one(id=id)
-
         if server is None:
             raise NotFound("Server with id: {id!r} not found".format(id=id))
-
         server.discard()
-
         self._repository.update_one(aggregate=server)
         self._message_bus.publish(domain_events=server.domain_events)
         server.clear_domain_events()
 
     # @AuthService.access_token_required
     def delete_one(self, id: str, access_token: str | None = None) -> None:
-        """Deletes the Server that matches the provided id and publishes the events.
-
-        Args:
-            id (`str`): Server id.
-            access_token (`str` | `None`): Access token. Defaults to `None`.
-
-        Raises:
-            `NotFound`: No Server found with the provided id.
-        """
         server = self._repository.find_one(id=id)
-
         if server is None:
             raise NotFound("Server with id: {id!r} not found".format(id=id))
-
         self._repository.delete_one(id=id)
         self._message_bus.publish(domain_events=server.domain_events)
         server.clear_domain_events()
