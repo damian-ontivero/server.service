@@ -137,7 +137,7 @@ class Application(AggregateRoot):
             version=version,
             architect=architect,
         )
-        domain_event = Application.Created(aggregate_id=application.id)
+        domain_event = Application.Created(aggregate_id=application.id.value)
         application.register_domain_event(domain_event=domain_event)
         return application
 

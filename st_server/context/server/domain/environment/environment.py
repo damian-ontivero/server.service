@@ -87,7 +87,7 @@ class Environment(AggregateRoot):
             id=EntityId.generate(),
             name=name,
         )
-        domain_event = Environment.Created(aggregate_id=environment.id)
+        domain_event = Environment.Created(aggregate_id=environment.id.value)
         environment.register_domain_event(domain_event=domain_event)
         return environment
 

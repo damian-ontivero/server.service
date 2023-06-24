@@ -140,7 +140,7 @@ class OperatingSystem(AggregateRoot):
             architect=architect,
         )
         domain_event = OperatingSystem.Created(
-            aggregate_id=operating_system.id
+            aggregate_id=operating_system.id.value
         )
         operating_system.register_domain_event(domain_event=domain_event)
         return operating_system

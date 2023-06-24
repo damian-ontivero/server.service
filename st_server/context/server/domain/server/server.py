@@ -323,7 +323,7 @@ class Server(AggregateRoot):
             credentials=credentials or [],
             applications=applications or [],
         )
-        domain_event = Server.Created(aggregate_id=server.id)
+        domain_event = Server.Created(aggregate_id=server.id.value)
         server.register_domain_event(domain_event=domain_event)
         return server
 
