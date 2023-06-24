@@ -42,26 +42,29 @@ class ConnectionType(AggregateRoot):
     def name(self, value: str) -> None:
         self._check_not_discarded()
         domain_event = ConnectionType.NameChanged(
-            aggregate_id=self._id.value,
-            old_value=self._name,
+            aggregate_id=self.id.value,
+            old_value=self.name,
             new_value=value,
         )
         self._name = value
         self.register_domain_event(domain_event=domain_event)
 
     def __repr__(self) -> str:
-        return "{d}{c}(id={id!r}, name={name!r})".format(
-            d="*Discarded*" if self._discarded else "",
+        return (
+            "{d}{c}(id={id!r}, name={name!r}, discarded={discarded!r})"
+        ).format(
+            d="*Discarded*" if self.discarded else "",
             c=self.__class__.__name__,
-            id=self._id.value,
-            name=self._name,
+            id=self.id,
+            name=self.name,
+            discarded=self.discarded,
         )
 
     def to_dict(self) -> dict:
         return {
-            "id": self._id.value,
-            "name": self._name,
-            "discarded": self._discarded,
+            "id": self.id.value,
+            "name": self.name,
+            "discarded": self.discarded,
         }
 
     @classmethod
@@ -106,6 +109,6 @@ class ConnectionType(AggregateRoot):
             When discarding a ConnectionType, the discarded attribute is set to True
             and a domain event is registered.
         """
-        domain_event = ConnectionType.Discarded(aggregate_id=self._id)
-        self._discarded = True
+        domain_event = ConnectionType.Discarded(aggregate_id=self.id.value)
+        self.discarded = True
         self.register_domain_event(domain_event=domain_event)

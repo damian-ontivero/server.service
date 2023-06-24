@@ -52,10 +52,9 @@ class OperatingSystem(AggregateRoot):
     def name(self, value: str) -> None:
         self._check_not_discarded()
         domain_event = OperatingSystem.NameChanged(
-            aggregate_id=self._id.value,
-            name=value,
-            version=self.version,
-            architect=self.architect,
+            aggregate_id=self.id.value,
+            old_value=self.name,
+            new_value=value,
         )
         self._name = value
         self.register_domain_event(domain_event=domain_event)
@@ -68,10 +67,9 @@ class OperatingSystem(AggregateRoot):
     def version(self, value: str) -> None:
         self._check_not_discarded()
         domain_event = OperatingSystem.VersionChanged(
-            aggregate_id=self._id.value,
-            name=self.name,
-            version=value,
-            architect=self.architect,
+            aggregate_id=self.id.value,
+            old_value=self.version,
+            new_value=value,
         )
         self._version = value
         self.register_domain_event(domain_event=domain_event)
@@ -84,10 +82,9 @@ class OperatingSystem(AggregateRoot):
     def architect(self, value: str) -> None:
         self._check_not_discarded()
         domain_event = OperatingSystem.ArchitectChanged(
-            aggregate_id=self._id.value,
-            name=self.name,
-            version=self.version,
-            architect=value,
+            aggregate_id=self.id.value,
+            old_value=self.architect,
+            new_value=value,
         )
         self._architect = value
         self.register_domain_event(domain_event=domain_event)
@@ -98,22 +95,22 @@ class OperatingSystem(AggregateRoot):
             "version={version!r}, architect={architect!r}, "
             "discarded={discarded!r})"
         ).format(
-            d="*Discarded*" if self._discarded else "",
+            d="*Discarded*" if self.discarded else "",
             c=self.__class__.__name__,
-            id=self._id.value,
-            name=self._name,
-            version=self._version,
-            architect=self._architect,
-            discarded=self._discarded,
+            id=self.id,
+            name=self.name,
+            version=self.version,
+            architect=self.architect,
+            discarded=self.discarded,
         )
 
     def to_dict(self) -> dict:
         return {
-            "id": self._id.value,
-            "name": self._name,
-            "version": self._version,
-            "architect": self._architect,
-            "discarded": self._discarded,
+            "id": self.id.value,
+            "name": self.name,
+            "version": self.version,
+            "architect": self.architect,
+            "discarded": self.discarded,
         }
 
     @classmethod
@@ -175,6 +172,6 @@ class OperatingSystem(AggregateRoot):
             When discarding a OperatingSystem, the discarded attribute is set to True
             and a domain event is registered.
         """
-        domain_event = OperatingSystem.Discarded(aggregate_id=self._id)
-        self._discarded = True
+        domain_event = OperatingSystem.Discarded(aggregate_id=self.id.value)
+        self.discarded = True
         self.register_domain_event(domain_event=domain_event)

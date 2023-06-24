@@ -73,19 +73,18 @@ class Credential(Entity):
         self._public_port = public_port
 
     @property
-    def server_id(self) -> str:
-        return self._server_id.value
+    def server_id(self) -> EntityId:
+        return self._server_id
 
     @server_id.setter
-    def server_id(self, value: str) -> None:
+    def server_id(self, value: EntityId) -> None:
         self._check_not_discarded()
-        server_id = EntityId.from_string(value=value)
         domain_event = Credential.ServerIdChanged(
-            aggregate_id=self._id.value,
-            old_value=self._server_id.value,
-            new_value=server_id.value,
+            aggregate_id=self.id.value,
+            old_value=self.server_id.__dict__,
+            new_value=value.__dict__,
         )
-        self._server_id = server_id
+        self._server_id = value
         self.register_domain_event(domain_event=domain_event)
 
     @property
@@ -96,8 +95,8 @@ class Credential(Entity):
     def connection_type(self, value: ConnectionType) -> None:
         self._check_not_discarded()
         domain_event = Credential.ConnectionTypeChanged(
-            aggregate_id=self._id.value,
-            old_value=self._connection_type,
+            aggregate_id=self.id.value,
+            old_value=self.connection_type,
             new_value=value,
         )
         self._connection_type = value
@@ -111,8 +110,8 @@ class Credential(Entity):
     def username(self, value: str) -> None:
         self._check_not_discarded()
         domain_event = Credential.UsernameChanged(
-            aggregate_id=self._id.value,
-            old_value=self._username,
+            aggregate_id=self.id.value,
+            old_value=self.username,
             new_value=value,
         )
         self._username = value
@@ -126,8 +125,8 @@ class Credential(Entity):
     def password(self, value: str) -> None:
         self._check_not_discarded()
         domain_event = Credential.PasswordChanged(
-            aggregate_id=self._id.value,
-            old_value=self._password,
+            aggregate_id=self.id.value,
+            old_value=self.password,
             new_value=value,
         )
         self._password = value
@@ -141,8 +140,8 @@ class Credential(Entity):
     def local_ip(self, value: str) -> None:
         self._check_not_discarded()
         domain_event = Credential.LocalIpChanged(
-            aggregate_id=self._id.value,
-            old_value=self._local_ip,
+            aggregate_id=self.id.value,
+            old_value=self.local_ip,
             new_value=value,
         )
         self._local_ip = value
@@ -156,8 +155,8 @@ class Credential(Entity):
     def local_port(self, value: int) -> None:
         self._check_not_discarded()
         domain_event = Credential.LocalPortChanged(
-            aggregate_id=self._id.value,
-            old_value=self._local_port,
+            aggregate_id=self.id.value,
+            old_value=self.local_port,
             new_value=value,
         )
         self._local_port = value
@@ -170,32 +169,32 @@ class Credential(Entity):
             "local_port={local_port!r}, public_ip={public_ip!r}, public_port={public_port!r}, "
             "discarded={discarded!r})"
         ).format(
-            d="*Discarded* " if self._discarded else "",
+            d="*Discarded* " if self.discarded else "",
             c=self.__class__.__name__,
-            id=self._id.value,
-            server_id=self._server_id.value,
-            connection_type=self._connection_type,
-            username=self._username,
-            password=self._password,
-            local_ip=self._local_ip,
-            local_port=self._local_port,
-            public_ip=self._public_ip,
-            public_port=self._public_port,
-            discarded=self._discarded,
+            id=self.id,
+            server_id=self.server_id,
+            connection_type=self.connection_type,
+            username=self.username,
+            password=self.password,
+            local_ip=self.local_ip,
+            local_port=self.local_port,
+            public_ip=self.public_ip,
+            public_port=self.public_port,
+            discarded=self.discarded,
         )
 
     def to_dict(self) -> dict:
         return {
-            "id": self._id.value,
-            "server_id": self._server_id.value,
-            "connection_type": self._connection_type,
-            "username": self._username,
-            "password": self._password,
-            "local_ip": self._local_ip,
-            "local_port": self._local_port,
-            "public_ip": self._public_ip,
-            "public_port": self._public_port,
-            "discarded": self._discarded,
+            "id": self.id.value,
+            "server_id": self.server_id.value,
+            "connection_type": self.connection_type,
+            "username": self.username,
+            "password": self.password,
+            "local_ip": self.local_ip,
+            "local_port": self.local_port,
+            "public_ip": self.public_ip,
+            "public_port": self.public_port,
+            "discarded": self.discarded,
         }
 
     @classmethod
@@ -279,6 +278,6 @@ class Credential(Entity):
             When discarding an credential, the discarded attribute is set to True
             and a domain event is registered.
         """
-        domain_event = Credential.Discarded(aggregate_id=self._id)
-        self._discarded = True
+        domain_event = Credential.Discarded(aggregate_id=self.id.value)
+        self.discarded = True
         self.register_domain_event(domain_event=domain_event)
