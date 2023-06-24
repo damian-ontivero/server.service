@@ -87,7 +87,9 @@ class ConnectionType(AggregateRoot):
             id=EntityId.generate(),
             name=name,
         )
-        domain_event = ConnectionType.Created(aggregate_id=connection_type.id)
+        domain_event = ConnectionType.Created(
+            aggregate_id=connection_type.id.value
+        )
         connection_type.register_domain_event(domain_event=domain_event)
         return connection_type
 

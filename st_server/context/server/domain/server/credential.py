@@ -81,7 +81,7 @@ class Credential(Entity):
         self._check_not_discarded()
         domain_event = Credential.ServerIdChanged(
             aggregate_id=self.id.value,
-            old_value=self.server_id.__dict__,
+            old_value=self.server_id.value,
             new_value=value.__dict__,
         )
         self._server_id = value
@@ -238,7 +238,7 @@ class Credential(Entity):
             public_port=public_port,
             discarded=False,
         )
-        domain_event = Credential.Created(aggregate_id=credential.id)
+        domain_event = Credential.Created(aggregate_id=credential.id.value)
         credential.register_domain_event(domain_event=domain_event)
         return credential
 
