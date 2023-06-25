@@ -3,13 +3,16 @@
 This is the aggregate root entity of the server aggregate.
 """
 
-from st_server.context.server.domain.environment.environment import Environment
-from st_server.context.server.domain.operating_system.operating_system import (
+from st_server.context.server.domain.entity.credential import Credential
+from st_server.context.server.domain.entity.environment import Environment
+from st_server.context.server.domain.entity.operating_system import (
     OperatingSystem,
 )
-from st_server.context.server.domain.server.credential import Credential
-from st_server.context.server.domain.server.server_application import (
+from st_server.context.server.domain.entity.server_application import (
     ServerApplication,
+)
+from st_server.context.server.domain.value_object.server_status import (
+    ServerStatus,
 )
 from st_server.shared.core.aggregate_root import AggregateRoot
 from st_server.shared.core.domain_event import DomainEvent
@@ -49,6 +52,9 @@ class Server(AggregateRoot):
     class ApplicationChanged(DomainEvent):
         pass
 
+    class StatusChanged(DomainEvent):
+        pass
+
     def __init__(
         self,
         id: EntityId | None = None,
@@ -62,6 +68,7 @@ class Server(AggregateRoot):
         operating_system: OperatingSystem | None = None,
         credentials: list[Credential] | None = None,
         applications: list[ServerApplication] | None = None,
+        status: ServerStatus | None = None,
         discarded: bool | None = None,
     ) -> None:
         """
@@ -79,6 +86,7 @@ class Server(AggregateRoot):
         self._operating_system_id = operating_system_id
         self._operating_system = operating_system
         self._credentials = credentials
+        self._status = status
         self._applications = applications
 
     @property
@@ -168,7 +176,7 @@ class Server(AggregateRoot):
     def operating_system_id(self, value: EntityId) -> None:
         self._check_not_discarded()
         domain_event = Server.OperatingSystemChanged(
-            aggregate_id=self._id.value,
+            aggregate_id=self.id.value,
             old_value=self.operating_system_id.__dict__,
             new_value=value.__dict__,
         )
@@ -187,8 +195,8 @@ class Server(AggregateRoot):
     def credentials(self, value: list[Credential]) -> None:
         self._check_not_discarded()
         domain_event = Server.CredentialChanged(
-            aggregate_id=self._id.value,
-            old_value=self._credentials,
+            aggregate_id=self.id.value,
+            old_value=self.credentials,
             new_value=value,
         )
         self._credentials = value
@@ -202,11 +210,26 @@ class Server(AggregateRoot):
     def applications(self, value: list[ServerApplication]) -> None:
         self._check_not_discarded()
         domain_event = Server.ApplicationChanged(
-            aggregate_id=self._id.value,
-            old_value=self._applications,
+            aggregate_id=self.id.value,
+            old_value=self.applications,
             new_value=value,
         )
         self._applications = value
+        self.register_domain_event(domain_event=domain_event)
+
+    @property
+    def status(self) -> ServerStatus:
+        return self._status
+
+    @status.setter
+    def status(self, value: ServerStatus) -> None:
+        self._check_not_discarded()
+        domain_event = Server.StatusChanged(
+            aggregate_id=self.id.value,
+            old_value=self.status,
+            new_value=value,
+        )
+        self._status = value
         self.register_domain_event(domain_event=domain_event)
 
     def __repr__(self) -> str:
@@ -219,6 +242,7 @@ class Server(AggregateRoot):
             "operating_system={operating_system!r}, "
             "credentials={credentials!r}, "
             "applications={applications!r}, "
+            "status={status!r}, "
             "discarded={discarded!r})"
         ).format(
             d="*Discarded*" if self.discarded else "",
@@ -234,6 +258,7 @@ class Server(AggregateRoot):
             operating_system=self.operating_system,
             credentials=self.credentials,
             applications=self.applications,
+            status=self.status,
             discarded=self.discarded,
         )
 
@@ -258,21 +283,12 @@ class Server(AggregateRoot):
             "applications": [
                 application.to_dict() for application in self.applications
             ],
+            "status": self.status.value if self.status else None,
             "discarded": self.discarded,
         }
 
     @classmethod
     def from_dict(cls, data: dict) -> "Server":
-        environment = (
-            Environment.from_dict(data=data.get("environment"))
-            if data.get("environment")
-            else None
-        )
-        operating_system = (
-            OperatingSystem.from_dict(data=data.get("operating_system"))
-            if data.get("operating_system")
-            else None
-        )
         return cls(
             id=EntityId.from_string(value=data.get("id")),
             name=data.get("name"),
@@ -282,13 +298,22 @@ class Server(AggregateRoot):
             environment_id=EntityId.from_string(
                 value=data.get("environment_id")
             ),
-            environment=environment,
+            environment=Environment.from_dict(data=data.get("environment"))
+            if data.get("environment")
+            else None,
             operating_system_id=EntityId.from_string(
                 value=data.get("operating_system_id")
             ),
-            operating_system=operating_system,
+            operating_system=OperatingSystem.from_dict(
+                data=data.get("operating_system")
+            )
+            if data.get("operating_system")
+            else None,
             credentials=data.get("credentials"),
             applications=data.get("applications"),
+            status=ServerStatus.from_string(value=data.get("status"))
+            if data.get("status")
+            else None,
             discarded=data.get("discarded"),
         )
 
@@ -337,6 +362,7 @@ class Server(AggregateRoot):
         operating_system_id: EntityId | None = None,
         credentials: list[Credential] | None = None,
         applications: list[ServerApplication] | None = None,
+        status: ServerStatus | None = None,
     ) -> "Server":
         """
         Important:
@@ -360,6 +386,8 @@ class Server(AggregateRoot):
             self.credentials = credentials
         if not self.applications == applications:
             self.applications = applications
+        if not self.status == status:
+            self.status = status
         return self
 
     def discard(self) -> None:

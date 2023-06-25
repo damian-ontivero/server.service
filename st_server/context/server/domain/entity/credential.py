@@ -3,7 +3,7 @@
 This is the aggregate root entity of the credential aggregate.
 """
 
-from st_server.context.server.domain.connection_type.connection_type import (
+from st_server.context.server.domain.entity.connection_type import (
     ConnectionType,
 )
 from st_server.shared.core.domain_event import DomainEvent

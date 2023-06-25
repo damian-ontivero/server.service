@@ -2,7 +2,7 @@
 
 import math
 
-from st_server.context.server.domain.connection_type.connection_type import (
+from st_server.context.server.domain.entity.connection_type import (
     ConnectionType,
 )
 from st_server.shared.core.exception import AlreadyExists, NotFound

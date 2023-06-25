@@ -2,7 +2,7 @@
 
 import math
 
-from st_server.context.server.domain.operating_system.operating_system import (
+from st_server.context.server.domain.entity.operating_system import (
     OperatingSystem,
 )
 from st_server.shared.core.exception import AlreadyExists, NotFound

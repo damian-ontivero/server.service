@@ -2,7 +2,11 @@
 
 import math
 
-from st_server.context.server.domain.server.server import Server
+from st_server.context.server.domain.entity.server import Server
+from st_server.context.server.domain.value_object.server_status import (
+    ServerStatus,
+)
+from st_server.shared.core.entity_id import EntityId
 from st_server.shared.core.exception import AlreadyExists, NotFound
 from st_server.shared.core.message_bus import MessageBus
 from st_server.shared.core.repository import Repository
@@ -116,8 +120,12 @@ class ServerService:
             cpu=data.get("cpu"),
             ram=data.get("ram"),
             hdd=data.get("hdd"),
-            environment_id=data.get("environment_id"),
-            operating_system_id=data.get("operating_system_id"),
+            environment_id=EntityId.from_string(
+                value=data.get("environment_id")
+            ),
+            operating_system_id=EntityId.from_string(
+                value=data.get("operating_system_id")
+            ),
             credentials=data.get("credentials"),
             applications=data.get("applications"),
         )
@@ -145,10 +153,15 @@ class ServerService:
             cpu=data.get("cpu"),
             ram=data.get("ram"),
             hdd=data.get("hdd"),
-            environment_id=data.get("environment_id"),
-            operating_system_id=data.get("operating_system_id"),
+            environment_id=EntityId.from_string(
+                value=data.get("environment_id")
+            ),
+            operating_system_id=EntityId.from_string(
+                value=data.get("operating_system_id")
+            ),
             credentials=data.get("credentials"),
             applications=data.get("applications"),
+            status=ServerStatus.from_string(value=data.get("status")),
         )
         self._repository.update_one(aggregate=server)
         self._message_bus.publish(domain_events=server.domain_events)

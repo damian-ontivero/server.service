@@ -2,7 +2,7 @@
 
 import math
 
-from st_server.context.server.domain.environment.environment import Environment
+from st_server.context.server.domain.entity.environment import Environment
 from st_server.shared.core.exception import AlreadyExists, NotFound
 from st_server.shared.core.message_bus import MessageBus
 from st_server.shared.core.repository import Repository
