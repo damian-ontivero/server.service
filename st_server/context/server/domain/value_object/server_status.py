@@ -16,11 +16,9 @@ class ServerStatus(ValueObject):
         if not value:
             raise ValueError("Server status cannot be empty")
         if not isinstance(value, str):
-            raise ValueError("Server status must be a string")
+            raise TypeError("Server status must be a string")
         if value not in [cls.RUNNING, cls.STOPPED, cls.ERROR, cls.UNKNOWN]:
-            raise ValueError(
-                "Invalid server status: {status!r}".format(status=value)
-            )
+            raise ValueError("Invalid server status")
         return cls(value=value)
 
     def __init__(self, value: str):
