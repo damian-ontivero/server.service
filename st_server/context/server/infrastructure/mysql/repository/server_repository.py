@@ -9,7 +9,7 @@ from sqlalchemy.orm import (
     load_only,
 )
 
-from st_server.context.server.domain.server.server import Server
+from st_server.context.server.domain.entity.server import Server
 from st_server.context.server.infrastructure.mysql.model.server import (
     ServerDbModel,
 )

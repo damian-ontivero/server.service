@@ -9,7 +9,7 @@ from sqlalchemy.orm import (
     load_only,
 )
 
-from st_server.context.server.domain.connection_type.connection_type import (
+from st_server.context.server.domain.entity.connection_type import (
     ConnectionType,
 )
 from st_server.context.server.infrastructure.mysql.model.connection_type import (

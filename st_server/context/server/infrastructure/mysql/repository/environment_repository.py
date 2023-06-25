@@ -9,7 +9,7 @@ from sqlalchemy.orm import (
     load_only,
 )
 
-from st_server.context.server.domain.environment.environment import Environment
+from st_server.context.server.domain.entity.environment import Environment
 from st_server.context.server.infrastructure.mysql.model.environment import (
     EnvironmentDbModel,
 )

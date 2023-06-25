@@ -9,7 +9,7 @@ from sqlalchemy.orm import (
     load_only,
 )
 
-from st_server.context.server.domain.application.application import Application
+from st_server.context.server.domain.entity.application import Application
 from st_server.context.server.infrastructure.mysql.model.application import (
     ApplicationDbModel,
 )

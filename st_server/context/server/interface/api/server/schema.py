@@ -22,6 +22,7 @@ class ServerBase:
     operating_system: OperatingSystemRead | None = None
     credentials: list | None = None
     applications: list | None = None
+    status: str | None = None
 
     def to_dict(self) -> dict:
         return asdict(self)

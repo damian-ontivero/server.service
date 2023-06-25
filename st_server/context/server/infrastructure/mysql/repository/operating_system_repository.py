@@ -9,7 +9,7 @@ from sqlalchemy.orm import (
     load_only,
 )
 
-from st_server.context.server.domain.operating_system.operating_system import (
+from st_server.context.server.domain.entity.operating_system import (
     OperatingSystem,
 )
 from st_server.context.server.infrastructure.mysql.model.operating_system import (

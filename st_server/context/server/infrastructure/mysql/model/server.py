@@ -32,6 +32,7 @@ class ServerDbModel(db.Base):
     )
     credentials = relationship("CredentialDbModel", lazy="noload")
     applications = relationship("ServerApplicationDbModel", lazy="noload")
+    status = sa.Column(sa.String(255), nullable=True)
 
     def __repr__(self) -> str:
         return (
@@ -43,6 +44,7 @@ class ServerDbModel(db.Base):
             "operating_system={operating_system!r}, "
             "credentials={credentials!r}, "
             "applications={applications!r}, "
+            "status={status!r}, "
             "discarded={discarded!r})"
         ).format(
             c=self.__class__.__name__,
@@ -57,6 +59,7 @@ class ServerDbModel(db.Base):
             operating_system=self.operating_system,
             credentials=self.credentials,
             applications=self.applications,
+            status=self.status,
             discarded=self.discarded,
         )
 
@@ -83,6 +86,7 @@ class ServerDbModel(db.Base):
             "applications": [
                 application.to_dict() for application in self.applications
             ],
+            "status": self.status,
             "discarded": self.discarded,
         }
         return {k: v for k, v in data.items() if k not in exclude}
@@ -99,5 +103,6 @@ class ServerDbModel(db.Base):
             operating_system_id=data.get("operating_system_id"),
             credentials=data.get("credentials") or [],
             applications=data.get("applications") or [],
+            status=data.get("status"),
             discarded=data.get("discarded"),
         )
