@@ -184,7 +184,9 @@ class Credential(Entity):
     @classmethod
     def from_dict(cls, data: dict) -> "Credential":
         return cls(
-            id=EntityId.from_string(value=data.get("id")),
+            id=EntityId.from_string(value=data.get("id"))
+            if data.get("id")
+            else None,
             server_id=EntityId.from_string(value=data.get("server_id")),
             connection_type=ConnectionType.from_string(
                 value=data.get("connection_type")
