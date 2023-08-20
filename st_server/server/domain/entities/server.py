@@ -374,9 +374,6 @@ class Server(AggregateRoot):
                     self._credentials.remove(current_credential)
             for new_credential in credentials:
                 if new_credential not in self._credentials:
-                    import ipdb
-
-                    ipdb.set_trace()
                     self._credentials.append(
                         Credential.create(
                             server_id=self._id,
