@@ -5,11 +5,7 @@ from st_server.server.domain.entities.credential import Credential
 from st_server.server.domain.value_objects.connection_type import (
     ConnectionType,
 )
-from st_server.server.infrastructure.mysql.repositories.credential_repository import (
-    CredentialRepositoryImpl,
-)
 from st_server.shared.domain.value_objects.entity_id import EntityId
-from tests.conftest import SessionLocal
 
 
 class CredentialFactory(factory.Factory):
@@ -35,9 +31,6 @@ class CredentialFactory(factory.Factory):
     @classmethod
     def _create(cls, model_class, *args, **kwargs):
         credential = model_class.create(*args, **kwargs)
-        CredentialRepositoryImpl(session=SessionLocal()).add_one(
-            aggregate=credential
-        )
         return credential
 
     @classmethod
