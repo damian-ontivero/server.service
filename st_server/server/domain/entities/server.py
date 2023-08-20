@@ -283,7 +283,10 @@ class Server(AggregateRoot):
             )
             if data.get("operating_system")
             else None,
-            credentials=data.get("credentials"),
+            credentials=[
+                Credential.from_dict(data=credential)
+                for credential in data.get("credentials")
+            ],
             applications=data.get("applications"),
             status=ServerStatus.from_string(value=data.get("status"))
             if data.get("status")
