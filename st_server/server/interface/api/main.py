@@ -6,9 +6,6 @@ from fastapi.middleware import cors
 from st_server.server.interface.api.routers.application import (
     router as application_router,
 )
-from st_server.server.interface.api.routers.credential import (
-    router as credential_router,
-)
 from st_server.server.interface.api.routers.server import (
     router as server_router,
 )
@@ -34,10 +31,4 @@ app.include_router(
     router=server_router,
     prefix="/server/servers",
     tags=["Server"],
-)
-
-app.include_router(
-    router=credential_router,
-    prefix="/server/credentials",
-    tags=["Credential"],
 )

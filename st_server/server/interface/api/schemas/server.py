@@ -2,6 +2,9 @@
 
 from dataclasses import asdict, dataclass, field
 
+from st_server.server.interface.api.schemas.application import ApplicationRead
+from st_server.server.interface.api.schemas.credential import CredentialRead
+
 
 @dataclass(frozen=True)
 class ServerBase:
@@ -11,8 +14,8 @@ class ServerBase:
     hdd: str | None = None
     environment: str | None = None
     operating_system: dict | None = None
-    credentials: list = field(default_factory=list)
-    applications: list = field(default_factory=list)
+    credentials: list[CredentialRead] = field(default_factory=list)
+    applications: list[ApplicationRead] = field(default_factory=list)
     status: str | None = None
 
     def to_dict(self) -> dict:

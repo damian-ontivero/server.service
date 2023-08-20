@@ -72,27 +72,6 @@ def mock_application_service(mock_application_repository, mock_message_bus):
     )
 
 
-@pytest.fixture(scope="function")
-def mock_credential_repository(mock_session, test_db):
-    from st_server.server.infrastructure.mysql.repositories.credential_repository import (
-        CredentialRepositoryImpl,
-    )
-
-    yield CredentialRepositoryImpl(session=mock_session)
-
-
-@pytest.fixture(scope="function")
-def mock_credential_service(mock_credential_repository, mock_message_bus):
-    from st_server.server.application.services.credential import (
-        CredentialService,
-    )
-
-    yield CredentialService(
-        repository=mock_credential_repository,
-        message_bus=mock_message_bus,
-    )
-
-
 # @pytest.fixture(scope="function")
 # def mock_auth_service(mock_user_repository):
 #     from st_server.server.application.services.auth import AuthService
