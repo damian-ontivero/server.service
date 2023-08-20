@@ -1,30 +1,33 @@
 [tool.poetry]
 name = "st-server"
-version = "0.1.0-preview.22"
+version = "0.1.0-preview.23"
 description = ""
 authors = ["Damian Ontivero <damian.ontivero@outlook.com>"]
 readme = "README.md"
 packages = [{include = "st_server"}]
 
 [tool.poetry.dependencies]
-python = "^3.10"
-sqlalchemy = "^2.0.10"
-alembic = "^1.10.3"
-pymysql = "^1.0.3"
-fastapi = "^0.95.1"
-uvicorn = "^0.21.1"
-werkzeug = "^2.2.3"
+python = "^3.11"
+sqlalchemy = "^2.0.19"
+alembic = "^1.11.1"
+pymysql = "^1.1.0"
+fastapi = "^0.100.1"
+uvicorn = "^0.23.1"
+werkzeug = "^2.3.6"
 python-multipart = "^0.0.6"
-pyjwt = "^2.6.0"
-cryptography = "^40.0.2"
+pyjwt = "^2.8.0"
+cryptography = "^41.0.2"
 pytz = "^2023.3"
-pika = "^1.3.1"
+pika = "^1.3.2"
+casbin = "^1.22.0"
+casbin-sqlalchemy-adapter = "^0.5.2"
 
 [tool.poetry.group.dev.dependencies]
-flake8 = "^6.0.0"
-black = "^23.3.0"
+flake8 = "^6.1.0"
+black = "^23.7.0"
 ipdb = "^0.13.13"
-pytest = "^7.3.1"
+pytest = "^7.4.0"
+pytest-factoryboy = "^2.5.1"
 
 [tool.black]
 line-length = 79
