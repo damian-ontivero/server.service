@@ -1,0 +1,38 @@
+version: "3.9"
+services:
+
+  api:
+    image: servertree-server-api-v1
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    container_name: servertree-server-api-v1
+    ports:
+      - "16401:16401"
+    depends_on:
+      - mysql
+    links:
+      - mysql
+
+  mysql:
+    image: mysql:8.0.33
+    container_name: servertree-mysql
+    ports:
+      - "3306:3306"
+    env_file:
+      - mysql.env
+    volumes:
+      - "./docker/mysql/data:/var/lib/mysql"
+      - "./db-init.sql:/docker-entrypoint-initdb.d/init.sql"
+  
+  # rabbitmq:
+  #   image: rabbitmq:3.11.14-management-alpine
+  #   container_name: servertree-rabbitmq
+  #   ports:
+  #     - "5672:5672"
+  #     - "15672:15672"
+  #   env_file:
+  #     - rabbitmq.env
+  #   volumes:
+  #     - "./docker/rabbitmq/data:/var/lib/rabbitmq"
+  #     - "./docker/rabbitmq/log:/var/log/rabbitmq"
