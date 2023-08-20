@@ -62,6 +62,7 @@ class CredentialRepositoryImpl(CredentialRepository):
     """
 
     def __init__(self, session: Session) -> None:
+        """Initialize the repository."""
         self._session = session
 
     def find_many(
@@ -72,6 +73,7 @@ class CredentialRepositoryImpl(CredentialRepository):
         fields: list[str] | None = None,
         **kwargs,
     ) -> RepositoryPageDto:
+        """Returns Credentials."""
         if limit is None:
             limit = 0
         if offset is None:
@@ -120,7 +122,9 @@ class CredentialRepositoryImpl(CredentialRepository):
             return RepositoryPageDto(
                 _total=total,
                 _items=[
-                    Credential.from_dict(credential.to_dict(exclude=exclude))
+                    Credential.from_dict(
+                        data=credential.to_dict(exclude=exclude)
+                    )
                     for credential in credentials
                 ],
             )
@@ -128,6 +132,7 @@ class CredentialRepositoryImpl(CredentialRepository):
     def find_one(
         self, id: int, fields: list[str] | None = None
     ) -> Credential | None:
+        """Returns a Credential."""
         if fields is None:
             fields = []
         with self._session as session:
@@ -152,24 +157,27 @@ class CredentialRepositoryImpl(CredentialRepository):
                     exclude.append(attr.key)
             credential = query.one_or_none()
             return (
-                Credential.from_dict(credential.to_dict(exclude=exclude))
+                Credential.from_dict(data=credential.to_dict(exclude=exclude))
                 if credential
                 else None
             )
 
     def add_one(self, aggregate: Credential) -> None:
+        """Adds a Credential."""
         with self._session as session:
-            model = CredentialDbModel.from_dict(aggregate.to_dict())
+            model = CredentialDbModel.from_dict(data=aggregate.to_dict())
             session.add(model)
             session.commit()
 
     def update_one(self, aggregate: Credential) -> None:
+        """Updates a Credential."""
         with self._session as session:
-            model = CredentialDbModel.from_dict(aggregate.to_dict())
+            model = CredentialDbModel.from_dict(data=aggregate.to_dict())
             session.merge(model)
             session.commit()
 
     def delete_one(self, id: int) -> None:
+        """Deletes a Credential."""
         with self._session as session:
             model = session.get(entity=CredentialDbModel, ident=id)
             session.delete(model)

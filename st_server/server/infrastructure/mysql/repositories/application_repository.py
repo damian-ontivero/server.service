@@ -62,6 +62,7 @@ class ApplicationRepositoryImpl(ApplicationRepository):
     """
 
     def __init__(self, session: Session) -> None:
+        """Initialize the repository."""
         self._session = session
 
     def find_many(
@@ -72,6 +73,7 @@ class ApplicationRepositoryImpl(ApplicationRepository):
         fields: list[str] | None = None,
         **kwargs,
     ) -> RepositoryPageDto:
+        """Returns Applications."""
         if limit is None:
             limit = 0
         if offset is None:
@@ -120,7 +122,9 @@ class ApplicationRepositoryImpl(ApplicationRepository):
             return RepositoryPageDto(
                 _total=total,
                 _items=[
-                    Application.from_dict(application.to_dict(exclude=exclude))
+                    Application.from_dict(
+                        data=application.to_dict(exclude=exclude)
+                    )
                     for application in applications
                 ],
             )
@@ -128,6 +132,7 @@ class ApplicationRepositoryImpl(ApplicationRepository):
     def find_one(
         self, id: int, fields: list[str] | None = None
     ) -> Application | None:
+        """Returns an Application."""
         if fields is None:
             fields = []
         with self._session as session:
@@ -152,24 +157,29 @@ class ApplicationRepositoryImpl(ApplicationRepository):
                     exclude.append(attr.key)
             application = query.one_or_none()
             return (
-                Application.from_dict(application.to_dict(exclude=exclude))
+                Application.from_dict(
+                    data=application.to_dict(exclude=exclude)
+                )
                 if application
                 else None
             )
 
     def add_one(self, aggregate: Application) -> None:
+        """Adds an Application."""
         with self._session as session:
-            model = ApplicationDbModel.from_dict(aggregate.to_dict())
+            model = ApplicationDbModel.from_dict(data=aggregate.to_dict())
             session.add(model)
             session.commit()
 
     def update_one(self, aggregate: Application) -> None:
+        """Updates an Application."""
         with self._session as session:
-            model = ApplicationDbModel.from_dict(aggregate.to_dict())
+            model = ApplicationDbModel.from_dict(data=aggregate.to_dict())
             session.merge(model)
             session.commit()
 
     def delete_one(self, id: int) -> None:
+        """Deletes an Application."""
         with self._session as session:
             model = session.get(entity=ApplicationDbModel, ident=id)
             session.delete(model)

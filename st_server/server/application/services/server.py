@@ -3,6 +3,7 @@
 import math
 
 from st_server.server.application.dtos.server import ServerReadDto
+from st_server.server.domain.entities.credential import Credential
 from st_server.server.domain.entities.server import Server
 from st_server.server.domain.repositories.server_repository import (
     ServerRepository,
@@ -60,6 +61,7 @@ class ServerService:
     def __init__(
         self, repository: ServerRepository, message_bus: MessageBus
     ) -> None:
+        """Initialize the service."""
         self._repository = repository
         self._message_bus = message_bus
 
@@ -76,6 +78,7 @@ class ServerService:
         access_token: str | None = None,
         **kwargs,
     ) -> ServicePageDto:
+        """Returns Servers."""
         if fields is None:
             fields = []
         if limit is None:
@@ -112,6 +115,7 @@ class ServerService:
         fields: list[str] | None = None,
         access_token: str | None = None,
     ) -> ServerReadDto:
+        """Returns a Server."""
         if fields is None:
             fields = []
         server = self._repository.find_one(id=id, fields=fields)
@@ -123,6 +127,7 @@ class ServerService:
     def add_one(
         self, data: dict, access_token: str | None = None
     ) -> ServerReadDto:
+        """Adds a Server."""
         server = Server.create(
             name=data.get("name"),
             cpu=data.get("cpu"),
@@ -136,7 +141,10 @@ class ServerService:
             )
             if data.get("operating_system")
             else None,
-            credentials=data.get("credentials"),
+            credentials=[
+                Credential.from_dict(data=credential)
+                for credential in data.get("credentials")
+            ],
             applications=data.get("applications"),
         )
         servers = self._repository.find_many(name="eq:{}".format(server.name))
@@ -155,6 +163,7 @@ class ServerService:
     def update_one(
         self, id: str, data: dict, access_token: str | None = None
     ) -> ServerReadDto:
+        """Updates a Server."""
         server = self._repository.find_one(id=id)
         if server is None:
             raise NotFound("Server with id: {id!r} not found".format(id=id))
@@ -171,7 +180,10 @@ class ServerService:
             )
             if data.get("operating_system")
             else None,
-            credentials=data.get("credentials"),
+            credentials=[
+                Credential.from_dict(data=credential)
+                for credential in data.get("credentials")
+            ],
             applications=data.get("applications"),
             status=ServerStatus.from_string(value=data.get("status"))
             if data.get("status")
@@ -184,6 +196,7 @@ class ServerService:
 
     # @AuthService.access_token_required
     def discard_one(self, id: str, access_token: str | None = None) -> None:
+        """Discards a Server."""
         server = self._repository.find_one(id=id)
         if server is None:
             raise NotFound("Server with id: {id!r} not found".format(id=id))
@@ -194,6 +207,7 @@ class ServerService:
 
     # @AuthService.access_token_required
     def delete_one(self, id: str, access_token: str | None = None) -> None:
+        """Deletes a Server."""
         server = self._repository.find_one(id=id)
         if server is None:
             raise NotFound("Server with id: {id!r} not found".format(id=id))

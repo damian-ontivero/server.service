@@ -4,6 +4,9 @@ import sqlalchemy as sa
 from sqlalchemy.orm import relationship
 
 from st_server.server.infrastructure.mysql import db
+from st_server.server.infrastructure.mysql.models.credential import (
+    CredentialDbModel,
+)
 
 
 class ServerDbModel(db.Base):
@@ -21,8 +24,10 @@ class ServerDbModel(db.Base):
     status = sa.Column(sa.String(255), nullable=True)
     discarded = sa.Column(sa.Boolean, nullable=False, default=False)
 
-    credentials = relationship("CredentialDbModel", lazy="noload")
-    applications = relationship("ServerApplicationDbModel", lazy="noload")
+    credentials = relationship(
+        "CredentialDbModel", lazy="joined", cascade="all, delete-orphan"
+    )
+    applications = relationship("ServerApplicationDbModel", lazy="joined")
 
     def __repr__(self) -> str:
         return (
@@ -83,7 +88,10 @@ class ServerDbModel(db.Base):
             hdd=data.get("hdd"),
             environment=data.get("environment"),
             operating_system=data.get("operating_system"),
-            credentials=data.get("credentials") or [],
+            credentials=[
+                CredentialDbModel.from_dict(data=credential)
+                for credential in data.get("credentials")
+            ],
             applications=data.get("applications") or [],
             status=data.get("status"),
             discarded=data.get("discarded"),

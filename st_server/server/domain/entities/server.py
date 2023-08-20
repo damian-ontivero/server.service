@@ -182,8 +182,10 @@ class Server(AggregateRoot):
         self._check_not_discarded()
         domain_event = Server.CredentialChanged(
             aggregate_id=self._id.value,
-            old_value=self._credentials,
-            new_value=credentials,
+            old_value=[
+                credential.to_dict() for credential in self._credentials
+            ],
+            new_value=[credential.to_dict() for credential in credentials],
         )
         self._credentials = credentials
         self.register_domain_event(domain_event=domain_event)
@@ -362,8 +364,22 @@ class Server(AggregateRoot):
             and not operating_system == self._operating_system
         ):
             self.operating_system = operating_system
-        if credentials is not None and not credentials == self._credentials:
-            self.credentials = credentials
+
+        if credentials is not None:
+            # If the new list of credentials does not contain the current credential, remove it.
+            # If the current list of credentials does not contain the new credential, add it.
+            # If the current list of credentials contains the new credential, update it.
+            for current_credential in self._credentials:
+                if current_credential not in credentials:
+                    self._credentials.remove(current_credential)
+            for new_credential in credentials:
+                if new_credential not in self._credentials:
+                    self._credentials.append(new_credential)
+                else:
+                    self._credentials[
+                        self._credentials.index(new_credential)
+                    ] = new_credential
+
         if applications is not None and not applications == self._applications:
             self.applications = applications
         if status is not None and not status == self._status:

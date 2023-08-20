@@ -59,6 +59,7 @@ class CredentialService:
     def __init__(
         self, repository: CredentialRepository, message_bus: MessageBus
     ) -> None:
+        """Initialize the service."""
         self._repository = repository
         self._message_bus = message_bus
 
@@ -75,6 +76,7 @@ class CredentialService:
         access_token: str | None = None,
         **kwargs,
     ) -> ServicePageDto:
+        """Returns Credentials."""
         if fields is None:
             fields = []
         if limit is None:
@@ -111,6 +113,7 @@ class CredentialService:
         fields: list[str] | None = None,
         access_token: str | None = None,
     ) -> Credential:
+        """Returns a Credential."""
         if fields is None:
             fields = []
         credential = self._repository.find_one(id=id, fields=fields)
@@ -122,6 +125,7 @@ class CredentialService:
     def add_one(
         self, data: dict, access_token: str | None = None
     ) -> Credential:
+        """Adds a Credential."""
         credential = Credential.create(
             server_id=EntityId.from_string(value=data.get("server_id")),
             connection_type=ConnectionType.from_string(
@@ -152,6 +156,7 @@ class CredentialService:
     def update_one(
         self, id: str, data: dict, access_token: str | None = None
     ) -> Credential:
+        """Updates a Credential."""
         credential = self._repository.find_one(id=id)
         if credential is None:
             raise NotFound(
@@ -178,6 +183,7 @@ class CredentialService:
 
     # @AuthService.access_token_required
     def discard_one(self, id: str, access_token: str | None = None) -> None:
+        """Discards a Credential."""
         credential = self._repository.find_one(id=id)
         if credential is None:
             raise NotFound(
@@ -188,6 +194,7 @@ class CredentialService:
 
     # @AuthService.access_token_required
     def delete_one(self, id: str, access_token: str | None = None) -> None:
+        """Deletes a Credential."""
         credential = self._repository.find_one(id=id)
         if credential is None:
             raise NotFound(

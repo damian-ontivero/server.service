@@ -55,6 +55,7 @@ class ApplicationService:
     def __init__(
         self, repository: ApplicationRepository, message_bus: MessageBus
     ) -> None:
+        """Initialize the service."""
         self._repository = repository
         self._message_bus = message_bus
 
@@ -71,6 +72,7 @@ class ApplicationService:
         access_token: str | None = None,
         **kwargs,
     ) -> ServicePageDto:
+        """Returns Applications."""
         if fields is None:
             fields = []
         if limit is None:
@@ -107,6 +109,7 @@ class ApplicationService:
         fields: list[str] | None = None,
         access_token: str | None = None,
     ) -> Application:
+        """Returns a Application."""
         if fields is None:
             fields = []
         application = self._repository.find_one(id=id, fields=fields)
@@ -118,6 +121,7 @@ class ApplicationService:
     def add_one(
         self, data: dict, access_token: str | None = None
     ) -> Application:
+        """Adds a Application."""
         application = Application.create(
             name=data.get("name"),
             version=data.get("version"),
@@ -145,6 +149,7 @@ class ApplicationService:
     def update_one(
         self, id: str, data: dict, access_token: str | None = None
     ) -> Application:
+        """Updates a Application."""
         application = self._repository.find_one(id=id)
         if application is None:
             raise NotFound(
@@ -162,6 +167,7 @@ class ApplicationService:
 
     # @AuthService.access_token_required
     def discard_one(self, id: str, access_token: str | None = None) -> None:
+        """Discards a Application."""
         application = self._repository.find_one(id=id)
         if application is None:
             raise NotFound(
@@ -174,6 +180,7 @@ class ApplicationService:
 
     # @AuthService.access_token_required
     def delete_one(self, id: str, access_token: str | None = None) -> None:
+        """Deletes a Application."""
         application = self._repository.find_one(id=id)
         if application is None:
             raise NotFound(

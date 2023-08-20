@@ -60,6 +60,7 @@ class ServerRepositoryImpl(ServerRepository):
     """
 
     def __init__(self, session: Session) -> None:
+        """Initialize the repository."""
         self._session = session
 
     def find_many(
@@ -70,6 +71,7 @@ class ServerRepositoryImpl(ServerRepository):
         fields: list[str] | None = None,
         **kwargs,
     ) -> RepositoryPageDto:
+        """Returns Servers."""
         if limit is None:
             limit = 0
         if offset is None:
@@ -118,7 +120,7 @@ class ServerRepositoryImpl(ServerRepository):
             return RepositoryPageDto(
                 _total=total,
                 _items=[
-                    Server.from_dict(server.to_dict(exclude=exclude))
+                    Server.from_dict(data=server.to_dict(exclude=exclude))
                     for server in servers
                 ],
             )
@@ -126,6 +128,7 @@ class ServerRepositoryImpl(ServerRepository):
     def find_one(
         self, id: int, fields: list[str] | None = None
     ) -> Server | None:
+        """Returns a Server."""
         if fields is None:
             fields = []
         with self._session as session:
@@ -148,24 +151,27 @@ class ServerRepositoryImpl(ServerRepository):
                     exclude.append(attr.key)
             server = query.one_or_none()
             return (
-                Server.from_dict(server.to_dict(exclude=exclude))
+                Server.from_dict(data=server.to_dict(exclude=exclude))
                 if server
                 else None
             )
 
     def add_one(self, aggregate: Server) -> None:
+        """Adds a Server."""
         with self._session as session:
-            model = ServerDbModel.from_dict(aggregate.to_dict())
+            model = ServerDbModel.from_dict(data=aggregate.to_dict())
             session.add(model)
             session.commit()
 
     def update_one(self, aggregate: Server) -> None:
+        """Updates a Server."""
         with self._session as session:
-            model = ServerDbModel.from_dict(aggregate.to_dict())
+            model = ServerDbModel.from_dict(data=aggregate.to_dict())
             session.merge(model)
             session.commit()
 
     def delete_one(self, id: int) -> None:
+        """Deletes a Server."""
         with self._session as session:
             model = session.get(entity=ServerDbModel, ident=id)
             session.delete(model)
