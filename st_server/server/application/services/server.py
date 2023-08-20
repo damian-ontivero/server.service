@@ -183,7 +183,9 @@ class ServerService:
             credentials=[
                 Credential.from_dict(data=credential)
                 for credential in data.get("credentials")
-            ],
+            ]
+            if data.get("credentials")
+            else None,
             applications=data.get("applications"),
             status=ServerStatus.from_string(value=data.get("status"))
             if data.get("status")
