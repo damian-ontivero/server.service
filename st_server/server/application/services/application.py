@@ -132,7 +132,7 @@ class ApplicationService:
             version="eq:{}".format(application.version),
             architect="eq:{}".format(application.architect),
         )
-        if applications._total:
+        if applications._total > 0:
             raise AlreadyExists(
                 "Application with name: {name!r} version: {version!r} and architect: {architect!r} already exists".format(
                     name=application.name,
@@ -155,6 +155,25 @@ class ApplicationService:
             raise NotFound(
                 "Application with id: {id!r} not found".format(id=id)
             )
+        if (
+            not application.name == data.get("name")
+            or not application.version == data.get("version")
+            or not application.architect == data.get("architect")
+        ):
+            applications = self._repository.find_many(
+                name="eq:{}".format(data.get("name")),
+                version="eq:{}".format(data.get("version")),
+                architect="eq:{}".format(data.get("architect")),
+            )
+            if applications._total > 0:
+                raise AlreadyExists(
+                    "Application with name: {name!r} version: {version!r} and architect: {architect!r} already exists".format(
+                        name=data.get("name"),
+                        version=data.get("version"),
+                        architect=data.get("architect"),
+                    )
+                )
+
         application = application.update(
             name=data.get("name"),
             version=data.get("version"),

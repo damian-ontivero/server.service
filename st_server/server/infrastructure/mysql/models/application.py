@@ -10,9 +10,7 @@ class ApplicationDbModel(db.Base):
 
     __tablename__ = "application"
 
-    id = sa.Column(
-        sa.String(32), primary_key=True, unique=True, nullable=False
-    )
+    id = sa.Column(sa.String(32), primary_key=True)
     name = sa.Column(sa.String(255), nullable=False)
     version = sa.Column(sa.String(255), nullable=False)
     architect = sa.Column(sa.String(255), nullable=False)
