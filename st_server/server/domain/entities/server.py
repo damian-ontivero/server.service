@@ -395,17 +395,17 @@ class Server(AggregateRoot):
             When updating the attributes, the domain events
             are registered by setters.
         """
-        if not name == self._name:
+        if name and not name == self._name:
             self.name = name
-        if not cpu == self._cpu:
+        if cpu and not cpu == self._cpu:
             self.cpu = cpu
-        if not ram == self._ram:
+        if ram and not ram == self._ram:
             self.ram = ram
-        if not hdd == self._hdd:
+        if hdd and not hdd == self._hdd:
             self.hdd = hdd
-        if not environment == self._environment:
+        if environment and not environment == self._environment:
             self.environment = environment
-        if not operating_system == self._operating_system:
+        if operating_system and not operating_system == self._operating_system:
             self.operating_system = operating_system
 
         if credentials is not None:
@@ -434,9 +434,9 @@ class Server(AggregateRoot):
                         self._credentials.index(new_credential)
                     ] = new_credential
 
-        if not applications == self._applications:
+        if applications and not applications == self._applications:
             self.applications = applications
-        if not status == self._status:
+        if status and not status == self._status:
             self.status = status
         return self
 

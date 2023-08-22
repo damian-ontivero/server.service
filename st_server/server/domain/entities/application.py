@@ -175,11 +175,11 @@ class Application(AggregateRoot):
             When updating the attributes, the domain events
             are registered by setters.
         """
-        if not name == self._name:
+        if name and not name == self._name:
             self.name = name
-        if not version == self._version:
+        if version and not version == self._version:
             self.version = version
-        if not architect == self._architect:
+        if architect and not architect == self._architect:
             self.architect = architect
         return self
 

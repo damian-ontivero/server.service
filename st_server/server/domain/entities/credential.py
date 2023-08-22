@@ -290,21 +290,21 @@ class Credential(Entity):
             When updating the attributes, the domain events
             are registered by setters.
         """
-        if not server_id == self._server_id:
+        if server_id and not server_id == self._server_id:
             self.server_id = server_id
-        if not connection_type == self._connection_type:
+        if connection_type and not connection_type == self._connection_type:
             self.connection_type = connection_type
-        if not username == self._username:
+        if username and not username == self._username:
             self.username = username
-        if not password == self._password:
+        if password and not password == self._password:
             self.password = password
-        if not local_ip == self._local_ip:
+        if local_ip and not local_ip == self._local_ip:
             self.local_ip = local_ip
-        if not local_port == self._local_port:
+        if local_port and not local_port == self._local_port:
             self.local_port = local_port
-        if not public_ip == self._public_ip:
+        if public_ip and not public_ip == self._public_ip:
             self.public_ip = public_ip
-        if not public_port == self._public_port:
+        if public_port and not public_port == self._public_port:
             self.public_port = public_port
         return self
 
