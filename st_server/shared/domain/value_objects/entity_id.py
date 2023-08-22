@@ -24,7 +24,7 @@ class EntityId:
         return cls(value=uuid4().hex)
 
     @classmethod
-    def from_string(cls, value: str) -> "EntityId":
+    def from_text(cls, value: str) -> "EntityId":
         """Named constructor for creating an entity id from a string."""
         return cls(value=value)
 

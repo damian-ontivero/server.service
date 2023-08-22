@@ -15,33 +15,53 @@ class Credential(Entity):
     """Credential entity."""
 
     class Created(DomainEvent):
+        """Domain event that represents the creation of a Credential."""
+
         pass
 
     class Discarded(DomainEvent):
+        """Domain event that represents the discarding of a Credential."""
+
         pass
 
     class ServerIdChanged(DomainEvent):
+        """Domain event that represents the change of the server_id of a Credential."""
+
         pass
 
     class ConnectionTypeChanged(DomainEvent):
+        """Domain event that represents the change of the connection_type of a Credential."""
+
         pass
 
     class UsernameChanged(DomainEvent):
+        """Domain event that represents the change of the username of a Credential."""
+
         pass
 
     class PasswordChanged(DomainEvent):
+        """Domain event that represents the change of the password of a Credential."""
+
         pass
 
     class LocalIpChanged(DomainEvent):
+        """Domain event that represents the change of the local_ip of a Credential."""
+
         pass
 
     class LocalPortChanged(DomainEvent):
+        """Domain event that represents the change of the local_port of a Credential."""
+
         pass
 
     class PublicIpChanged(DomainEvent):
+        """Domain event that represents the change of the public_ip of a Credential."""
+
         pass
 
     class PublicPortChanged(DomainEvent):
+        """Domain event that represents the change of the public_port of a Credential."""
+
         pass
 
     def __init__(
@@ -57,7 +77,8 @@ class Credential(Entity):
         public_port: str | None = None,
         discarded: bool | None = None,
     ) -> None:
-        """
+        """Initialize the Credential.
+
         Important:
             Do not use directly to create a new Credential.
             Use the factory method `Credential.create` instead.
@@ -74,77 +95,94 @@ class Credential(Entity):
 
     @property
     def server_id(self) -> EntityId:
+        """Returns the server id of the Credential."""
         return self._server_id
 
     @server_id.setter
     def server_id(self, server_id: EntityId) -> None:
+        """Sets the server id of the Credential."""
         self._check_not_discarded()
         self._server_id = server_id
 
     @property
     def connection_type(self) -> ConnectionType:
+        """Returns the connection type of the Credential."""
         return self._connection_type
 
     @connection_type.setter
     def connection_type(self, connection_type: ConnectionType) -> None:
+        """Sets the connection type of the Credential."""
         self._check_not_discarded()
         self._connection_type = connection_type
 
     @property
     def username(self) -> str:
+        """Returns the username of the Credential."""
         return self._username
 
     @username.setter
     def username(self, username: str) -> None:
+        """Sets the username of the Credential."""
         self._check_not_discarded()
         self._username = username
 
     @property
     def password(self) -> str:
+        """Returns the password of the Credential."""
         return self._password
 
     @password.setter
     def password(self, password: str) -> None:
+        """Sets the password of the Credential."""
         self._check_not_discarded()
         self._password = password
 
     @property
     def local_ip(self) -> str:
+        """Returns the local ip of the Credential."""
         return self._local_ip
 
     @local_ip.setter
     def local_ip(self, local_ip: str) -> None:
+        """Sets the local ip of the Credential."""
         self._check_not_discarded()
         self._local_ip = local_ip
 
     @property
     def local_port(self) -> int:
+        """Returns the local port of the Credential."""
         return self._local_port
 
     @local_port.setter
     def local_port(self, local_port: int) -> None:
+        """Sets the local port of the Credential."""
         self._check_not_discarded()
         self._local_port = local_port
 
     @property
     def public_ip(self) -> str:
+        """Returns the public ip of the Credential."""
         return self._public_ip
 
     @public_ip.setter
     def public_ip(self, public_ip: str) -> None:
+        """Sets the public ip of the Credential."""
         self._check_not_discarded()
         self._public_ip = public_ip
 
     @property
     def public_port(self) -> int:
+        """Returns the public port of the Credential."""
         return self._public_port
 
     @public_port.setter
     def public_port(self, public_port: int) -> None:
+        """Sets the public port of the Credential."""
         self._check_not_discarded()
         self._public_port = public_port
 
     def __repr__(self) -> str:
+        """Returns the representation of the Credential."""
         return (
             "{d}{c}(id={id!r}, server_id={server_id!r}, "
             "connection_type={connection_type!r}, "
@@ -168,6 +206,7 @@ class Credential(Entity):
         )
 
     def to_dict(self) -> dict:
+        """Returns the dictionary representation of the Credential."""
         return {
             "id": self._id.value,
             "server_id": self._server_id.value,
@@ -183,12 +222,13 @@ class Credential(Entity):
 
     @classmethod
     def from_dict(cls, data: dict) -> "Credential":
+        """Named constructor for creating a Credential from a dictionary."""
         return cls(
-            id=EntityId.from_string(value=data.get("id"))
+            id=EntityId.from_text(value=data.get("id"))
             if data.get("id")
             else EntityId.generate(),
-            server_id=EntityId.from_string(value=data.get("server_id")),
-            connection_type=ConnectionType.from_string(
+            server_id=EntityId.from_text(value=data.get("server_id")),
+            connection_type=ConnectionType.from_text(
                 value=data.get("connection_type")
             ),
             username=data.get("username"),
@@ -212,10 +252,11 @@ class Credential(Entity):
         public_ip: str,
         public_port: int,
     ) -> "Credential":
-        """
+        """Named constructor for creating a new Credential.
+
         Important:
-            This method is only used to create a new credential.
-            When creating a new credential, the id is automatically generated
+            This method is only used to create a new Credential.
+            When creating a new Credential, the id is automatically generated
             and a domain event is registered.
         """
         return cls(
@@ -242,35 +283,34 @@ class Credential(Entity):
         public_ip: str | None = None,
         public_port: int | None = None,
     ) -> None:
-        """
+        """Updates the Credential.
+
         Important:
-            This method is only used to update an credential.
+            This method is only used to update an Credential.
             When updating the attributes, the domain events
             are registered by setters.
         """
-        if server_id is not None and not server_id == self._server_id:
+        if not server_id == self._server_id:
             self.server_id = server_id
-        if (
-            connection_type is not None
-            and not connection_type == self._connection_type
-        ):
+        if not connection_type == self._connection_type:
             self.connection_type = connection_type
-        if username is not None and not username == self._username:
+        if not username == self._username:
             self.username = username
-        if password is not None and not password == self._password:
+        if not password == self._password:
             self.password = password
-        if local_ip is not None and not local_ip == self._local_ip:
+        if not local_ip == self._local_ip:
             self.local_ip = local_ip
-        if local_port is not None and not local_port == self._local_port:
+        if not local_port == self._local_port:
             self.local_port = local_port
-        if public_ip is not None and not public_ip == self._public_ip:
+        if not public_ip == self._public_ip:
             self.public_ip = public_ip
-        if public_port is not None and not public_port == self._public_port:
+        if not public_port == self._public_port:
             self.public_port = public_port
         return self
 
     def discard(self) -> None:
-        """
+        """Discards the Credential.
+
         Important:
             This method is only used to discard an credential.
             When discarding an credential, the discarded attribute is set to True

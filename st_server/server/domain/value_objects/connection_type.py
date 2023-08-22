@@ -17,7 +17,7 @@ class ConnectionType:
         return self
 
     @classmethod
-    def from_string(cls, value: str) -> "ConnectionType":
+    def from_text(cls, value: str) -> "ConnectionType":
         """Named constructor for creating a connection type from a string."""
         return cls(value=value)
 

@@ -133,7 +133,7 @@ class ServerService:
             cpu=data.get("cpu"),
             ram=data.get("ram"),
             hdd=data.get("hdd"),
-            environment=Environment.from_string(value=data.get("environment"))
+            environment=Environment.from_text(value=data.get("environment"))
             if data.get("environment")
             else None,
             operating_system=OperatingSystem.from_dict(
@@ -172,7 +172,7 @@ class ServerService:
             cpu=data.get("cpu"),
             ram=data.get("ram"),
             hdd=data.get("hdd"),
-            environment=Environment.from_string(value=data.get("environment"))
+            environment=Environment.from_text(value=data.get("environment"))
             if data.get("environment")
             else None,
             operating_system=OperatingSystem.from_dict(
@@ -187,7 +187,7 @@ class ServerService:
             if data.get("credentials")
             else None,
             applications=data.get("applications"),
-            status=ServerStatus.from_string(value=data.get("status"))
+            status=ServerStatus.from_text(value=data.get("status"))
             if data.get("status")
             else None,
         )

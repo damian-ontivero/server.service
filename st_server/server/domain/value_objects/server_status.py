@@ -24,7 +24,7 @@ class ServerStatus:
         return self
 
     @classmethod
-    def from_string(cls, value: str) -> "ServerStatus":
+    def from_text(cls, value: str) -> "ServerStatus":
         """Named constructor for creating a server status from a string."""
         return cls(value=value)
 

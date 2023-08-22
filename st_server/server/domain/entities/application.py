@@ -12,18 +12,28 @@ class Application(AggregateRoot):
     """Application entity."""
 
     class Created(DomainEvent):
+        """Domain event that represents the creation of an Application."""
+
         pass
 
     class Discarded(DomainEvent):
+        """Domain event that represents the discarding of an Application."""
+
         pass
 
     class NameChanged(DomainEvent):
+        """Domain event that represents the change of the name of an Application."""
+
         pass
 
     class VersionChanged(DomainEvent):
+        """Domain event that represents the change of the version of an Application."""
+
         pass
 
     class ArchitectChanged(DomainEvent):
+        """Domain event that represents the change of the architect of an Application."""
+
         pass
 
     def __init__(
@@ -34,7 +44,8 @@ class Application(AggregateRoot):
         architect: str | None = None,
         discarded: bool | None = None,
     ) -> None:
-        """
+        """Initialize the Application.
+
         Important:
             Do not use directly to create a new Application.
             Use the factory method `Application.create` instead.
@@ -46,10 +57,12 @@ class Application(AggregateRoot):
 
     @property
     def name(self) -> str:
+        """Returns the name of the Application."""
         return self._name
 
     @name.setter
     def name(self, name: str) -> None:
+        """Sets the name of the Application."""
         self._check_not_discarded()
         domain_event = Application.NameChanged(
             aggregate_id=self._id.value,
@@ -61,10 +74,12 @@ class Application(AggregateRoot):
 
     @property
     def version(self) -> str:
+        """Returns the version of the Application."""
         return self._version
 
     @version.setter
     def version(self, version: str) -> None:
+        """Sets the version of the Application."""
         self._check_not_discarded()
         domain_event = Application.VersionChanged(
             aggregate_id=self._id.value,
@@ -76,10 +91,12 @@ class Application(AggregateRoot):
 
     @property
     def architect(self) -> str:
+        """Returns the architect of the Application."""
         return self._architect
 
     @architect.setter
     def architect(self, architect: str) -> None:
+        """Sets the architect of the Application."""
         self._check_not_discarded()
         domain_event = Application.ArchitectChanged(
             aggregate_id=self._id.value,
@@ -90,6 +107,7 @@ class Application(AggregateRoot):
         self.register_domain_event(domain_event=domain_event)
 
     def __repr__(self) -> str:
+        """Returns the string representation of the Application."""
         return (
             "{d}{c}(id={id!r}, name={name!r}, "
             "version={version!r}, architect={architect!r}, "
@@ -105,6 +123,7 @@ class Application(AggregateRoot):
         )
 
     def to_dict(self) -> dict:
+        """Returns the dictionary representation of the Application."""
         return {
             "id": self._id.value,
             "name": self._name,
@@ -115,8 +134,9 @@ class Application(AggregateRoot):
 
     @classmethod
     def from_dict(cls, data: dict) -> "Application":
+        """Named constructor for creating an Application from a dictionary."""
         return cls(
-            id=EntityId.from_string(data.get("id")),
+            id=EntityId.from_text(data.get("id")),
             name=data.get("name"),
             version=data.get("version"),
             architect=data.get("architect"),
@@ -125,10 +145,11 @@ class Application(AggregateRoot):
 
     @classmethod
     def create(cls, name: str, version: str, architect: str) -> "Application":
-        """
+        """Named constructor for creating a new Application.
+
         Important:
-            This method is only used to create a new application.
-            When creating a new application, the id is automatically generated
+            This method is only used to create a new Application.
+            When creating a new Application, the id is automatically generated
             and a domain event is registered.
         """
         application = cls(
@@ -137,7 +158,7 @@ class Application(AggregateRoot):
             version=version,
             architect=architect,
         )
-        domain_event = Application.Created(aggregate_id=application.id.value)
+        domain_event = Application.Created(aggregate_id=application._id.value)
         application.register_domain_event(domain_event=domain_event)
         return application
 
@@ -147,25 +168,27 @@ class Application(AggregateRoot):
         version: str | None = None,
         architect: str | None = None,
     ) -> None:
-        """
+        """Updates the Application.
+
         Important:
-            This method is only used to update an application.
+            This method is only used to update an Application.
             When updating the attributes, the domain events
             are registered by setters.
         """
-        if name is not None and not name == self._name:
+        if not name == self._name:
             self.name = name
-        if version is not None and not version == self._version:
+        if not version == self._version:
             self.version = version
-        if architect is not None and not architect == self._architect:
+        if not architect == self._architect:
             self.architect = architect
         return self
 
     def discard(self) -> None:
-        """
+        """Discards the Application.
+
         Important:
-            This method is only used to discard an application.
-            When discarding an application, the discarded attribute is set to True
+            This method is only used to discard an Application.
+            When discarding an Application, the discarded attribute is set to True
             and a domain event is registered.
         """
         domain_event = Application.Discarded(aggregate_id=self._id.value)

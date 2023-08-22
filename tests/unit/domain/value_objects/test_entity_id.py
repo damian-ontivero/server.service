@@ -12,9 +12,9 @@ def test_generate():
     assert entity_id.value is not None
 
 
-def test_from_string():
+def test_from_text():
     """Test."""
-    entity_id = EntityId.from_string("1234")
+    entity_id = EntityId.from_text("1234")
 
     assert entity_id.value is not None
     assert entity_id.value == "1234"
@@ -33,9 +33,9 @@ def test_immutable_generate():
         entity_id._value = "12345"
 
 
-def test_immutable_from_string():
+def test_immutable_from_text():
     """Test."""
-    entity_id = EntityId.from_string("1234")
+    entity_id = EntityId.from_text("1234")
 
     assert entity_id.value is not None
     assert entity_id.value == "1234"

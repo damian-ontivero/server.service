@@ -17,7 +17,7 @@ class Environment:
         return self
 
     @classmethod
-    def from_string(cls, value: str) -> "Environment":
+    def from_text(cls, value: str) -> "Environment":
         """Named constructor for creating an environment from a string."""
         return cls(value=value)
 

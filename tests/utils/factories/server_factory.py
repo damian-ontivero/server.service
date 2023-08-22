@@ -22,7 +22,7 @@ class ServerFactory(factory.Factory):
     cpu = factory.Faker("pyint")
     ram = factory.Faker("pyint")
     hdd = factory.Faker("pyint")
-    environment = Environment.from_string(value="DEV")
+    environment = Environment.from_text(value="DEV")
     operating_system = OperatingSystem.from_dict(
         value={
             "name": "Ubuntu",
