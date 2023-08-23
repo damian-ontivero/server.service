@@ -417,18 +417,27 @@ class Server(AggregateRoot):
                     self._credentials.remove(current_credential)
             for new_credential in credentials:
                 if new_credential not in self._credentials:
-                    self._credentials.append(
-                        Credential.create(
-                            server_id=self._id,
-                            connection_type=new_credential.connection_type,
-                            username=new_credential.username,
-                            password=new_credential.password,
-                            local_ip=new_credential.local_ip,
-                            local_port=new_credential.local_port,
-                            public_ip=new_credential.public_ip,
-                            public_port=new_credential.public_port,
+                    if not any(
+                        [
+                            new_credential.connection_type
+                            == credential.connection_type
+                            and new_credential.username == credential.username
+                            for credential in self._credentials
+                        ]
+                    ):
+                        self._credentials.append(
+                            Credential.create(
+                                server_id=self._id,
+                                connection_type=new_credential.connection_type,
+                                username=new_credential.username,
+                                password=new_credential.password,
+                                local_ip=new_credential.local_ip,
+                                local_port=new_credential.local_port,
+                                public_ip=new_credential.public_ip,
+                                public_port=new_credential.public_port,
+                            )
                         )
-                    )
+
                 else:
                     self._credentials[
                         self._credentials.index(new_credential)
