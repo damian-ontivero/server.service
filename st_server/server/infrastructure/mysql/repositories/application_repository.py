@@ -52,9 +52,6 @@ class ApplicationRepositoryImpl(ApplicationRepository):
 
         Example: `["name:asc", "age:desc"]`
 
-    In the `find_many` method, the `fields` parameter is a list of strings with the
-    field names to be loaded.
-
     If a `None` value is provided to limit, there will be no pagination.
     If a `Zero` value is provided to limit, no aggregates will be returned.
     If a `None` value is provided to offset, the first offset will be returned.
@@ -70,7 +67,6 @@ class ApplicationRepositoryImpl(ApplicationRepository):
         limit: int | None = None,
         offset: int | None = None,
         sort: list[str] | None = None,
-        fields: list[str] | None = None,
         **kwargs,
     ) -> RepositoryPageDto:
         """Returns Applications."""
@@ -80,28 +76,11 @@ class ApplicationRepositoryImpl(ApplicationRepository):
             offset = 0
         if sort is None:
             sort = []
-        if fields is None:
-            fields = []
         if kwargs is None:
             kwargs = {}
         with self._session as session:
             query = session.query(ApplicationDbModel)
-            exclude = []
             for attr in inspect(ApplicationDbModel).attrs:
-                # If no fields are provided, load all.
-                if not fields:
-                    query = query.options(joinedload("*"))
-                # Else if the attribute is in the fields, load it.
-                elif attr.key in fields:
-                    if isinstance(attr, ColumnProperty):
-                        query = query.options(
-                            load_only(getattr(ApplicationDbModel, attr.key))
-                        )
-                    if isinstance(attr, RelationshipProperty):
-                        query = query.options(joinedload(attr))
-                # Else if the attribute is not in the fields, exclude it.
-                else:
-                    exclude.append(attr.key)
                 # If the attribute is in the kwargs, filter by it.
                 if attr.key in kwargs:
                     op, val = kwargs[attr.key].split(":")
@@ -122,44 +101,20 @@ class ApplicationRepositoryImpl(ApplicationRepository):
             return RepositoryPageDto(
                 _total=total,
                 _items=[
-                    Application.from_dict(
-                        data=application.to_dict(exclude=exclude)
-                    )
+                    Application.from_dict(data=application.to_dict())
                     for application in applications
                 ],
             )
 
-    def find_one(
-        self, id: int, fields: list[str] | None = None
-    ) -> Application | None:
+    def find_one(self, id: int) -> Application | None:
         """Returns an Application."""
-        if fields is None:
-            fields = []
         with self._session as session:
             query = session.query(ApplicationDbModel).filter(
                 ApplicationDbModel.id == id
             )
-            exclude = []
-            for attr in inspect(ApplicationDbModel).attrs:
-                # If no fields are provided, load all.
-                if not fields:
-                    query = query.options(joinedload("*"))
-                # If the attribute is in the fields, load it.
-                elif attr.key in fields:
-                    if isinstance(attr, ColumnProperty):
-                        query = query.options(
-                            load_only(getattr(ApplicationDbModel, attr.key))
-                        )
-                    if isinstance(attr, RelationshipProperty):
-                        query = query.options(joinedload(attr))
-                # If the attribute is not in the fields, exclude it.
-                else:
-                    exclude.append(attr.key)
             application = query.one_or_none()
             return (
-                Application.from_dict(
-                    data=application.to_dict(exclude=exclude)
-                )
+                Application.from_dict(data=application.to_dict())
                 if application
                 else None
             )

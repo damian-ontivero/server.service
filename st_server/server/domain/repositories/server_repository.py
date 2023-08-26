@@ -61,7 +61,6 @@ class ServerRepository(metaclass=ABCMeta):
         limit: int | None = None,
         offset: int | None = None,
         sort: list[str] | None = None,
-        fields: list[str] | None = None,
         **kwargs,
     ) -> RepositoryPageDto:
         """Returns a list of Servers."""
@@ -71,7 +70,6 @@ class ServerRepository(metaclass=ABCMeta):
     def find_one(
         self,
         id: int,
-        fields: list[str] | None = None,
     ) -> Server | None:
         """Returns a Server."""
         raise NotImplementedError

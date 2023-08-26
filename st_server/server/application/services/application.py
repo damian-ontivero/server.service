@@ -43,9 +43,6 @@ class ApplicationService:
 
         Example: `["name:asc", "age:desc"]`
 
-    In the `find_many` method, the `fields` parameter is a list of strings with the
-    field names to be loaded.
-
     If a `None` value is provided to limit, there will be no pagination.
     If a `Zero` value is provided to limit, no aggregates will be returned.
     If a `None` value is provided to offset, the first offset will be returned.
@@ -68,13 +65,10 @@ class ApplicationService:
         limit: int | None = None,
         offset: int | None = None,
         sort: list[str] | None = None,
-        fields: list[str] | None = None,
         access_token: str | None = None,
         **kwargs,
     ) -> ServicePageDto:
         """Returns Applications."""
-        if fields is None:
-            fields = []
         if limit is None:
             limit = 0
         if offset is None:
@@ -84,7 +78,7 @@ class ApplicationService:
         if kwargs is None:
             kwargs = {}
         applications = self._repository.find_many(
-            limit=limit, offset=offset, sort=sort, fields=fields, **kwargs
+            limit=limit, offset=offset, sort=sort, **kwargs
         )
         total = applications._total
         return ServicePageDto(
@@ -106,13 +100,10 @@ class ApplicationService:
     def find_one(
         self,
         id: int,
-        fields: list[str] | None = None,
         access_token: str | None = None,
     ) -> Application:
         """Returns a Application."""
-        if fields is None:
-            fields = []
-        application = self._repository.find_one(id=id, fields=fields)
+        application = self._repository.find_one(id=id)
         if application is None:
             raise NotFound(message=f"Application with id {id} not found.")
         return ApplicationReadDto.from_entity(application)

@@ -61,7 +61,6 @@ class ApplicationRepository(metaclass=ABCMeta):
         limit: int | None = None,
         offset: int | None = None,
         sort: list[str] | None = None,
-        fields: list[str] | None = None,
         **kwargs,
     ) -> RepositoryPageDto:
         """Returns a list of Applications."""
@@ -71,7 +70,6 @@ class ApplicationRepository(metaclass=ABCMeta):
     def find_one(
         self,
         id: int,
-        fields: list[str] | None = None,
     ) -> Application | None:
         """Returns an Application."""
         raise NotImplementedError

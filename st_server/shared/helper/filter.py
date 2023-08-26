@@ -4,7 +4,7 @@ from functools import wraps
 
 from st_server.shared.application.exceptions import FilterError
 
-KNOWN_PARAMS = ["limit", "offset", "sort", "fields", "access_token"]
+KNOWN_PARAMS = ["limit", "offset", "sort", "access_token"]
 OPERATORS = ["eq", "gt", "ge", "lt", "le", "in", "btw", "lk"]
 
 

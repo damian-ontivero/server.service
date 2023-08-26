@@ -53,9 +53,6 @@ class ServerService:
 
         Example: `["name:asc", "age:desc"]`
 
-    In the `find_many` method, the `fields` parameter is a list of strings with the
-    field names to be loaded.
-
     If a `None` value is provided to limit, there will be no pagination.
     If a `Zero` value is provided to limit, no aggregates will be returned.
     If a `None` value is provided to offset, the first offset will be returned.
@@ -78,13 +75,10 @@ class ServerService:
         limit: int | None = None,
         offset: int | None = None,
         sort: list[str] | None = None,
-        fields: list[str] | None = None,
         access_token: str | None = None,
         **kwargs,
     ) -> ServicePageDto:
         """Returns Servers."""
-        if fields is None:
-            fields = []
         if limit is None:
             limit = 0
         if offset is None:
@@ -94,7 +88,7 @@ class ServerService:
         if kwargs is None:
             kwargs = {}
         servers = self._repository.find_many(
-            limit=limit, offset=offset, sort=sort, fields=fields, **kwargs
+            limit=limit, offset=offset, sort=sort, **kwargs
         )
         total = servers._total
         return ServicePageDto(
@@ -116,13 +110,10 @@ class ServerService:
     def find_one(
         self,
         id: str,
-        fields: list[str] | None = None,
         access_token: str | None = None,
     ) -> ServerReadDto:
         """Returns a Server."""
-        if fields is None:
-            fields = []
-        server = self._repository.find_one(id=id, fields=fields)
+        server = self._repository.find_one(id=id)
         if server is None:
             raise NotFound(message=f"Server with id {id} not found.")
         return ServerReadDto.from_entity(server=server)

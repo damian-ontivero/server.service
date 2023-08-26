@@ -75,7 +75,6 @@ def get_all(
     offset: int = Query(default=0),
     sort: list[str] | None = Query(default=None),
     filter: ApplicationQueryParameter = Depends(),
-    fields: list[str] | None = Query(default=None),
     authorization: HTTPAuthorizationCredentials = Depends(auth_scheme),
     request: Request = None,
     application_service: ApplicationService = Depends(get_application_service),
@@ -83,7 +82,6 @@ def get_all(
     """Route to get all Applications."""
     try:
         applications = application_service.find_many(
-            fields=fields,
             limit=limit,
             offset=offset,
             sort=sort,
@@ -117,14 +115,13 @@ def get_all(
 @router.get("/{id}", response_model=ApplicationReadDto)
 def get(
     id: str,
-    fields: list[str] | None = Query(default=None),
     authorization: HTTPAuthorizationCredentials = Depends(auth_scheme),
     application_service: ApplicationService = Depends(get_application_service),
 ):
     """Route to get an Application by id."""
     try:
         application = application_service.find_one(
-            id=id, fields=fields, access_token=authorization.credentials
+            id=id, access_token=authorization.credentials
         )
         return JSONResponse(content=jsonable_encoder(obj=application))
     except AuthenticationError as e:

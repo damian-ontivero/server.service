@@ -70,7 +70,6 @@ def get_all(
     offset: int = Query(default=0),
     sort: list[str] | None = Query(default=None),
     filter: ServerQueryParameter = Depends(),
-    fields: list[str] | None = Query(default=None),
     authorization: HTTPAuthorizationCredentials = Depends(auth_scheme),
     request: Request = None,
     server_service: ServerService = Depends(get_server_service),
@@ -78,7 +77,6 @@ def get_all(
     """Route to get all Servers."""
     try:
         servers = server_service.find_many(
-            fields=fields,
             limit=limit,
             offset=offset,
             sort=sort,
@@ -116,14 +114,13 @@ def get_all(
 @router.get("/{id}", response_model=ServerReadDto)
 def get(
     id: str,
-    fields: list[str] | None = Query(default=None),
     authorization: HTTPAuthorizationCredentials = Depends(auth_scheme),
     server_service: ServerService = Depends(get_server_service),
 ):
     """Route to get a Server by id."""
     try:
         server = server_service.find_one(
-            id=id, fields=fields, access_token=authorization.credentials
+            id=id, access_token=authorization.credentials
         )
         return JSONResponse(content=jsonable_encoder(obj=server))
     except AuthenticationError as e:
