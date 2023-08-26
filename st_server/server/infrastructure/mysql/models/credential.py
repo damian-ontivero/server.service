@@ -19,7 +19,7 @@ class CredentialDbModel(db.Base):
     public_port = sa.Column(sa.String(255), nullable=True)
     username = sa.Column(sa.String(255), nullable=False)
     password = sa.Column(sa.String(255), nullable=False)
-    discarded = sa.Column(sa.Boolean, nullable=False, default=False)
+    discarded = sa.Column(sa.Boolean, nullable=False)
 
     def __repr__(self) -> str:
         return (

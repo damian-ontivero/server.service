@@ -145,7 +145,8 @@ def create(
     """Route to create a Server."""
     try:
         server = server_service.add_one(
-            data=server_in.to_dict(), access_token=authorization.credentials
+            data=server_in.model_dump(exclude_none=True),
+            access_token=authorization.credentials,
         )
         return JSONResponse(
             content=jsonable_encoder(obj=server),
@@ -180,7 +181,7 @@ def update(
     try:
         server = server_service.update_one(
             id=id,
-            data=server_in.to_dict(),
+            data=server_in.model_dump(exclude_none=True),
             access_token=authorization.credentials,
         )
         return JSONResponse(

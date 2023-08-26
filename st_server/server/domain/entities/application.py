@@ -157,6 +157,7 @@ class Application(AggregateRoot):
             name=name,
             version=version,
             architect=architect,
+            discarded=False,
         )
         domain_event = Application.Created(aggregate_id=application._id.value)
         application.register_domain_event(domain_event=domain_event)

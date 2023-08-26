@@ -379,9 +379,9 @@ class Server(AggregateRoot):
     def update(
         self,
         name: str | None = None,
-        cpu: str | None = None,
-        ram: str | None = None,
-        hdd: str | None = None,
+        cpu: str | None = ...,
+        ram: str | None = ...,
+        hdd: str | None = ...,
         environment: Environment | None = None,
         operating_system: OperatingSystem | None = None,
         credentials: list[Credential] | None = None,
@@ -397,11 +397,11 @@ class Server(AggregateRoot):
         """
         if name and not name == self._name:
             self.name = name
-        if cpu and not cpu == self._cpu:
+        if cpu is not ... and not cpu == self._cpu:
             self.cpu = cpu
-        if ram and not ram == self._ram:
+        if ram is not ... and not ram == self._ram:
             self.ram = ram
-        if hdd and not hdd == self._hdd:
+        if hdd is not ... and not hdd == self._hdd:
             self.hdd = hdd
         if environment and not environment == self._environment:
             self.environment = environment

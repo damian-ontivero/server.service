@@ -8,6 +8,9 @@ from st_server.server.domain.entities.server import Server
 from st_server.server.domain.repositories.server_repository import (
     ServerRepository,
 )
+from st_server.server.domain.value_objects.connection_type import (
+    ConnectionType,
+)
 from st_server.server.domain.value_objects.environment import Environment
 from st_server.server.domain.value_objects.operating_system import (
     OperatingSystem,
@@ -15,6 +18,7 @@ from st_server.server.domain.value_objects.operating_system import (
 from st_server.server.domain.value_objects.server_status import ServerStatus
 from st_server.shared.application.exceptions import AlreadyExists, NotFound
 from st_server.shared.application.service_page_dto import ServicePageDto
+from st_server.shared.domain.value_objects.entity_id import EntityId
 from st_server.shared.helper.filter import validate_filter
 from st_server.shared.helper.pagination import validate_pagination
 from st_server.shared.helper.sort import validate_sort
@@ -169,9 +173,9 @@ class ServerService:
             raise NotFound("Server with id: {id!r} not found".format(id=id))
         server = server.update(
             name=data.get("name"),
-            cpu=data.get("cpu"),
-            ram=data.get("ram"),
-            hdd=data.get("hdd"),
+            cpu=data.get("cpu", ...),
+            ram=data.get("ram", ...),
+            hdd=data.get("hdd", ...),
             environment=Environment.from_text(value=data.get("environment"))
             if data.get("environment")
             else None,
@@ -181,7 +185,22 @@ class ServerService:
             if data.get("operating_system")
             else None,
             credentials=[
-                Credential.from_dict(data=credential)
+                Credential.create(
+                    server_id=EntityId.from_text(
+                        value=credential.get("server_id")
+                    ),
+                    connection_type=ConnectionType.from_text(
+                        value=credential.get("connection_type")
+                    ),
+                    username=credential.get("username"),
+                    password=credential.get("password"),
+                    local_ip=credential.get("local_ip"),
+                    local_port=credential.get("local_port"),
+                    public_ip=credential.get("public_ip"),
+                    public_port=credential.get("public_port"),
+                )
+                if credential.get("id") is None
+                else Credential.from_dict(data=credential)
                 for credential in data.get("credentials")
             ]
             if data.get("credentials")

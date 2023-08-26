@@ -22,7 +22,7 @@ class ServerDbModel(db.Base):
     environment = sa.Column(sa.String(255), nullable=False)
     operating_system = sa.Column(sa.JSON, nullable=False)
     status = sa.Column(sa.String(255), nullable=True)
-    discarded = sa.Column(sa.Boolean, nullable=False, default=False)
+    discarded = sa.Column(sa.Boolean, nullable=False)
 
     credentials = relationship(
         "CredentialDbModel", lazy="joined", cascade="all, delete-orphan"

@@ -14,7 +14,7 @@ class ApplicationDbModel(db.Base):
     name = sa.Column(sa.String(255), nullable=False)
     version = sa.Column(sa.String(255), nullable=False)
     architect = sa.Column(sa.String(255), nullable=False)
-    discarded = sa.Column(sa.Boolean, nullable=False, default=False)
+    discarded = sa.Column(sa.Boolean, nullable=False)
 
     def __repr__(self) -> str:
         return (

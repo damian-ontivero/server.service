@@ -278,10 +278,10 @@ class Credential(Entity):
         connection_type: ConnectionType | None = None,
         username: str | None = None,
         password: str | None = None,
-        local_ip: str | None = None,
-        local_port: int | None = None,
-        public_ip: str | None = None,
-        public_port: int | None = None,
+        local_ip: str | None = ...,
+        local_port: int | None = ...,
+        public_ip: str | None = ...,
+        public_port: int | None = ...,
     ) -> None:
         """Updates the Credential.
 
@@ -298,13 +298,13 @@ class Credential(Entity):
             self.username = username
         if password and not password == self._password:
             self.password = password
-        if local_ip and not local_ip == self._local_ip:
+        if local_ip is not ... and not local_ip == self._local_ip:
             self.local_ip = local_ip
-        if local_port and not local_port == self._local_port:
+        if local_port is not ... and not local_port == self._local_port:
             self.local_port = local_port
-        if public_ip and not public_ip == self._public_ip:
+        if public_ip is not ... and not public_ip == self._public_ip:
             self.public_ip = public_ip
-        if public_port and not public_port == self._public_port:
+        if public_port is not ... and not public_port == self._public_port:
             self.public_port = public_port
         return self
 

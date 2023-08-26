@@ -11,9 +11,9 @@ class ServerApplication:
         self,
         server_id: EntityId | None = None,
         application_id: EntityId | None = None,
-        install_dir: str | None = None,
-        log_dir: str | None = None,
-        application: Application | None = None,
+        install_dir: str | None = ...,
+        log_dir: str | None = ...,
+        application: Application | None = ...,
     ) -> None:
         """Initialize the ServerApplication.
 
