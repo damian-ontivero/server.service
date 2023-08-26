@@ -1,15 +1,15 @@
-"""Value object that represents the operating system of the Server."""
+"""Value object that represents the Operating System of the Server."""
 
 
 class OperatingSystem:
-    """Value object that represents the operating system of the Server."""
+    """Value object that represents the Operating System of the Server."""
 
     __slots__ = ("_name", "_version", "_architecture")
 
     def __new__(
         cls, name: str, version: str, architecture: str
     ) -> "OperatingSystem":
-        """Creates a new instance of operating system."""
+        """Creates a new instance of Operating System."""
         if not isinstance(name, str):
             raise TypeError("Operating system name must be a string")
         if not len(name) > 0:
@@ -30,7 +30,7 @@ class OperatingSystem:
 
     @classmethod
     def from_dict(cls, value: dict) -> "OperatingSystem":
-        """Named constructor for creating a operating system from a dictionary."""
+        """Named constructor for creating a Operating System from a dictionary."""
         return cls(
             name=value.get("name"),
             version=value.get("version"),
@@ -39,22 +39,22 @@ class OperatingSystem:
 
     @property
     def name(self) -> str:
-        """Returns the name of the operating system."""
+        """Returns the name of the Operating System."""
         return self._name
 
     @property
     def version(self) -> str:
-        """Returns the version of the operating system."""
+        """Returns the version of the Operating System."""
         return self._version
 
     @property
     def architecture(self) -> str:
-        """Returns the architecture of the operating system."""
+        """Returns the architecture of the Operating System."""
         return self._architecture
 
     @property
     def __dict__(self) -> dict:
-        """Returns the dictionary representation of the operating system."""
+        """Returns the dictionary representation of the Operating System."""
         return {
             "name": self.name,
             "version": self.version,
@@ -70,7 +70,7 @@ class OperatingSystem:
         raise AttributeError("Operating system objects are immutable")
 
     def __eq__(self, other: object) -> bool:
-        """Compares if two operating system are equal."""
+        """Compares if two Operating System are equal."""
         if isinstance(other, OperatingSystem):
             return (
                 self.name == other.name
@@ -80,15 +80,15 @@ class OperatingSystem:
         return NotImplemented
 
     def __ne__(self, other: object) -> bool:
-        """Compares if two operating system are not equal."""
+        """Compares if two Operating System are not equal."""
         return not self.__eq__(other)
 
     def __hash__(self) -> int:
-        """Returns the hash of the operating system."""
+        """Returns the hash of the Operating System."""
         return hash((self.name, self.version, self.architecture))
 
     def __repr__(self) -> str:
-        """Returns the representation of the operating system."""
+        """Returns the representation of the Operating System."""
         return (
             "{c}(name={name!r}, version={version!r}, "
             "architecture={architecture!r})"

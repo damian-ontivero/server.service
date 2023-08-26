@@ -185,22 +185,7 @@ class ServerService:
             if data.get("operating_system")
             else None,
             credentials=[
-                Credential.create(
-                    server_id=EntityId.from_text(
-                        value=credential.get("server_id")
-                    ),
-                    connection_type=ConnectionType.from_text(
-                        value=credential.get("connection_type")
-                    ),
-                    username=credential.get("username"),
-                    password=credential.get("password"),
-                    local_ip=credential.get("local_ip"),
-                    local_port=credential.get("local_port"),
-                    public_ip=credential.get("public_ip"),
-                    public_port=credential.get("public_port"),
-                )
-                if credential.get("id") is None
-                else Credential.from_dict(data=credential)
+                Credential.from_dict(data=credential)
                 for credential in data.get("credentials")
             ]
             if data.get("credentials")

@@ -181,7 +181,7 @@ def update(
     try:
         server = server_service.update_one(
             id=id,
-            data=server_in.to_dict(exclude_none=True),
+            data=server_in.to_dict(),
             access_token=authorization.credentials,
         )
         return JSONResponse(

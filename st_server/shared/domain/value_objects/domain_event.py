@@ -1,17 +1,17 @@
-"""Base class for domain events."""
+"""Base class for Domain Event."""
 
 from st_server.shared.helper.time import now
 
 
 class DomainEvent:
-    """Base class for domain events.
+    """Base class for Domain Event.
 
     Domain Events are value objects that represent something that happened in
     the domain. They are used to notify other parts of the application about
     something that happened in the domain.
 
     Attributes are specified as keyword arguments and can be added
-    but not modified. This is to ensure that the domain events are immutable.
+    but not modified. This is to ensure that the Domain Event are immutable.
     """
 
     def __init__(self, **kwargs) -> None:
@@ -26,13 +26,13 @@ class DomainEvent:
         self.__dict__[name] = value
 
     def __eq__(self, other: object) -> bool:
-        """Compares if two domain events are equal."""
+        """Compares if two Domain Event are equal."""
         if isinstance(other, DomainEvent):
             return self.__dict__ == other.__dict__
         return NotImplemented
 
     def __ne__(self, other: object) -> bool:
-        """Compares if two domain events are not equal."""
+        """Compares if two Domain Event are not equal."""
         return not self.__eq__(other)
 
     def __hash__(self) -> int:

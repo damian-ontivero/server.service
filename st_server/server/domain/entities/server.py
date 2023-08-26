@@ -409,9 +409,6 @@ class Server(AggregateRoot):
             self.operating_system = operating_system
 
         if credentials is not None:
-            # If the new list of credentials does not contain the current credential, remove it.
-            # If the current list of credentials does not contain the new credential, add it.
-            # If the current list of credentials contains the new credential, update it.
             for current_credential in self._credentials:
                 if current_credential not in credentials:
                     self._credentials.remove(current_credential)
@@ -441,7 +438,15 @@ class Server(AggregateRoot):
                 else:
                     self._credentials[
                         self._credentials.index(new_credential)
-                    ] = new_credential
+                    ].update(
+                        connection_type=new_credential.connection_type,
+                        username=new_credential.username,
+                        password=new_credential.password,
+                        local_ip=new_credential.local_ip,
+                        local_port=new_credential.local_port,
+                        public_ip=new_credential.public_ip,
+                        public_port=new_credential.public_port,
+                    )
 
         if applications and not applications == self._applications:
             self.applications = applications

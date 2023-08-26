@@ -226,7 +226,7 @@ class Credential(Entity):
         return cls(
             id=EntityId.from_text(value=data.get("id"))
             if data.get("id")
-            else EntityId.generate(),
+            else None,
             server_id=EntityId.from_text(value=data.get("server_id")),
             connection_type=ConnectionType.from_text(
                 value=data.get("connection_type")

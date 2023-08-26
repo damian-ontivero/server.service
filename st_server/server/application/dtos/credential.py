@@ -16,14 +16,8 @@ class CredentialBase:
     public_ip: str | None = None
     public_port: str | None = None
 
-    def to_dict(self, exclude_none: bool = False) -> dict:
+    def to_dict(self) -> dict:
         """Converts the DTO to a dictionary."""
-        if exclude_none is True:
-            return {
-                key: value
-                for key, value in asdict(self).items()
-                if value is not None
-            }
         return asdict(self)
 
 
