@@ -8,9 +8,6 @@ from st_server.server.domain.entities.server import Server
 from st_server.server.domain.repositories.server_repository import (
     ServerRepository,
 )
-from st_server.server.domain.value_objects.connection_type import (
-    ConnectionType,
-)
 from st_server.server.domain.value_objects.environment import Environment
 from st_server.server.domain.value_objects.operating_system import (
     OperatingSystem,
@@ -18,7 +15,6 @@ from st_server.server.domain.value_objects.operating_system import (
 from st_server.server.domain.value_objects.server_status import ServerStatus
 from st_server.shared.application.exceptions import AlreadyExists, NotFound
 from st_server.shared.application.service_page_dto import ServicePageDto
-from st_server.shared.domain.value_objects.entity_id import EntityId
 from st_server.shared.helper.filter import validate_filter
 from st_server.shared.helper.pagination import validate_pagination
 from st_server.shared.helper.sort import validate_sort

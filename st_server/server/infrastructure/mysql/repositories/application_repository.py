@@ -1,13 +1,7 @@
 """Application repository implementation."""
 
 from sqlalchemy import inspect
-from sqlalchemy.orm import (
-    ColumnProperty,
-    RelationshipProperty,
-    Session,
-    joinedload,
-    load_only,
-)
+from sqlalchemy.orm import Session
 
 from st_server.server.domain.entities.application import Application
 from st_server.server.domain.repositories.application_repository import (
