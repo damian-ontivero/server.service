@@ -1,6 +1,6 @@
 """Data Transfer Objects for Credential."""
 
-from dataclasses import dataclass
+from dataclasses import asdict, dataclass
 
 from st_server.server.domain.entities.credential import Credential
 
@@ -15,6 +15,16 @@ class CredentialBase:
     local_port: str | None = None
     public_ip: str | None = None
     public_port: str | None = None
+
+    def to_dict(self, exclude_none: bool = False) -> dict:
+        """Converts the DTO to a dictionary."""
+        if exclude_none is True:
+            return {
+                key: value
+                for key, value in asdict(self).items()
+                if value is not None
+            }
+        return asdict(self)
 
 
 @dataclass(frozen=True)

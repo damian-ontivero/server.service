@@ -1,6 +1,6 @@
 """Data Transfer Objects for Server."""
 
-from dataclasses import dataclass, field
+from dataclasses import asdict, dataclass, field
 
 from st_server.server.application.dtos.credential import CredentialReadDto
 from st_server.server.application.dtos.server_application import (
@@ -20,6 +20,16 @@ class ServerBase:
     credentials: list[CredentialReadDto] = field(default_factory=list)
     applications: list[ServerApplicationReadDto] = field(default_factory=list)
     status: str | None = None
+
+    def to_dict(self, exclude_none: bool = False) -> dict:
+        """Converts the DTO to a dictionary."""
+        if exclude_none is True:
+            return {
+                key: value
+                for key, value in asdict(self).items()
+                if value is not None
+            }
+        return asdict(self)
 
 
 @dataclass(frozen=True)

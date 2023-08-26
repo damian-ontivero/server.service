@@ -6,6 +6,11 @@ from fastapi.responses import JSONResponse
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from jwt.exceptions import ExpiredSignatureError
 
+from st_server.server.application.dtos.server import (
+    ServerCreateDto,
+    ServerReadDto,
+    ServerUpdateDto,
+)
 from st_server.server.application.services.server import ServerService
 from st_server.server.infrastructure.message_bus.rabbitmq_message_bus import (
     RabbitMQMessageBus,
@@ -16,11 +21,6 @@ from st_server.server.infrastructure.mysql.repositories.server_repository import
 )
 from st_server.server.interface.api.query_parameters.server import (
     ServerQueryParameter,
-)
-from st_server.server.interface.api.schemas.server import (
-    ServerCreate,
-    ServerRead,
-    ServerUpdate,
 )
 from st_server.shared.application.exceptions import (
     AlreadyExists,
@@ -64,7 +64,7 @@ def get_server_service(
     yield ServerService(repository=repository, message_bus=message_bus)
 
 
-@router.get("", response_model=list[ServerRead])
+@router.get("", response_model=list[ServerReadDto])
 def get_all(
     limit: int = Query(default=25),
     offset: int = Query(default=0),
@@ -113,7 +113,7 @@ def get_all(
         )
 
 
-@router.get("/{id}", response_model=ServerRead)
+@router.get("/{id}", response_model=ServerReadDto)
 def get(
     id: str,
     fields: list[str] | None = Query(default=None),
@@ -136,16 +136,16 @@ def get(
         )
 
 
-@router.post("", response_model=ServerRead)
+@router.post("", response_model=ServerReadDto)
 def create(
-    server_in: ServerCreate,
+    server_in: ServerCreateDto,
     authorization: HTTPAuthorizationCredentials = Depends(auth_scheme),
     server_service: ServerService = Depends(get_server_service),
 ):
     """Route to create a Server."""
     try:
         server = server_service.add_one(
-            data=server_in.model_dump(exclude_none=True),
+            data=server_in.to_dict(),
             access_token=authorization.credentials,
         )
         return JSONResponse(
@@ -170,10 +170,10 @@ def create(
         )
 
 
-@router.put("/{id}", response_model=ServerRead)
+@router.put("/{id}", response_model=ServerReadDto)
 def update(
     id: str,
-    server_in: ServerUpdate,
+    server_in: ServerUpdateDto,
     authorization: HTTPAuthorizationCredentials = Depends(auth_scheme),
     server_service: ServerService = Depends(get_server_service),
 ):
@@ -181,7 +181,7 @@ def update(
     try:
         server = server_service.update_one(
             id=id,
-            data=server_in.model_dump(exclude_none=True),
+            data=server_in.to_dict(exclude_none=True),
             access_token=authorization.credentials,
         )
         return JSONResponse(

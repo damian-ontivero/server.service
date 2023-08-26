@@ -5,6 +5,11 @@ from fastapi.encoders import jsonable_encoder
 from fastapi.responses import JSONResponse
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 
+from st_server.server.application.dtos.application import (
+    ApplicationCreateDto,
+    ApplicationReadDto,
+    ApplicationUpdateDto,
+)
 from st_server.server.application.services.application import (
     ApplicationService,
 )
@@ -17,11 +22,6 @@ from st_server.server.infrastructure.mysql.repositories.application_repository i
 )
 from st_server.server.interface.api.query_parameters.application import (
     ApplicationQueryParameter,
-)
-from st_server.server.interface.api.schemas.application import (
-    ApplicationCreate,
-    ApplicationRead,
-    ApplicationUpdate,
 )
 from st_server.shared.application.exceptions import (
     AlreadyExists,
@@ -69,7 +69,7 @@ def get_application_service(
     yield ApplicationService(repository=repository, message_bus=message_bus)
 
 
-@router.get("", response_model=list[ApplicationRead])
+@router.get("", response_model=list[ApplicationReadDto])
 def get_all(
     limit: int = Query(default=25),
     offset: int = Query(default=0),
@@ -114,7 +114,7 @@ def get_all(
         )
 
 
-@router.get("/{id}", response_model=ApplicationRead)
+@router.get("/{id}", response_model=ApplicationReadDto)
 def get(
     id: str,
     fields: list[str] | None = Query(default=None),
@@ -137,9 +137,9 @@ def get(
         )
 
 
-@router.post("", response_model=ApplicationRead)
+@router.post("", response_model=ApplicationReadDto)
 def create(
-    application_in: ApplicationCreate,
+    application_in: ApplicationCreateDto,
     authorization: HTTPAuthorizationCredentials = Depends(auth_scheme),
     application_service: ApplicationService = Depends(get_application_service),
 ):
@@ -171,10 +171,10 @@ def create(
         )
 
 
-@router.put("/{id}", response_model=ApplicationRead)
+@router.put("/{id}", response_model=ApplicationReadDto)
 def update(
     id: str,
-    application_in: ApplicationUpdate,
+    application_in: ApplicationUpdateDto,
     authorization: HTTPAuthorizationCredentials = Depends(auth_scheme),
     application_service: ApplicationService = Depends(get_application_service),
 ):
@@ -182,7 +182,7 @@ def update(
     try:
         application = application_service.update_one(
             id=id,
-            data=application_in.to_dict(),
+            data=application_in.to_dict(exclude_none=True),
             access_token=authorization.credentials,
         )
         return JSONResponse(
