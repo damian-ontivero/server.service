@@ -379,9 +379,9 @@ class Server(AggregateRoot):
     def update(
         self,
         name: str | None = None,
-        cpu: str | None = ...,
-        ram: str | None = ...,
-        hdd: str | None = ...,
+        cpu: str | None = None,
+        ram: str | None = None,
+        hdd: str | None = None,
         environment: Environment | None = None,
         operating_system: OperatingSystem | None = None,
         credentials: list[Credential] | None = None,
@@ -395,17 +395,17 @@ class Server(AggregateRoot):
             When updating the attributes, the domain events
             are registered by setters.
         """
-        if name and not name == self._name:
+        if not name == self._name:
             self.name = name
-        if cpu is not ... and not cpu == self._cpu:
+        if not cpu == self._cpu:
             self.cpu = cpu
-        if ram is not ... and not ram == self._ram:
+        if not ram == self._ram:
             self.ram = ram
-        if hdd is not ... and not hdd == self._hdd:
+        if not hdd == self._hdd:
             self.hdd = hdd
-        if environment and not environment == self._environment:
+        if not environment == self._environment:
             self.environment = environment
-        if operating_system and not operating_system == self._operating_system:
+        if not operating_system == self._operating_system:
             self.operating_system = operating_system
 
         if credentials is not None:
@@ -439,6 +439,7 @@ class Server(AggregateRoot):
                     self._credentials[
                         self._credentials.index(new_credential)
                     ].update(
+                        server_id=new_credential.server_id,
                         connection_type=new_credential.connection_type,
                         username=new_credential.username,
                         password=new_credential.password,
@@ -448,9 +449,9 @@ class Server(AggregateRoot):
                         public_port=new_credential.public_port,
                     )
 
-        if applications and not applications == self._applications:
+        if applications is not None:
             self.applications = applications
-        if status and not status == self._status:
+        if not status == self._status:
             self.status = status
         return self
 

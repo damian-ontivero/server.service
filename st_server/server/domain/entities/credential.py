@@ -278,10 +278,10 @@ class Credential(Entity):
         connection_type: ConnectionType | None = None,
         username: str | None = None,
         password: str | None = None,
-        local_ip: str | None = ...,
-        local_port: int | None = ...,
-        public_ip: str | None = ...,
-        public_port: int | None = ...,
+        local_ip: str | None = None,
+        local_port: int | None = None,
+        public_ip: str | None = None,
+        public_port: int | None = None,
     ) -> None:
         """Updates the Credential.
 
@@ -290,21 +290,21 @@ class Credential(Entity):
             When updating the attributes, the domain events
             are registered by setters.
         """
-        if server_id and not server_id == self._server_id:
+        if not server_id == self._server_id:
             self.server_id = server_id
-        if connection_type and not connection_type == self._connection_type:
+        if not connection_type == self._connection_type:
             self.connection_type = connection_type
-        if username and not username == self._username:
+        if not username == self._username:
             self.username = username
-        if password and not password == self._password:
+        if not password == self._password:
             self.password = password
-        if local_ip is not ... and not local_ip == self._local_ip:
+        if not local_ip == self._local_ip:
             self.local_ip = local_ip
-        if local_port is not ... and not local_port == self._local_port:
+        if not local_port == self._local_port:
             self.local_port = local_port
-        if public_ip is not ... and not public_ip == self._public_ip:
+        if not public_ip == self._public_ip:
             self.public_ip = public_ip
-        if public_port is not ... and not public_port == self._public_port:
+        if not public_port == self._public_port:
             self.public_port = public_port
         return self
 

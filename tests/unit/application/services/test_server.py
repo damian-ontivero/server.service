@@ -42,14 +42,14 @@ def test_add_one_ok(mock_server_service):
 
 def test_update_one_ok(mock_server_service):
     server = ServerFactory()
-    data = {"name": "SuperTest"}
+    server.name = "SuperTest"
 
     server_updated = mock_server_service.update_one(
-        id=server.id.value, data=data
+        id=server.id.value, data=server.to_dict()
     )
 
     assert isinstance(server_updated, ServerReadDto)
-    assert server_updated.name == data["name"]
+    assert server_updated.name == server.name
 
 
 def test_delete_one_ok(mock_server_service):

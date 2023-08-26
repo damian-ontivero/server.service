@@ -46,14 +46,14 @@ def test_add_one_ok(mock_application_service):
 
 def test_update_one_ok(mock_application_service):
     application = ApplicationFactory()
-    data = {"name": "SuperTest"}
+    application.name = "SuperTest"
 
     application_updated = mock_application_service.update_one(
-        id=application.id.value, data=data
+        id=application.id.value, data=application.to_dict()
     )
 
     assert isinstance(application_updated, ApplicationReadDto)
-    assert application_updated.name == data["name"]
+    assert application_updated.name == application.name
 
 
 def test_delete_one_ok(mock_application_service):

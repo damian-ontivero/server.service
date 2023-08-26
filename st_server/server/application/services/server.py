@@ -173,9 +173,9 @@ class ServerService:
             raise NotFound("Server with id: {id!r} not found".format(id=id))
         server = server.update(
             name=data.get("name"),
-            cpu=data.get("cpu", ...),
-            ram=data.get("ram", ...),
-            hdd=data.get("hdd", ...),
+            cpu=data.get("cpu"),
+            ram=data.get("ram"),
+            hdd=data.get("hdd"),
             environment=Environment.from_text(value=data.get("environment"))
             if data.get("environment")
             else None,
