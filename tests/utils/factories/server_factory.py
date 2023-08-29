@@ -19,9 +19,9 @@ class ServerFactory(factory.Factory):
         model = Server
 
     name = factory.Faker("name")
-    cpu = factory.Faker("pyint")
-    ram = factory.Faker("pyint")
-    hdd = factory.Faker("pyint")
+    cpu = factory.Faker("pystr")
+    ram = factory.Faker("pystr")
+    hdd = factory.Faker("pystr")
     environment = Environment.from_text(value="DEV")
     operating_system = OperatingSystem.from_dict(
         value={

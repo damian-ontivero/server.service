@@ -344,9 +344,9 @@ class Server(AggregateRoot):
     def create(
         cls,
         name: str,
-        cpu: str,
-        ram: str,
-        hdd: str,
+        cpu: str | None = None,
+        ram: str | None = None,
+        hdd: str | None = None,
         environment: Environment | None = None,
         operating_system: OperatingSystem | None = None,
         credentials: list[Credential] | None = None,
@@ -379,9 +379,9 @@ class Server(AggregateRoot):
     def update(
         self,
         name: str | None = None,
-        cpu: str | None = None,
-        ram: str | None = None,
-        hdd: str | None = None,
+        cpu: str | None = ...,
+        ram: str | None = ...,
+        hdd: str | None = ...,
         environment: Environment | None = None,
         operating_system: OperatingSystem | None = None,
         credentials: list[Credential] | None = None,
@@ -397,17 +397,16 @@ class Server(AggregateRoot):
         """
         if not name == self._name:
             self.name = name
-        if not cpu == self._cpu:
+        if cpu is not ... and not cpu == self._cpu:
             self.cpu = cpu
-        if not ram == self._ram:
+        if ram is not ... and not ram == self._ram:
             self.ram = ram
-        if not hdd == self._hdd:
+        if ram is not ... and not hdd == self._hdd:
             self.hdd = hdd
         if not environment == self._environment:
             self.environment = environment
         if not operating_system == self._operating_system:
             self.operating_system = operating_system
-
         if credentials is not None:
             for current_credential in self._credentials:
                 if current_credential not in credentials:

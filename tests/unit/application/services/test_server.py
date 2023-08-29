@@ -52,6 +52,45 @@ def test_update_one_ok(mock_server_service):
     assert server_updated.name == server.name
 
 
+def test_update_one_blank_cpu_field_ok(mock_server_service):
+    server = ServerFactory()
+    server.cpu = None
+
+    server_updated = mock_server_service.update_one(
+        id=server.id.value, data=server.to_dict()
+    )
+
+    assert isinstance(server_updated, ServerReadDto)
+    assert server_updated.id == server.id.value
+    assert server_updated.cpu is None
+
+
+def test_update_one_blank_ram_field_ok(mock_server_service):
+    server = ServerFactory()
+    server.ram = None
+
+    server_updated = mock_server_service.update_one(
+        id=server.id.value, data=server.to_dict()
+    )
+
+    assert isinstance(server_updated, ServerReadDto)
+    assert server_updated.id == server.id.value
+    assert server_updated.ram is None
+
+
+def test_update_one_blank_hdd_field_ok(mock_server_service):
+    server = ServerFactory()
+    server.hdd = None
+
+    server_updated = mock_server_service.update_one(
+        id=server.id.value, data=server.to_dict()
+    )
+
+    assert isinstance(server_updated, ServerReadDto)
+    assert server_updated.id == server.id.value
+    assert server_updated.hdd is None
+
+
 def test_delete_one_ok(mock_server_service):
     server = ServerFactory()
 
