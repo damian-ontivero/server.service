@@ -1,10 +1,10 @@
 [tool.poetry]
 name = "st-server"
-version = "0.2.0-preview.13"
+version = "0.2.0-preview.14"
 description = ""
 authors = ["Damian Ontivero <damian.ontivero@outlook.com>"]
 readme = "README.md"
-packages = [{include = "st_server"}]
+packages = [{ include = "st_server" }]
 
 [tool.poetry.dependencies]
 python = "^3.11"

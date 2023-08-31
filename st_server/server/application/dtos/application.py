@@ -7,6 +7,8 @@ from st_server.server.domain.entities.application import Application
 
 @dataclass(frozen=True)
 class ApplicationBase:
+    """Base Data Transfer Object for Application."""
+
     name: str | None = None
     version: str | None = None
     architect: str | None = None
@@ -18,6 +20,8 @@ class ApplicationBase:
 
 @dataclass(frozen=True)
 class ApplicationReadDto(ApplicationBase):
+    """Data Transfer Object for reading an Application."""
+
     id: str | None = None
     discarded: bool | None = None
 
@@ -34,9 +38,9 @@ class ApplicationReadDto(ApplicationBase):
 
 @dataclass(frozen=True)
 class ApplicationUpdateDto(ApplicationBase):
-    pass
+    """Data Transfer Object for updating an Application."""
 
 
 @dataclass(frozen=True)
 class ApplicationCreateDto(ApplicationBase):
-    pass
+    """Data Transfer Object for creating an Application."""

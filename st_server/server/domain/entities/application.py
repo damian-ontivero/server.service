@@ -14,27 +14,17 @@ class Application(AggregateRoot):
     class Created(DomainEvent):
         """Domain event that represents the creation of an Application."""
 
-        pass
-
     class Discarded(DomainEvent):
         """Domain event that represents the discarding of an Application."""
-
-        pass
 
     class NameChanged(DomainEvent):
         """Domain event that represents the change of the name of an Application."""
 
-        pass
-
     class VersionChanged(DomainEvent):
         """Domain event that represents the change of the version of an Application."""
 
-        pass
-
     class ArchitectChanged(DomainEvent):
         """Domain event that represents the change of the architect of an Application."""
-
-        pass
 
     def __init__(
         self,

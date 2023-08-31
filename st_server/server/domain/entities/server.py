@@ -23,57 +23,35 @@ class Server(AggregateRoot):
     class Created(DomainEvent):
         """Domain event that represents the creation of a Server."""
 
-        pass
-
     class Discarded(DomainEvent):
         """Domain event that represents the discarding of a Server."""
-
-        pass
 
     class NameChanged(DomainEvent):
         """Domain event that represents the change of the name of a Server."""
 
-        pass
-
     class CpuChanged(DomainEvent):
         """Domain event that represents the change of the cpu of a Server."""
-
-        pass
 
     class RamChanged(DomainEvent):
         """Domain event that represents the change of the ram of a Server."""
 
-        pass
-
     class HddChanged(DomainEvent):
         """Domain event that represents the change of the hdd of a Server."""
-
-        pass
 
     class EnvironmentChanged(DomainEvent):
         """Domain event that represents the change of the environment of a Server."""
 
-        pass
-
     class OperatingSystemChanged(DomainEvent):
         """Domain event that represents the change of the operating system of a Server."""
-
-        pass
 
     class CredentialChanged(DomainEvent):
         """Domain event that represents the change of the credentials of a Server."""
 
-        pass
-
     class ApplicationChanged(DomainEvent):
         """Domain event that represents the change of the applications of a Server."""
 
-        pass
-
     class StatusChanged(DomainEvent):
         """Domain event that represents the change of the status of a Server."""
-
-        pass
 
     def __init__(
         self,

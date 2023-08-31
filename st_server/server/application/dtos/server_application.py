@@ -8,6 +8,8 @@ from st_server.server.domain.entities.server import ServerApplication
 
 @dataclass(frozen=True)
 class ServerApplicationBase:
+    """Base Data Transfer Object for ServerApplication."""
+
     server_id: str | None = None
     application_id: str | None = None
     install_dir: str | None = None
@@ -21,6 +23,8 @@ class ServerApplicationBase:
 
 @dataclass(frozen=True)
 class ServerApplicationReadDto(ServerApplicationBase):
+    """Data Transfer Object for reading an ServerApplication."""
+
     @classmethod
     def from_entity(
         cls, server_application: ServerApplication
@@ -38,9 +42,9 @@ class ServerApplicationReadDto(ServerApplicationBase):
 
 @dataclass(frozen=True)
 class ServerApplicationUpdateDto(ServerApplicationBase):
-    pass
+    """Data Transfer Object for updating an ServerApplication."""
 
 
 @dataclass(frozen=True)
 class ServerApplicationCreateDto(ServerApplicationBase):
-    pass
+    """Data Transfer Object for creating an ServerApplication."""

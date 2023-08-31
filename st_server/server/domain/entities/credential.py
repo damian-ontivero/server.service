@@ -17,52 +17,32 @@ class Credential(Entity):
     class Created(DomainEvent):
         """Domain event that represents the creation of a Credential."""
 
-        pass
-
     class Discarded(DomainEvent):
         """Domain event that represents the discarding of a Credential."""
-
-        pass
 
     class ServerIdChanged(DomainEvent):
         """Domain event that represents the change of the server_id of a Credential."""
 
-        pass
-
     class ConnectionTypeChanged(DomainEvent):
         """Domain event that represents the change of the connection_type of a Credential."""
-
-        pass
 
     class UsernameChanged(DomainEvent):
         """Domain event that represents the change of the username of a Credential."""
 
-        pass
-
     class PasswordChanged(DomainEvent):
         """Domain event that represents the change of the password of a Credential."""
-
-        pass
 
     class LocalIpChanged(DomainEvent):
         """Domain event that represents the change of the local_ip of a Credential."""
 
-        pass
-
     class LocalPortChanged(DomainEvent):
         """Domain event that represents the change of the local_port of a Credential."""
-
-        pass
 
     class PublicIpChanged(DomainEvent):
         """Domain event that represents the change of the public_ip of a Credential."""
 
-        pass
-
     class PublicPortChanged(DomainEvent):
         """Domain event that represents the change of the public_port of a Credential."""
-
-        pass
 
     def __init__(
         self,

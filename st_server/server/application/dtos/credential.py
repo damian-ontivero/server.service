@@ -7,6 +7,8 @@ from st_server.server.domain.entities.credential import Credential
 
 @dataclass(frozen=True)
 class CredentialBase:
+    """Base Data Transfer Object for Credential."""
+
     server_id: str | None = None
     connection_type: str | None = None
     username: str | None = None
@@ -23,6 +25,8 @@ class CredentialBase:
 
 @dataclass(frozen=True)
 class CredentialReadDto(CredentialBase):
+    """Data Transfer Object for reading an Credential."""
+
     id: str | None = None
     discarded: bool | None = None
 
@@ -44,9 +48,9 @@ class CredentialReadDto(CredentialBase):
 
 @dataclass(frozen=True)
 class CredentialUpdateDto(CredentialBase):
-    pass
+    """Data Transfer Object for updating an Credential."""
 
 
 @dataclass(frozen=True)
 class CredentialCreateDto(CredentialBase):
-    pass
+    """Data Transfer Object for creating an Credential."""

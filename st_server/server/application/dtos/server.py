@@ -11,6 +11,8 @@ from st_server.server.domain.entities.server import Server
 
 @dataclass(frozen=True)
 class ServerBase:
+    """Base Data Transfer Object for Server."""
+
     name: str | None = None
     cpu: str | None = None
     ram: str | None = None
@@ -28,6 +30,8 @@ class ServerBase:
 
 @dataclass(frozen=True)
 class ServerReadDto(ServerBase):
+    """Data Transfer Object for reading an Server."""
+
     id: str | None = None
     discarded: bool | None = None
 
@@ -58,9 +62,9 @@ class ServerReadDto(ServerBase):
 
 @dataclass(frozen=True)
 class ServerUpdateDto(ServerBase):
-    pass
+    """Data Transfer Object for updating an Server."""
 
 
 @dataclass(frozen=True)
 class ServerCreateDto(ServerBase):
-    pass
+    """Data Transfer Object for creating an Server."""
