@@ -111,7 +111,7 @@ class ServerService:
         """Returns a Server."""
         server = self._repository.find_one(id=id)
         if server is None:
-            raise NotFound(message=f"Server with id {id} not found.")
+            raise NotFound(f"Server with id {id} not found.")
         return ServerReadDto.from_entity(server=server)
 
     # @AuthService.access_token_required

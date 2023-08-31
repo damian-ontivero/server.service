@@ -105,7 +105,7 @@ class ApplicationService:
         """Returns a Application."""
         application = self._repository.find_one(id=id)
         if application is None:
-            raise NotFound(message=f"Application with id {id} not found.")
+            raise NotFound(f"Application with id {id} not found.")
         return ApplicationReadDto.from_entity(application)
 
     # @AuthService.access_token_required
