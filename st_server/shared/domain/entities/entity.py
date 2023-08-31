@@ -60,7 +60,7 @@ class Entity(metaclass=ABCMeta):
 
     @classmethod
     @abstractmethod
-    def from_dict(data: dict) -> "Entity":
+    def from_dict(cls, data: dict) -> "Entity":
         """Named constructor for creating an entity from a dictionary."""
         raise NotImplementedError
 
