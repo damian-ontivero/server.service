@@ -8,7 +8,7 @@ from sqlalchemy.orm import declarative_base, sessionmaker
 config = configparser.ConfigParser()
 config.read("st_server/config.ini")
 
-db_user = config.get("database", "Server")
+db_user = config.get("database", "user")
 db_pass = config.get("database", "pass")
 db_host = config.get("database", "host")
 db_port = config.getint("database", "port")

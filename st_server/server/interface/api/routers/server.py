@@ -52,7 +52,7 @@ def get_server_repository(session: db.SessionLocal = Depends(get_db_session)):
 def get_message_bus():
     """Yields a message bus."""
     yield RabbitMQMessageBus(
-        host="localhost", port=5672, username="admin", password="admin"
+        host="192.168.1.63", port=5672, username="admin", password="st4dM1n!"
     )
 
 
