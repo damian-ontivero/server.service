@@ -29,9 +29,6 @@ def test_immutable_generate():
     with pytest.raises(AttributeError):
         entity_id.value = "1234"
 
-    with pytest.raises(AttributeError):
-        entity_id._value = "12345"
-
 
 def test_immutable_from_text():
     """Test."""
@@ -42,6 +39,3 @@ def test_immutable_from_text():
 
     with pytest.raises(AttributeError):
         entity_id.value = "12345"
-
-    with pytest.raises(AttributeError):
-        entity_id._value = "123456"

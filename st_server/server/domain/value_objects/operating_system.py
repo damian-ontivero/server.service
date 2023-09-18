@@ -6,9 +6,16 @@ class OperatingSystem:
 
     __slots__ = ("_name", "_version", "_architecture")
 
-    def __new__(
-        cls, name: str, version: str, architecture: str
-    ) -> "OperatingSystem":
+    @classmethod
+    def from_dict(cls, value):
+        """Named constructor for creating a Operating System from a dictionary."""
+        return cls(
+            name=value.get("name"),
+            version=value.get("version"),
+            architecture=value.get("architecture"),
+        )
+
+    def __new__(cls, name, version, architecture):
         """Creates a new instance of Operating System."""
         if not isinstance(name, str):
             raise TypeError("Operating system name must be a string")
@@ -23,53 +30,12 @@ class OperatingSystem:
         if not len(architecture) > 0:
             raise ValueError("Operating system architecture cannot be empty")
         self = object.__new__(cls)
-        self.__setattr("_name", name)
-        self.__setattr("_version", version)
-        self.__setattr("_architecture", architecture)
+        self._name = name
+        self._version = version
+        self._architecture = architecture
         return self
 
-    @classmethod
-    def from_dict(cls, value: dict) -> "OperatingSystem":
-        """Named constructor for creating a Operating System from a dictionary."""
-        return cls(
-            name=value.get("name"),
-            version=value.get("version"),
-            architecture=value.get("architecture"),
-        )
-
-    @property
-    def name(self) -> str:
-        """Returns the name of the Operating System."""
-        return self._name
-
-    @property
-    def version(self) -> str:
-        """Returns the version of the Operating System."""
-        return self._version
-
-    @property
-    def architecture(self) -> str:
-        """Returns the architecture of the Operating System."""
-        return self._architecture
-
-    @property
-    def __dict__(self) -> dict:
-        """Returns the dictionary representation of the Operating System."""
-        return {
-            "name": self.name,
-            "version": self.version,
-            "architecture": self.architecture,
-        }
-
-    def __setattr__(self, name: str, value: object) -> None:
-        """Prevents setting attributes."""
-        raise AttributeError("Operating system objects are immutable")
-
-    def __delattr__(self, name: str) -> None:
-        """Prevents deleting attributes."""
-        raise AttributeError("Operating system objects are immutable")
-
-    def __eq__(self, other: object) -> bool:
+    def __eq__(self, other):
         """Compares if two Operating System are equal."""
         if isinstance(other, OperatingSystem):
             return (
@@ -79,15 +45,15 @@ class OperatingSystem:
             )
         return NotImplemented
 
-    def __ne__(self, other: object) -> bool:
+    def __ne__(self, other):
         """Compares if two Operating System are not equal."""
         return not self.__eq__(other)
 
-    def __hash__(self) -> int:
+    def __hash__(self):
         """Returns the hash of the Operating System."""
         return hash((self.name, self.version, self.architecture))
 
-    def __repr__(self) -> str:
+    def __repr__(self):
         """Returns the representation of the Operating System."""
         return (
             "{c}(name={name!r}, version={version!r}, "
@@ -99,6 +65,17 @@ class OperatingSystem:
             architecture=self.architecture,
         )
 
-    def __setattr(self, name: str, value: object) -> None:
-        """Private method for setting attributes."""
-        object.__setattr__(self, name, value)
+    @property
+    def name(self):
+        """Returns the name of the Operating System."""
+        return self._name
+
+    @property
+    def version(self):
+        """Returns the version of the Operating System."""
+        return self._version
+
+    @property
+    def architecture(self):
+        """Returns the architecture of the Operating System."""
+        return self._architecture
