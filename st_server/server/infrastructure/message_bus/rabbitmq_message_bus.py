@@ -4,7 +4,7 @@ import json
 
 import pika
 
-from st_server.shared.domain.value_objects.domain_event import DomainEvent
+from st_server.shared.domain.value_object.domain_event import DomainEvent
 from st_server.shared.infrastructure.message_bus.message_bus import MessageBus
 
 

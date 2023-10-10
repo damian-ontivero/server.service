@@ -1,7 +1,7 @@
-from .models.application import ApplicationDbModel
-from .models.credential import CredentialDbModel
-from .models.server import ServerDbModel
-from .models.server_application import ServerApplicationDbModel
+from .model.application import ApplicationDbModel
+from .model.credential import CredentialDbModel
+from .model.server import ServerDbModel
+from .model.server_application import ServerApplicationDbModel
 
 __all__ = [
     "ApplicationDbModel",

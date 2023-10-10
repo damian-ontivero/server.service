@@ -1,0 +1,32 @@
+import pytest
+
+from st_server.server.application.dto.server import ServerReadDto
+from st_server.shared.application.exception.exception import NotFound
+from test.util.factory.server_factory import ServerFactory
+
+
+def test_find_many_ok(mock_server_query):
+    servers = ServerFactory.create_batch(5)
+
+    servers_found = mock_server_query.find_many(
+        _filter={
+            "id": {"in": ",".join([server.id.value for server in servers])}
+        }
+    )
+
+    assert servers_found._total == 5
+    assert isinstance(servers_found._items[0], ServerReadDto)
+
+
+def test_find_one_ok(mock_server_query):
+    server = ServerFactory()
+
+    server_found = mock_server_query.find_one(id=server.id.value)
+
+    assert isinstance(server_found, ServerReadDto)
+    assert server.id.value == server_found.id
+
+
+def test_find_one_not_found(mock_server_query):
+    with pytest.raises(NotFound):
+        mock_server_query.find_one(id="1234")

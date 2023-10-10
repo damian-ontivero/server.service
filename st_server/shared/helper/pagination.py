@@ -2,7 +2,7 @@
 
 from functools import wraps
 
-from st_server.shared.application.exceptions import PaginationError
+from st_server.shared.application.exception.exception import PaginationError
 
 
 def validate_pagination(func):
@@ -10,28 +10,30 @@ def validate_pagination(func):
 
     @wraps(func)
     def wrapped(*args, **kwargs):
-        limit = kwargs.get("limit", None)
-        offset = kwargs.get("offset", None)
+        _limit = kwargs.get("_limit", None)
+        _offset = kwargs.get("_offset", None)
 
-        if limit is not None:
+        if _limit is not None:
             try:
-                assert int(limit) >= 0
+                assert int(_limit) >= 0
             except ValueError:
                 raise PaginationError(
-                    "The limit number must be an integer value"
-                )
-            except AssertionError:
-                raise PaginationError("The limit number cannot be less than 1")
-        if offset is not None:
-            try:
-                assert int(offset) >= 0
-            except ValueError:
-                raise PaginationError(
-                    "The offset number must be an integer value"
+                    "The _limit number must be an integer value"
                 )
             except AssertionError:
                 raise PaginationError(
-                    "The offset number cannot be less than 0"
+                    "The _limit number cannot be less than 1"
+                )
+        if _offset is not None:
+            try:
+                assert int(_offset) >= 0
+            except ValueError:
+                raise PaginationError(
+                    "The _offset number must be an integer value"
+                )
+            except AssertionError:
+                raise PaginationError(
+                    "The _offset number cannot be less than 0"
                 )
         return func(*args, **kwargs)
 
