@@ -45,9 +45,9 @@ class UpdateApplicationCommandHandler(CommandHandler):
     def _check_exists(self, name: str) -> None:
         """Returns True if an application with the given name exists."""
         applications = self._repository.find_many(
-            _filter={"name": {"eq": name}}
+            filter={"name": {"eq": name}}
         )
-        if applications._total:
+        if applications.total:
             raise AlreadyExists(
                 "Application with name: {name!r} already exists".format(
                     name=name

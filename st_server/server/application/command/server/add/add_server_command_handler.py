@@ -49,8 +49,8 @@ class AddServerCommandHandler(CommandHandler):
 
     def _check_exists(self, name: str) -> None:
         """Returns True if a server with the given name exists."""
-        servers = self._repository.find_many(_filter={"name": {"eq": name}})
-        if servers._total:
+        servers = self._repository.find_many(filter={"name": {"eq": name}})
+        if servers.total:
             raise AlreadyExists(
                 "Server with name: {name!r} already exists".format(name=name)
             )

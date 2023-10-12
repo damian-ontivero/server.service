@@ -63,47 +63,45 @@ class ServerQuery:
     @validate_filter
     def find_many(
         self,
-        _limit: int | None = None,
-        _offset: int | None = None,
-        _filter: dict | None = None,
-        _and_filter: list[dict] | None = None,
-        _or_filter: list[dict] | None = None,
-        _sort: list[dict] | None = None,
+        limit: int | None = None,
+        offset: int | None = None,
+        filter: dict | None = None,
+        and_filter: list[dict] | None = None,
+        or_filter: list[dict] | None = None,
+        sort: list[dict] | None = None,
         access_token: str | None = None,
     ) -> QueryResponse:
         """Returns servers."""
-        if _limit is None:
-            _limit = 0
-        if _offset is None:
-            _offset = 0
-        if _filter is None:
-            _filter = {}
-        if _and_filter is None:
-            _and_filter = []
-        if _or_filter is None:
-            _or_filter = []
-        if _sort is None:
-            _sort = []
+        if limit is None:
+            limit = 0
+        if offset is None:
+            offset = 0
+        if filter is None:
+            filter = {}
+        if and_filter is None:
+            and_filter = []
+        if or_filter is None:
+            or_filter = []
+        if sort is None:
+            sort = []
         servers = self._repository.find_many(
-            _limit=_limit,
-            _offset=_offset,
-            _filter=_filter,
-            _and_filter=_and_filter,
-            _or_filter=_or_filter,
-            _sort=_sort,
+            limit=limit,
+            offset=offset,
+            filter=filter,
+            and_filter=and_filter,
+            or_filter=or_filter,
+            sort=sort,
         )
-        total = servers._total
+        total = servers.total
         return QueryResponse(
-            _total=total,
-            _limit=_limit,
-            _offset=_offset,
-            _prev_offset=_offset - _limit if _offset > 0 else None,
-            _next_offset=_offset + _limit
-            if _offset + _limit < total
-            else None,
-            _items=[
+            total=total,
+            limit=limit,
+            offset=offset,
+            prev_offset=offset - limit if offset > 0 else None,
+            next_offset=offset + limit if offset + limit < total else None,
+            items=[
                 ServerReadDto.from_entity(server=server)
-                for server in servers._items
+                for server in servers.items
             ],
         )
 

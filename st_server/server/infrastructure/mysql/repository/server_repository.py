@@ -14,9 +14,9 @@ from st_server.shared.domain.repository.repository_page_dto import (
 )
 
 
-def _build_filter(_filter: dict):
-    """Builds the _filter."""
-    for attr, criteria in _filter.items():
+def _build_filter(filter: dict):
+    """Builds the filter."""
+    for attr, criteria in filter.items():
         if hasattr(ServerDbModel, attr):
             for op, val in criteria.items():
                 if isinstance(val, dict):
@@ -36,9 +36,9 @@ def _build_filter(_filter: dict):
                     )
 
 
-def _build_sort(_sort: list[dict]):
-    """Builds the _sort."""
-    for criteria in _sort:
+def _build_sort(sort: list[dict]):
+    """Builds the sort."""
+    for criteria in sort:
         for attr, order in criteria.items():
             if hasattr(ServerDbModel, attr):
                 return getattr(getattr(ServerDbModel, attr), order)()
@@ -49,12 +49,12 @@ class ServerRepositoryImpl(ServerRepository):
 
     Repositories are responsible for retrieving and storing aggregates.
 
-    In the `find_many` method, the `_filter` parameter is a dictionary that
-    contains the _filter criteria. The `_and_filter` and `_or_filter` parameters
-    are lists of dictionaries that contain the _filter criteria. The `_sort`
-    parameter is a list of dictionaries that contain the _sort criteria.
+    In the `find_many` method, the `filter` parameter is a dictionary that
+    contains the filter criteria. The `and_filter` and `or_filter` parameters
+    are lists of dictionaries that contain the filter criteria. The `sort`
+    parameter is a list of dictionaries that contain the sort criteria.
 
-    The `_filter`, `_and_filter` and `_or_filter` parameters are
+    The `filter`, `and_filter` and `or_filter` parameters are
     dictionaries with the following structure:
 
     {
@@ -63,8 +63,8 @@ class ServerRepositoryImpl(ServerRepository):
         }
     }
 
-    The `attribute` is the name of the attribute to _filter by. The `operator`
-    is the operator to _filter by. The `value` is the value to _filter by. The
+    The `attribute` is the name of the attribute to filter by. The `operator`
+    is the operator to filter by. The `value` is the value to filter by. The
     following operators are supported:
 
     - `eq`: equal to
@@ -79,21 +79,21 @@ class ServerRepositoryImpl(ServerRepository):
     The `in` operator expects a comma-separated list of values. The `btw`
     operator expects a comma-separated list of two values.
 
-    The `_sort` parameter is a list of dictionaries with the following
+    The `sort` parameter is a list of dictionaries with the following
     structure:
 
     {
         "attribute": "order"
     }
 
-    The `attribute` is the name of the attribute to _sort by. The `order` is the
-    order to _sort by. The following orders are supported:
+    The `attribute` is the name of the attribute to sort by. The `order` is the
+    order to sort by. The following orders are supported:
 
     - `asc`: ascending
     - `desc`: descending
 
-    The `_limit` parameter is the maximum number of records to return. The
-    `_offset` parameter is the number of records to skip.
+    The `limit` parameter is the maximum number of records to return. The
+    `offset` parameter is the number of records to skip.
 
     The `find_one` method returns a single aggregate. The `id` parameter is the
     ID of the aggregate to return.
@@ -114,47 +114,47 @@ class ServerRepositoryImpl(ServerRepository):
 
     def find_many(
         self,
-        _limit: int | None = None,
-        _offset: int | None = None,
-        _filter: dict | None = None,
-        _and_filter: list[dict] | None = None,
-        _or_filter: list[dict] | None = None,
-        _sort: list[dict] | None = None,
+        limit: int | None = None,
+        offset: int | None = None,
+        filter: dict | None = None,
+        and_filter: list[dict] | None = None,
+        or_filter: list[dict] | None = None,
+        sort: list[dict] | None = None,
     ) -> RepositoryPageDto:
         """Returns servers."""
-        if _limit is None:
-            _limit = 0
-        if _offset is None:
-            _offset = 0
-        if _filter is None:
-            _filter = {}
-        if _and_filter is None:
-            _and_filter = []
-        if _or_filter is None:
-            _or_filter = []
-        if _sort is None:
-            _sort = []
+        if limit is None:
+            limit = 0
+        if offset is None:
+            offset = 0
+        if filter is None:
+            filter = {}
+        if and_filter is None:
+            and_filter = []
+        if or_filter is None:
+            or_filter = []
+        if sort is None:
+            sort = []
         with self._session as session:
             query = session.query(ServerDbModel)
-            if _filter:
-                query = query.filter(_build_filter(_filter=_filter))
-            if _and_filter:
+            if filter:
+                query = query.filter(_build_filter(filter=filter))
+            if and_filter:
                 query = query.filter(
-                    and_(*[_build_filter(_and) for _and in _and_filter])
+                    and_(*[_build_filter(_and) for _and in and_filter])
                 )
-            if _or_filter:
+            if or_filter:
                 query = query.filter(
-                    or_(*[_build_filter(_or) for _or in _or_filter])
+                    or_(*[_build_filter(_or) for _or in or_filter])
                 )
-            if _sort:
-                query = query.order_by(_build_sort(_sort=_sort))
+            if sort:
+                query = query.order_by(_build_sort(sort=sort))
             total = query.count()
-            query = query.limit(limit=_limit or total)
-            query = query.offset(offset=_offset)
+            query = query.limit(limit=limit or total)
+            query = query.offset(offset=offset)
             users = query.all()
             return RepositoryPageDto(
-                _total=total,
-                _items=[
+                total=total,
+                items=[
                     Server.from_dict(data=user.to_dict()) for user in users
                 ],
             )

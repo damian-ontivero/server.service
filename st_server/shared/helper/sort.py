@@ -1,4 +1,4 @@
-"""Validates _sort format."""
+"""Validates sort format."""
 
 from functools import wraps
 
@@ -6,15 +6,15 @@ from st_server.shared.application.exception.exception import SortError
 
 
 def validate_sort(func):
-    """Decorator to validate _sort."""
+    """Decorator to validate sort."""
 
     @wraps(func)
     def wrapped(*args, **kwargs):
-        _sort = kwargs.get("_sort", [])
-        for _sort in _sort:
-            if not isinstance(_sort, dict):
+        sort = kwargs.get("sort", [])
+        for sort in sort:
+            if not isinstance(sort, dict):
                 raise SortError
-            for key, value in _sort.items():
+            for key, value in sort.items():
                 if not isinstance(key, str):
                     raise SortError
                 if not isinstance(value, str):

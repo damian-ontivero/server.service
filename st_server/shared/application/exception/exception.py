@@ -22,8 +22,8 @@ class PaginationError(Exception):
 
 
 class FilterError(Exception):
-    """Exception raised when a _filter is incorrect."""
+    """Exception raised when a filter is incorrect."""
 
 
 class SortError(Exception):
-    """Exception raised when a _sort is incorrect."""
+    """Exception raised when a sort is incorrect."""

@@ -24,12 +24,12 @@ class ServerRepository(metaclass=ABCMeta):
 
     Repositories are responsible for retrieving and storing aggregates.
 
-    In the `find_many` method, the `_filter` parameter is a dictionary that
-    contains the _filter criteria. The `_and_filter` and `_or_filter` parameters
-    are lists of dictionaries that contain the _filter criteria. The `_sort`
-    parameter is a list of dictionaries that contain the _sort criteria.
+    In the `find_many` method, the `filter` parameter is a dictionary that
+    contains the filter criteria. The `and_filter` and `or_filter` parameters
+    are lists of dictionaries that contain the filter criteria. The `sort`
+    parameter is a list of dictionaries that contain the sort criteria.
 
-    The `_filter`, `_and_filter` and `_or_filter` parameters are
+    The `filter`, `and_filter` and `or_filter` parameters are
     dictionaries with the following structure:
 
     {
@@ -38,8 +38,8 @@ class ServerRepository(metaclass=ABCMeta):
         }
     }
 
-    The `attribute` is the name of the attribute to _filter by. The `operator`
-    is the operator to _filter by. The `value` is the value to _filter by. The
+    The `attribute` is the name of the attribute to filter by. The `operator`
+    is the operator to filter by. The `value` is the value to filter by. The
     following operators are supported:
 
     - `eq`: equal to
@@ -54,21 +54,21 @@ class ServerRepository(metaclass=ABCMeta):
     The `in` operator expects a comma-separated list of values. The `btw`
     operator expects a comma-separated list of two values.
 
-    The `_sort` parameter is a list of dictionaries with the following
+    The `sort` parameter is a list of dictionaries with the following
     structure:
 
     {
         "attribute": "order"
     }
 
-    The `attribute` is the name of the attribute to _sort by. The `order` is the
-    order to _sort by. The following orders are supported:
+    The `attribute` is the name of the attribute to sort by. The `order` is the
+    order to sort by. The following orders are supported:
 
     - `asc`: ascending
     - `desc`: descending
 
-    The `_limit` parameter is the maximum number of records to return. The
-    `_offset` parameter is the number of records to skip.
+    The `limit` parameter is the maximum number of records to return. The
+    `offset` parameter is the number of records to skip.
 
     The `find_one` method returns a single aggregate. The `id` parameter is the
     ID of the aggregate to return.
@@ -86,12 +86,12 @@ class ServerRepository(metaclass=ABCMeta):
     @abstractmethod
     def find_many(
         self,
-        _limit: int,
-        _offset: int,
-        _filter: dict,
-        _and_filter: list[dict],
-        _or_filter: list[dict],
-        _sort: list[dict],
+        limit: int,
+        offset: int,
+        filter: dict,
+        and_filter: list[dict],
+        or_filter: list[dict],
+        sort: list[dict],
     ) -> RepositoryPageDto:
         """Returns a list of servers."""
         raise NotImplementedError

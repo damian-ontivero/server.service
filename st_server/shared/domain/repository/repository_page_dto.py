@@ -7,5 +7,5 @@ from st_server.shared.domain.entity.entity import Entity
 class RepositoryPageDto:
     """Dataclass to represent the response from the repository with pagination."""
 
-    _total: int
-    _items: list[Entity] = field(default_factory=list)
+    total: int
+    items: list[Entity] = field(default_factory=list)

@@ -1,4 +1,4 @@
-"""Validates _filter format."""
+"""Validates filter format."""
 
 from functools import wraps
 
@@ -8,12 +8,12 @@ OPERATORS = ["eq", "gt", "ge", "lt", "le", "in", "btw", "lk"]
 
 
 def validate_filter(func):
-    """Decorator to validate _filter."""
+    """Decorator to validate filter."""
 
     @wraps(func)
     def wrapped(*args, **kwargs):
-        _filter = kwargs.get("_filter", {})
-        for key, value in _filter.items():
+        filter = kwargs.get("filter", {})
+        for key, value in filter.items():
             if not isinstance(key, str):
                 raise FilterError
             if not isinstance(value, dict):
@@ -21,9 +21,9 @@ def validate_filter(func):
             for op, val in value.items():
                 if op not in OPERATORS:
                     raise FilterError
-        _and_filter = kwargs.get("_and_filter", [])
-        for _filter in _and_filter:
-            for key, value in _filter.items():
+        and_filter = kwargs.get("and_filter", [])
+        for filter in and_filter:
+            for key, value in filter.items():
                 if not isinstance(key, str):
                     raise FilterError
                 if not isinstance(value, dict):
@@ -31,9 +31,9 @@ def validate_filter(func):
                 for op, val in value.items():
                     if op not in OPERATORS:
                         raise FilterError
-        _or_filter = kwargs.get("_or_filter", [])
-        for _filter in _or_filter:
-            for key, value in _filter.items():
+        or_filter = kwargs.get("or_filter", [])
+        for filter in or_filter:
+            for key, value in filter.items():
                 if not isinstance(key, str):
                     raise FilterError
                 if not isinstance(value, dict):

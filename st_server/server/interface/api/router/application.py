@@ -97,12 +97,12 @@ def get_query(
 
 @router.get("", response_model=QueryResponse)
 def get_all(
-    _limit: int = Query(default=25),
-    _offset: int = Query(default=0),
-    _filter: str = Query(default="{}"),
-    _and_filter: str | None = Query(default="[]"),
-    _or_filter: str | None = Query(default="[]"),
-    _sort: str | None = Query(default="[]"),
+    limit: int = Query(default=25),
+    offset: int = Query(default=0),
+    filter: str = Query(default="{}"),
+    and_filter: str | None = Query(default="[]"),
+    or_filter: str | None = Query(default="[]"),
+    sort: str | None = Query(default="[]"),
     authorization: HTTPAuthorizationCredentials = Depends(auth_scheme),
     request: Request = None,
     query: ApplicationQuery = Depends(get_query),
@@ -110,15 +110,15 @@ def get_all(
     """Route to get all applications."""
     try:
         applications = query.find_many(
-            _limit=_limit,
-            _offset=_offset,
-            _filter=json.loads(_filter),
-            _and_filter=json.loads(_and_filter),
-            _or_filter=json.loads(_or_filter),
-            _sort=json.loads(_sort),
+            limit=limit,
+            offset=offset,
+            filter=json.loads(filter),
+            and_filter=json.loads(and_filter),
+            or_filter=json.loads(or_filter),
+            sort=json.loads(sort),
             access_token=authorization.credentials,
         )
-        if applications._total == 0:
+        if applications.total == 0:
             raise HTTPException(status_code=status.HTTP_204_NO_CONTENT)
         return JSONResponse(
             content=jsonable_encoder(obj=applications),

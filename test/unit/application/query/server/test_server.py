@@ -9,13 +9,13 @@ def test_find_many_ok(mock_server_query):
     servers = ServerFactory.create_batch(5)
 
     servers_found = mock_server_query.find_many(
-        _filter={
+        filter={
             "id": {"in": ",".join([server.id.value for server in servers])}
         }
     )
 
-    assert servers_found._total == 5
-    assert isinstance(servers_found._items[0], ServerReadDto)
+    assert servers_found.total == 5
+    assert isinstance(servers_found.items[0], ServerReadDto)
 
 
 def test_find_one_ok(mock_server_query):
