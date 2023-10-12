@@ -1,7 +1,5 @@
 """Server query."""
 
-import math
-
 from st_server.server.application.dto.server import ServerReadDto
 from st_server.server.domain.repository.server_repository import (
     ServerRepository,

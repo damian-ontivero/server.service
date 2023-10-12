@@ -35,10 +35,11 @@ class UpdateApplicationCommandHandler(CommandHandler):
         if not application.name == command.name:
             self._check_exists(name=command.name)
         application.name = command.name or application.name
+        application.version = command.version or application.version
+        application.architect = command.architect or application.architect
         self._repository.save_one(aggregate=application)
         self._message_bus.publish(domain_events=application.domain_events)
         application.clear_domain_events()
-        application = self._repository.find_one(id=command.id)
         return ApplicationReadDto.from_entity(application=application)
 
     def _check_exists(self, name: str) -> None:

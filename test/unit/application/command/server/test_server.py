@@ -1,4 +1,3 @@
-from st_server.server.application.dto.server import ServerReadDto
 from test.util.factory.server_factory import ServerFactory
 from st_server.server.application.command.server.add.add_server_command import (
     AddServerCommand,
@@ -20,7 +19,7 @@ from st_server.server.application.command.server.delete.delete_server_command_ha
 )
 
 
-def test_add_one_ok(mock_application_repository, mock_message_bus):
+def test_add_one_ok(mock_server_repository, mock_message_bus):
     server = ServerFactory.build()
     data = server.to_dict()
 
@@ -35,11 +34,11 @@ def test_add_one_ok(mock_application_repository, mock_message_bus):
         applications=data["applications"],
     )
     AddServerCommandHandler(
-        repository=mock_application_repository, message_bus=mock_message_bus
+        repository=mock_server_repository, message_bus=mock_message_bus
     ).handle(command)
 
 
-def test_update_one_ok(mock_application_repository, mock_message_bus):
+def test_update_one_ok(mock_server_repository, mock_message_bus):
     server = ServerFactory()
     server.name = "SuperTest"
 
@@ -56,12 +55,12 @@ def test_update_one_ok(mock_application_repository, mock_message_bus):
         status=server.status,
     )
     UpdateServerCommandHandler(
-        repository=mock_application_repository, message_bus=mock_message_bus
+        repository=mock_server_repository, message_bus=mock_message_bus
     ).handle(command)
 
 
 def test_update_one_blank_cpu_field_ok(
-    mock_application_repository, mock_message_bus
+    mock_server_repository, mock_message_bus
 ):
     server = ServerFactory()
     server.cpu = None
@@ -79,12 +78,12 @@ def test_update_one_blank_cpu_field_ok(
         status=server.status,
     )
     UpdateServerCommandHandler(
-        repository=mock_application_repository, message_bus=mock_message_bus
+        repository=mock_server_repository, message_bus=mock_message_bus
     ).handle(command)
 
 
 def test_update_one_blank_ram_field_ok(
-    mock_application_repository, mock_message_bus
+    mock_server_repository, mock_message_bus
 ):
     server = ServerFactory()
     server.ram = None
@@ -102,12 +101,12 @@ def test_update_one_blank_ram_field_ok(
         status=server.status,
     )
     UpdateServerCommandHandler(
-        repository=mock_application_repository, message_bus=mock_message_bus
+        repository=mock_server_repository, message_bus=mock_message_bus
     ).handle(command)
 
 
 def test_update_one_blank_hdd_field_ok(
-    mock_application_repository, mock_message_bus
+    mock_server_repository, mock_message_bus
 ):
     server = ServerFactory()
     server.hdd = None
@@ -125,14 +124,14 @@ def test_update_one_blank_hdd_field_ok(
         status=server.status,
     )
     UpdateServerCommandHandler(
-        repository=mock_application_repository, message_bus=mock_message_bus
+        repository=mock_server_repository, message_bus=mock_message_bus
     ).handle(command)
 
 
-def test_delete_one_ok(mock_application_repository, mock_message_bus):
+def test_delete_one_ok(mock_server_repository, mock_message_bus):
     server = ServerFactory()
 
     command = DeleteServerCommand(id=server.id.value)
     DeleteServerCommandHandler(
-        repository=mock_application_repository, message_bus=mock_message_bus
+        repository=mock_server_repository, message_bus=mock_message_bus
     ).handle(command)

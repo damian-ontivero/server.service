@@ -35,10 +35,19 @@ class UpdateServerCommandHandler(CommandHandler):
         if not server.name == command.name:
             self._check_exists(name=command.name)
         server.name = command.name or server.name
+        server.cpu = command.cpu or server.cpu
+        server.ram = command.ram or server.ram
+        server.hdd = command.hdd or server.hdd
+        server.environment = command.environment or server.environment
+        server.operating_system = (
+            command.operating_system or server.operating_system
+        )
+        server.credentials = command.credentials or server.credentials
+        server.applications = command.applications or server.applications
+        server.status = command.status or server.status
         self._repository.save_one(aggregate=server)
         self._message_bus.publish(domain_events=server.domain_events)
         server.clear_domain_events()
-        server = self._repository.find_one(id=command.id)
         return ServerReadDto.from_entity(server=server)
 
     def _check_exists(self, name: str) -> None:

@@ -11,6 +11,10 @@ from st_server.server.domain.entity.server import Server
 from st_server.server.domain.repository.server_repository import (
     ServerRepository,
 )
+from st_server.server.domain.value_object.operating_system import (
+    OperatingSystem,
+)
+from st_server.server.domain.value_object.environment import Environment
 
 
 class AddServerCommandHandler(CommandHandler):
@@ -25,12 +29,22 @@ class AddServerCommandHandler(CommandHandler):
 
     def handle(self, command: AddServerCommand) -> int:
         """Handle a command."""
-        server = Server.create(name=command.name)
+        server = Server.create(
+            name=command.name,
+            cpu=command.cpu,
+            ram=command.ram,
+            hdd=command.hdd,
+            environment=Environment.from_text(value=command.environment),
+            operating_system=OperatingSystem.from_dict(
+                value=command.operating_system
+            ),
+            credentials=command.credentials,
+            applications=command.applications,
+        )
         self._check_exists(name=server.name)
         self._repository.save_one(aggregate=server)
         self._message_bus.publish(domain_events=server.domain_events)
         server.clear_domain_events()
-        server = self._repository.find_one(id=server.id.value)
         return ServerReadDto.from_entity(server=server)
 
     def _check_exists(self, name: str) -> None:

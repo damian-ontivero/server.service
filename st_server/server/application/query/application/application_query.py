@@ -1,9 +1,6 @@
 """Application query."""
 
-import math
-
 from st_server.server.application.dto.application import ApplicationReadDto
-from st_server.server.domain.entity.application import Application
 from st_server.server.domain.repository.application_repository import (
     ApplicationRepository,
 )

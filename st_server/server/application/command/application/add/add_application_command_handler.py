@@ -34,7 +34,6 @@ class AddApplicationCommandHandler(CommandHandler):
         self._repository.save_one(aggregate=application)
         self._message_bus.publish(domain_events=application.domain_events)
         application.clear_domain_events()
-        application = self._repository.find_one(id=application.id.value)
         return ApplicationReadDto.from_entity(application=application)
 
     def _check_exists(self, name: str) -> None:

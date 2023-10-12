@@ -2,10 +2,8 @@ import factory
 import factory.fuzzy
 
 from st_server.server.domain.entity.server import Server
-from st_server.server.domain.value_object.environment import Environment
-from st_server.server.domain.value_object.operating_system import (
-    OperatingSystem,
-)
+from test.util.factory.environment import EnvironmentFactory
+from test.util.factory.operating_system import OperatingSystemFactory
 from st_server.server.infrastructure.mysql.repository.server_repository import (
     ServerRepositoryImpl,
 )
@@ -22,14 +20,8 @@ class ServerFactory(factory.Factory):
     cpu = factory.Faker("pystr")
     ram = factory.Faker("pystr")
     hdd = factory.Faker("pystr")
-    environment = Environment.from_text(value="DEV")
-    operating_system = OperatingSystem.from_dict(
-        value={
-            "name": "Ubuntu",
-            "version": "20.04",
-            "architecture": "x86_64",
-        }
-    )
+    environment = factory.SubFactory(EnvironmentFactory)
+    operating_system = factory.SubFactory(OperatingSystemFactory)
 
     @classmethod
     def _create(cls, model_class, *args, **kwargs):

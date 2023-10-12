@@ -253,16 +253,16 @@ class Server(AggregateRoot):
         ).format(
             d="*Discarded*" if self._discarded else "",
             c=self.__class__.__name__,
-            id=self._id.value,
+            id=self._id,
             name=self._name,
             cpu=self._cpu,
             ram=self._ram,
             hdd=self._hdd,
-            environment=self._environment.value,
+            environment=self._environment,
             operating_system=self._operating_system,
             credentials=self._credentials,
             applications=self._applications,
-            status=self._status.value,
+            status=self._status,
             discarded=self._discarded,
         )
 

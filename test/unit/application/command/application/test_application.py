@@ -1,4 +1,3 @@
-from st_server.server.application.dto.application import ApplicationReadDto
 from test.util.factory.application_factory import ApplicationFactory
 from st_server.server.application.command.application.add.add_application_command import (
     AddApplicationCommand,

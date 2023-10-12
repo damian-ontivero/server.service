@@ -13,17 +13,17 @@ class RabbitMQMessageBus(MessageBus):
 
     Exchange:
         Aggregate root which published the event.
-            Server.FirstNameChanged -> Server
+            User.FirstNameChanged -> user
 
     Routing key:
         If the domain event is a property changed event:
-            Server.FirstNameChanged -> firstname.changed
+            User.FirstNameChanged -> firstname.changed
 
         If the domain event is not a property changed event:
-            Server.Created -> created
+            User.Created -> created
 
     Body:
-        Server.FirstNameChanged -> {
+        User.FirstNameChanged -> {
             "occurred_on": "2023-06-05 22:06:19.683588",
             "aggregate_id": "3af25ebdf13a421080910ef6b4b8b474",
             "old_value": "John",
@@ -34,17 +34,19 @@ class RabbitMQMessageBus(MessageBus):
     def __init__(
         self, host: str, port: int, username: str, password: str
     ) -> None:
+        """Initializes the RabbitMQ message bus."""
         self._connection = pika.BlockingConnection(
             pika.ConnectionParameters(
                 host=host,
                 port=port,
                 credentials=pika.PlainCredentials(username, password),
-                virtual_host="support",
+                virtual_host="server",
             )
         )
         self._channel = self._connection.channel()
 
     def publish(self, domain_events: list[DomainEvent]) -> None:
+        """Publishes a list of domain events."""
         for domain_event in domain_events:
             aggregate, event = domain_event.__class__.__qualname__.split(".")
             routing_key = (
