@@ -119,7 +119,7 @@ def get_all(
             _sort=json.loads(_sort),
             access_token=authorization.credentials,
         )
-        if not servers._total == 0:
+        if servers._total == 0:
             raise HTTPException(status_code=status.HTTP_204_NO_CONTENT)
         return JSONResponse(
             content=jsonable_encoder(obj=servers),
@@ -186,11 +186,11 @@ def create(
             credentials=server_in.credentials,
             applications=server_in.applications,
         )
-        AddServerCommandHandler(
+        server = AddServerCommandHandler(
             repository=repository, message_bus=message_bus
         ).handle(command=command)
         return JSONResponse(
-            content=jsonable_encoder(obj=command),
+            content=jsonable_encoder(obj=server),
             status_code=status.HTTP_201_CREATED,
         )
     except AuthenticationError as e:
@@ -233,11 +233,11 @@ def update(
             applications=server_in.applications,
             status=server_in.status,
         )
-        UpdateServerCommandHandler(
+        server = UpdateServerCommandHandler(
             repository=repository, message_bus=message_bus
         ).handle(command=command)
         return JSONResponse(
-            content=jsonable_encoder(obj=command),
+            content=jsonable_encoder(obj=server),
             status_code=status.HTTP_200_OK,
         )
     except AuthenticationError as e:
@@ -263,7 +263,7 @@ def update(
 
 
 @router.delete("/{id}")
-def discard(
+def delete(
     id: str,
     authorization: HTTPAuthorizationCredentials = Depends(auth_scheme),
     repository: ServerRepositoryImpl = Depends(get_repository),
@@ -271,9 +271,7 @@ def discard(
 ):
     """Route to discard a server."""
     try:
-        command = DeleteServerCommand(
-            id=id, access_token=authorization.credentials
-        )
+        command = DeleteServerCommand(id=id)
         DeleteServerCommandHandler(
             repository=repository, message_bus=message_bus
         ).handle(command=command)

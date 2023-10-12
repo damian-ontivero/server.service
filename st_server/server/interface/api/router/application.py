@@ -181,11 +181,11 @@ def create(
             version=application_in.version,
             architect=application_in.architect,
         )
-        AddApplicationCommandHandler(
+        application = AddApplicationCommandHandler(
             repository=repository, message_bus=message_bus
         ).handle(command=command)
         return JSONResponse(
-            content=jsonable_encoder(obj=command),
+            content=jsonable_encoder(obj=application),
             status_code=status.HTTP_201_CREATED,
         )
     except AuthenticationError as e:
@@ -222,11 +222,11 @@ def update(
             version=application_in.version,
             architect=application_in.architect,
         )
-        UpdateApplicationCommandHandler(
+        application = UpdateApplicationCommandHandler(
             repository=repository, message_bus=message_bus
         ).handle(command=command)
         return JSONResponse(
-            content=jsonable_encoder(obj=command),
+            content=jsonable_encoder(obj=application),
             status_code=status.HTTP_200_OK,
         )
     except AuthenticationError as e:
@@ -252,7 +252,7 @@ def update(
 
 
 @router.delete("/{id}")
-def discard(
+def delete(
     id: str,
     authorization: HTTPAuthorizationCredentials = Depends(auth_scheme),
     repository: ApplicationRepositoryImpl = Depends(get_repository),

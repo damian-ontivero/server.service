@@ -23,7 +23,7 @@ class AddApplicationCommandHandler(CommandHandler):
         self._repository = repository
         self._message_bus = message_bus
 
-    def handle(self, command: AddApplicationCommand) -> int:
+    def handle(self, command: AddApplicationCommand) -> ApplicationReadDto:
         """Handle a command."""
         application = Application.create(
             name=command.name,

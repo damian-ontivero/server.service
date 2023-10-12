@@ -27,7 +27,7 @@ class AddServerCommandHandler(CommandHandler):
         self._repository = repository
         self._message_bus = message_bus
 
-    def handle(self, command: AddServerCommand) -> int:
+    def handle(self, command: AddServerCommand) -> ServerReadDto:
         """Handle a command."""
         server = Server.create(
             name=command.name,

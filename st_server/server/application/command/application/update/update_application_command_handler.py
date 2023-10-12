@@ -25,7 +25,7 @@ class UpdateApplicationCommandHandler(CommandHandler):
         self._repository = repository
         self._message_bus = message_bus
 
-    def handle(self, command: UpdateApplicationCommand) -> None:
+    def handle(self, command: UpdateApplicationCommand) -> ApplicationReadDto:
         """Handle a command."""
         application = self._repository.find_one(id=command.id)
         if application is None:
