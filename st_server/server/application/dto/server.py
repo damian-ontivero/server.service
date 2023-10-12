@@ -44,7 +44,7 @@ class ServerReadDto(ServerBase):
             ram=server.ram,
             hdd=server.hdd,
             environment=server.environment.value,
-            operating_system=server.operating_system,
+            operating_system=server.operating_system.__dict__,
             credentials=[
                 CredentialReadDto.from_entity(credential=credential)
                 for credential in server.credentials

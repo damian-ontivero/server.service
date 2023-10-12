@@ -48,6 +48,7 @@ from st_server.server.application.command.application.update.update_application_
 from st_server.server.application.command.application.delete.delete_application_command_handler import (
     DeleteApplicationCommandHandler,
 )
+from st_server.shared.application.response.query_response import QueryResponse
 
 
 router = APIRouter()
@@ -94,7 +95,7 @@ def get_query(
     yield ApplicationQuery(repository=repository, message_bus=message_bus)
 
 
-@router.get("", response_model=list[ApplicationReadDto])
+@router.get("", response_model=QueryResponse)
 def get_all(
     _limit: int = Query(default=25),
     _offset: int = Query(default=0),
@@ -117,7 +118,7 @@ def get_all(
             _sort=json.loads(_sort),
             access_token=authorization.credentials,
         )
-        if not applications._total == 0:
+        if applications._total == 0:
             raise HTTPException(status_code=status.HTTP_204_NO_CONTENT)
         return JSONResponse(
             content=jsonable_encoder(obj=applications),

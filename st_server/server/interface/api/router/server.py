@@ -49,6 +49,7 @@ from st_server.server.application.command.server.update.update_server_command_ha
 from st_server.server.application.command.server.delete.delete_server_command_handler import (
     DeleteServerCommandHandler,
 )
+from st_server.shared.application.response.query_response import QueryResponse
 
 
 router = APIRouter()
@@ -95,7 +96,7 @@ def get_query(
     yield ServerQuery(repository=repository, message_bus=message_bus)
 
 
-@router.get("", response_model=list[ServerReadDto])
+@router.get("", response_model=QueryResponse)
 def get_all(
     _limit: int = Query(default=25),
     _offset: int = Query(default=0),
