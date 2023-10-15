@@ -26,7 +26,7 @@ class ServerFactory(factory.Factory):
     @classmethod
     def _create(cls, model_class, *args, **kwargs):
         server = model_class.create(*args, **kwargs)
-        ServerRepositoryImpl(session=SessionLocal()).save_one(aggregate=server)
+        ServerRepositoryImpl(SessionLocal()).save_one(server)
         return server
 
     @classmethod

@@ -100,8 +100,7 @@ class ServerQuery:
             prev_offset=offset - limit if offset > 0 else None,
             next_offset=offset + limit if offset + limit < total else None,
             items=[
-                ServerReadDto.from_entity(server=server)
-                for server in servers.items
+                ServerReadDto.from_entity(server) for server in servers.items
             ],
         )
 
@@ -111,7 +110,7 @@ class ServerQuery:
         self, id: str, access_token: str | None = None
     ) -> ServerReadDto:
         """Returns a server."""
-        server = self._repository.find_one(id=id)
+        server = self._repository.find_one(id)
         if server is None:
             raise NotFound("Server with id: {id!r} not found".format(id=id))
-        return ServerReadDto.from_entity(server=server)
+        return ServerReadDto.from_entity(server)

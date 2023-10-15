@@ -23,11 +23,11 @@ class DeleteServerCommandHandler(CommandHandler):
 
     def handle(self, command: DeleteServerCommand) -> None:
         """Handle a command."""
-        server = self._repository.find_one(id=command.id)
+        server = self._repository.find_one(command.id)
         if server is None:
             raise NotFound(
                 "Server with id: {id!r} not found".format(id=command.id)
             )
-        self._repository.delete_one(id=command.id)
-        self._message_bus.publish(domain_events=server.domain_events)
+        self._repository.delete_one(command.id)
+        self._message_bus.publish(server.domain_events)
         server.clear_domain_events()

@@ -75,7 +75,7 @@ def get_db_session():
 
 def get_repository(session: db.SessionLocal = Depends(get_db_session)):
     """Yields a server repository."""
-    yield ServerRepositoryImpl(session=session)
+    yield ServerRepositoryImpl(session)
 
 
 def get_message_bus():
@@ -188,7 +188,7 @@ def create(
         )
         server = AddServerCommandHandler(
             repository=repository, message_bus=message_bus
-        ).handle(command=command)
+        ).handle(command)
         return JSONResponse(
             content=jsonable_encoder(obj=server),
             status_code=status.HTTP_201_CREATED,
@@ -235,7 +235,7 @@ def update(
         )
         server = UpdateServerCommandHandler(
             repository=repository, message_bus=message_bus
-        ).handle(command=command)
+        ).handle(command)
         return JSONResponse(
             content=jsonable_encoder(obj=server),
             status_code=status.HTTP_200_OK,
@@ -274,7 +274,7 @@ def delete(
         command = DeleteServerCommand(id=id)
         DeleteServerCommandHandler(
             repository=repository, message_bus=message_bus
-        ).handle(command=command)
+        ).handle(command)
         return JSONResponse(
             content=jsonable_encoder(
                 obj={"message": "The server has been deleted"}

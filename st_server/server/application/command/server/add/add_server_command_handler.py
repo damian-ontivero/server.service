@@ -34,18 +34,18 @@ class AddServerCommandHandler(CommandHandler):
             cpu=command.cpu,
             ram=command.ram,
             hdd=command.hdd,
-            environment=Environment.from_text(value=command.environment),
-            operating_system=OperatingSystem.from_dict(
-                value=command.operating_system
+            environment=Environment.from_text(command.environment),
+            operating_system=OperatingSystem.from_data(
+                command.operating_system
             ),
             credentials=command.credentials,
             applications=command.applications,
         )
-        self._check_exists(name=server.name)
-        self._repository.save_one(aggregate=server)
-        self._message_bus.publish(domain_events=server.domain_events)
+        self._check_exists(server.name)
+        self._repository.save_one(server)
+        self._message_bus.publish(server.domain_events)
         server.clear_domain_events()
-        return ServerReadDto.from_entity(server=server)
+        return ServerReadDto.from_entity(server)
 
     def _check_exists(self, name: str) -> None:
         """Returns True if a server with the given name exists."""

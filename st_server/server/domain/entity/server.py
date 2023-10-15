@@ -15,43 +15,58 @@ from st_server.server.domain.value_object.server_status import ServerStatus
 from st_server.shared.domain.entity.aggregate_root import AggregateRoot
 from st_server.shared.domain.value_object.domain_event import DomainEvent
 from st_server.shared.domain.value_object.entity_id import EntityId
+from st_server.server.domain.value_object.connection_type import (
+    ConnectionType,
+)
 
 
 class Server(AggregateRoot):
     """Server entity."""
 
-    class Created(DomainEvent):
-        """Domain event that represents the creation of a Server."""
-
-    class Discarded(DomainEvent):
-        """Domain event that represents the discarding of a Server."""
-
     class NameChanged(DomainEvent):
         """Domain event that represents the change of the name of a Server."""
+
+        pass
 
     class CpuChanged(DomainEvent):
         """Domain event that represents the change of the cpu of a Server."""
 
+        pass
+
     class RamChanged(DomainEvent):
         """Domain event that represents the change of the ram of a Server."""
+
+        pass
 
     class HddChanged(DomainEvent):
         """Domain event that represents the change of the hdd of a Server."""
 
+        pass
+
     class EnvironmentChanged(DomainEvent):
         """Domain event that represents the change of the environment of a Server."""
+
+        pass
 
     class OperatingSystemChanged(DomainEvent):
         """Domain event that represents the change of the operating system of a Server."""
 
+        pass
+
     class CredentialChanged(DomainEvent):
         """Domain event that represents the change of the credentials of a Server."""
+
+        pass
 
     class ApplicationChanged(DomainEvent):
         """Domain event that represents the change of the applications of a Server."""
 
+        pass
+
     class StatusChanged(DomainEvent):
         """Domain event that represents the change of the status of a Server."""
+
+        pass
 
     def __init__(
         self,
@@ -67,11 +82,11 @@ class Server(AggregateRoot):
         status: ServerStatus | None = None,
         discarded: bool | None = None,
     ) -> None:
-        """Initialize the Server.
+        """Initializes the Server.
 
         Important:
             Do not use directly to create a new Server.
-            Use the factory method `Server.create` instead.
+            Use the named constructor `Server.create` instead.
         """
         super().__init__(id=id, discarded=discarded)
         self._name = name
@@ -99,7 +114,7 @@ class Server(AggregateRoot):
             new_value=name,
         )
         self._name = name
-        self.register_domain_event(domain_event=domain_event)
+        self.register_domain_event(domain_event)
 
     @property
     def cpu(self) -> str:
@@ -116,7 +131,7 @@ class Server(AggregateRoot):
             new_value=cpu,
         )
         self._cpu = cpu
-        self.register_domain_event(domain_event=domain_event)
+        self.register_domain_event(domain_event)
 
     @property
     def ram(self) -> str:
@@ -133,7 +148,7 @@ class Server(AggregateRoot):
             new_value=ram,
         )
         self._ram = ram
-        self.register_domain_event(domain_event=domain_event)
+        self.register_domain_event(domain_event)
 
     @property
     def hdd(self) -> str:
@@ -150,7 +165,7 @@ class Server(AggregateRoot):
             new_value=hdd,
         )
         self._hdd = hdd
-        self.register_domain_event(domain_event=domain_event)
+        self.register_domain_event(domain_event)
 
     @property
     def environment(self) -> Environment:
@@ -167,7 +182,7 @@ class Server(AggregateRoot):
             new_value=environment.value,
         )
         self._environment = environment
-        self.register_domain_event(domain_event=domain_event)
+        self.register_domain_event(domain_event)
 
     @property
     def operating_system(self) -> OperatingSystem:
@@ -184,7 +199,7 @@ class Server(AggregateRoot):
             new_value=operating_system.__dict__,
         )
         self._operating_system = operating_system
-        self.register_domain_event(domain_event=domain_event)
+        self.register_domain_event(domain_event)
 
     @property
     def credentials(self) -> list[Credential]:
@@ -197,13 +212,11 @@ class Server(AggregateRoot):
         self._check_not_discarded()
         domain_event = Server.CredentialChanged(
             aggregate_id=self._id.value,
-            old_value=[
-                credential.to_dict() for credential in self._credentials
-            ],
-            new_value=[credential.to_dict() for credential in credentials],
+            old_value=self._credentials,
+            new_value=credentials,
         )
         self._credentials = credentials
-        self.register_domain_event(domain_event=domain_event)
+        self.register_domain_event(domain_event)
 
     @property
     def applications(self) -> list[ServerApplication]:
@@ -220,7 +233,7 @@ class Server(AggregateRoot):
             new_value=applications,
         )
         self._applications = applications
-        self.register_domain_event(domain_event=domain_event)
+        self.register_domain_event(domain_event)
 
     @property
     def status(self) -> ServerStatus:
@@ -237,7 +250,7 @@ class Server(AggregateRoot):
             new_value=status.value,
         )
         self._status = status
-        self.register_domain_event(domain_event=domain_event)
+        self.register_domain_event(domain_event)
 
     def __repr__(self) -> str:
         """Returns the string representation of the Server."""
@@ -266,58 +279,6 @@ class Server(AggregateRoot):
             discarded=self._discarded,
         )
 
-    def to_dict(self) -> dict:
-        """Returns the dictionary representation of the Server."""
-        return {
-            "id": self._id.value,
-            "name": self._name,
-            "cpu": self._cpu,
-            "ram": self._ram,
-            "hdd": self._hdd,
-            "environment": self._environment.value
-            if self._environment
-            else None,
-            "operating_system": self._operating_system.__dict__
-            if self._operating_system
-            else None,
-            "credentials": [
-                credential.to_dict() for credential in self._credentials
-            ],
-            "applications": [
-                application.to_dict() for application in self._applications
-            ],
-            "status": self._status.value if self._status else None,
-            "discarded": self._discarded,
-        }
-
-    @classmethod
-    def from_dict(cls, data: dict) -> "Server":
-        """Named constructor for creating a Server from a dictionary."""
-        return cls(
-            id=EntityId.from_text(value=data.get("id")),
-            name=data.get("name"),
-            cpu=data.get("cpu"),
-            ram=data.get("ram"),
-            hdd=data.get("hdd"),
-            environment=Environment.from_text(value=data.get("environment"))
-            if data.get("environment")
-            else None,
-            operating_system=OperatingSystem.from_dict(
-                value=data.get("operating_system")
-            )
-            if data.get("operating_system")
-            else None,
-            credentials=[
-                Credential.from_dict(data=credential)
-                for credential in data.get("credentials")
-            ],
-            applications=data.get("applications"),
-            status=ServerStatus.from_text(value=data.get("status"))
-            if data.get("status")
-            else None,
-            discarded=data.get("discarded"),
-        )
-
     @classmethod
     def create(
         cls,
@@ -325,12 +286,12 @@ class Server(AggregateRoot):
         cpu: str | None = None,
         ram: str | None = None,
         hdd: str | None = None,
-        environment: Environment | None = None,
-        operating_system: OperatingSystem | None = None,
-        credentials: list[Credential] | None = None,
-        applications: list[ServerApplication] | None = None,
+        environment: str | None = None,
+        operating_system: dict | None = None,
+        credentials: list[dict] | None = None,
+        applications: list[dict] | None = None,
     ) -> "Server":
-        """Named constructor for creating a new Server.
+        """Named constructor to create a new Server.
 
         Important:
             This method is only used to create a new Server.
@@ -343,103 +304,138 @@ class Server(AggregateRoot):
             cpu=cpu,
             ram=ram,
             hdd=hdd,
-            environment=environment,
-            operating_system=operating_system,
-            credentials=credentials or [],
-            applications=applications or [],
-            status=ServerStatus.from_text(value="stopped"),
+            environment=Environment.from_text(environment),
+            operating_system=OperatingSystem.from_data(operating_system),
+            credentials=[
+                Credential.create(
+                    connection_type=credential["connection_type"],
+                    username=credential["username"],
+                    password=credential["password"],
+                    local_ip=credential["local_ip"],
+                    local_port=credential["local_port"],
+                    public_ip=credential["public_ip"],
+                    public_port=credential["public_port"],
+                )
+                for credential in credentials or []
+            ],
+            applications=[
+                ServerApplication.create(
+                    application_id=application["application_id"],
+                    install_dir=application["install_dir"],
+                    log_dir=application["log_dir"],
+                )
+                for application in applications or []
+            ],
+            status="stopped",
             discarded=False,
         )
         domain_event = Server.Created(aggregate_id=server.id.value)
-        server.register_domain_event(domain_event=domain_event)
+        server.register_domain_event(domain_event)
         return server
 
-    def update(
-        self,
-        name: str | None = None,
-        cpu: str | None = ...,
-        ram: str | None = ...,
-        hdd: str | None = ...,
-        environment: Environment | None = None,
-        operating_system: OperatingSystem | None = None,
-        credentials: list[Credential] | None = None,
-        applications: list[ServerApplication] | None = None,
-        status: ServerStatus | None = None,
-    ) -> "Server":
+    def update(self, data: dict) -> None:
         """Updates the Server.
 
         Important:
-            This method is only used to update a Server.
-            When updating the attributes, the domain events
-            are registered by setters.
+            This method is only used to update an existing Server.
         """
-        if not name == self._name:
-            self.name = name
-        if cpu is not ... and not cpu == self._cpu:
-            self.cpu = cpu
-        if ram is not ... and not ram == self._ram:
-            self.ram = ram
-        if ram is not ... and not hdd == self._hdd:
-            self.hdd = hdd
-        if not environment == self._environment:
-            self.environment = environment
-        if not operating_system == self._operating_system:
-            self.operating_system = operating_system
-        if credentials is not None:
-            for current_credential in self._credentials:
-                if current_credential not in credentials:
-                    self._credentials.remove(current_credential)
-            for new_credential in credentials:
-                if new_credential not in self._credentials:
-                    if not any(
-                        [
-                            new_credential.connection_type
-                            == credential.connection_type
-                            and new_credential.username == credential.username
-                            for credential in self._credentials
-                        ]
-                    ):
-                        self._credentials.append(
-                            Credential.create(
-                                server_id=self._id,
-                                connection_type=new_credential.connection_type,
-                                username=new_credential.username,
-                                password=new_credential.password,
-                                local_ip=new_credential.local_ip,
-                                local_port=new_credential.local_port,
-                                public_ip=new_credential.public_ip,
-                                public_port=new_credential.public_port,
-                            )
-                        )
-
-                else:
-                    self._credentials[
-                        self._credentials.index(new_credential)
-                    ].update(
-                        server_id=new_credential.server_id,
-                        connection_type=new_credential.connection_type,
-                        username=new_credential.username,
-                        password=new_credential.password,
-                        local_ip=new_credential.local_ip,
-                        local_port=new_credential.local_port,
-                        public_ip=new_credential.public_ip,
-                        public_port=new_credential.public_port,
+        self._check_not_discarded()
+        if "name" in data:
+            self._name = data["name"]
+        if "cpu" in data:
+            self._cpu = data["cpu"]
+        if "ram" in data:
+            self._ram = data["ram"]
+        if "hdd" in data:
+            self._hdd = data["hdd"]
+        if "environment" in data:
+            self._environment = Environment.from_text(data["environment"])
+        if "operating_system" in data:
+            self._operating_system = OperatingSystem.from_data(
+                data["operating_system"]
+            )
+        # Remove credential if not in data.
+        for credential in self._credentials:
+            if credential.id.value not in [
+                new_credential["id"]
+                for new_credential in data.get("credentials")
+            ]:
+                self._credentials.remove(credential)
+        # Update existing credentials.
+        for credential in self._credentials:
+            for new_credential in data.get("credentials"):
+                if credential.id.value == new_credential["id"]:
+                    credential.update(new_credential)
+        # Add new credentials.
+        for new_credential in data.get("credentials"):
+            if new_credential["id"] not in [
+                credential.id.value for credential in self._credentials
+            ]:
+                self._credentials.append(
+                    Credential.create(
+                        connection_type=ConnectionType.from_text(
+                            new_credential["connection_type"]
+                        ),
+                        username=new_credential["username"],
+                        password=new_credential["password"],
+                        local_ip=new_credential["local_ip"],
+                        local_port=new_credential["local_port"],
+                        public_ip=new_credential["public_ip"],
+                        public_port=new_credential["public_port"],
                     )
+                )
+        # Remove application if not in data.
+        for application in self._applications:
+            if application.id.value not in [
+                new_application["id"]
+                for new_application in data.get("applications")
+            ]:
+                self._applications.remove(application)
+        # Update existing applications.
+        for application in self._applications:
+            for new_application in data.get("applications"):
+                if application.id.value == new_application["id"]:
+                    application.update(new_application)
+        # Add new applications.
+        for new_application in data.get("applications"):
+            if new_application["id"] not in [
+                application.id.value for application in self._applications
+            ]:
+                self._applications.append(
+                    ServerApplication.create(
+                        application_id=new_application["application_id"],
+                        install_dir=new_application["install_dir"],
+                        log_dir=new_application["log_dir"],
+                    )
+                )
+        if "status" in data:
+            self._status = ServerStatus.from_text(data["status"])
 
-        if applications is not None:
-            self.applications = applications
-        if not status == self._status:
-            self.status = status
-        return self
-
-    def discard(self) -> None:
-        """Discards the Server.
+    @classmethod
+    def from_data(cls, data: dict) -> "Server":
+        """Named constructor to reconstitute a Server from a dictionary.
 
         Important:
-            This method is only used to discard a Server.
-            When discarding a Server, the discarded attribute is set to True
-            and a domain event is registered.
+            This method is only used to reconstitute a Server.
         """
-        domain_event = Server.Discarded(aggregate_id=self._id.value)
-        self._discarded = True
-        self.register_domain_event(domain_event=domain_event)
+        return cls(
+            id=EntityId(data["id"]),
+            name=data["name"],
+            cpu=data["cpu"],
+            ram=data["ram"],
+            hdd=data["hdd"],
+            environment=Environment.from_text(data["environment"]),
+            operating_system=OperatingSystem.from_data(
+                data["operating_system"]
+            ),
+            credentials=[
+                Credential.from_data(credential)
+                for credential in data["credentials"]
+            ],
+            applications=[
+                ServerApplication(application)
+                for application in data["applications"]
+            ],
+            status=ServerStatus.from_text(data["status"]),
+            discarded=data["discarded"],
+        )

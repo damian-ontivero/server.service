@@ -3,6 +3,7 @@
 from abc import ABCMeta, abstractmethod
 
 from st_server.shared.domain.value_object.entity_id import EntityId
+from st_server.shared.domain.value_object.domain_event import DomainEvent
 
 
 class Entity(metaclass=ABCMeta):
@@ -12,6 +13,16 @@ class Entity(metaclass=ABCMeta):
     They have a specific life cycle: creation, update, and deletion. They are
     mutable and can be compared by their identity.
     """
+
+    class Created(DomainEvent):
+        """Domain event that represents the creation of the entity."""
+
+        pass
+
+    class Discarded(DomainEvent):
+        """Domain event that represents the discarding of the entity."""
+
+        pass
 
     @abstractmethod
     def __init__(self, id: EntityId, discarded: bool = False) -> None:
@@ -52,25 +63,3 @@ class Entity(metaclass=ABCMeta):
         """Checks if the entity is not discarded."""
         if self.discarded:
             raise ValueError("The entity is discarded")
-
-    @abstractmethod
-    def to_dict(self) -> dict:
-        """Returns the dictionary representation of the entity."""
-        raise NotImplementedError
-
-    @classmethod
-    @abstractmethod
-    def from_dict(cls, data: dict) -> "Entity":
-        """Named constructor for creating an entity from a dictionary."""
-        raise NotImplementedError
-
-    @classmethod
-    @abstractmethod
-    def create() -> "Entity":
-        """Named constructor for creating a new entity."""
-        raise NotImplementedError
-
-    @abstractmethod
-    def discard(self) -> None:
-        """Discards the entity."""
-        raise NotImplementedError

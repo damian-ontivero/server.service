@@ -12,9 +12,9 @@ class ServerStatus:
     __slots__ = ("_value",)
 
     @classmethod
-    def from_text(cls, value):
-        """Named constructor for creating a Server status from a string."""
-        return cls(value)
+    def from_text(cls, text: str) -> "ServerStatus":
+        """Named constructor to create a Server status from a string."""
+        return cls(text)
 
     def __new__(cls, value):
         """Creates a new instance of Server status."""

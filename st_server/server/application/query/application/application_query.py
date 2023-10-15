@@ -99,7 +99,7 @@ class ApplicationQuery:
             prev_offset=offset - limit if offset > 0 else None,
             next_offset=offset + limit if offset + limit < total else None,
             items=[
-                ApplicationReadDto.from_entity(application=application)
+                ApplicationReadDto.from_entity(application)
                 for application in applications.items
             ],
         )
@@ -110,9 +110,9 @@ class ApplicationQuery:
         self, id: str, access_token: str | None = None
     ) -> ApplicationReadDto:
         """Returns an application."""
-        application = self._repository.find_one(id=id)
+        application = self._repository.find_one(id)
         if application is None:
             raise NotFound(
                 "Application with id: {id!r} not found".format(id=id)
             )
-        return ApplicationReadDto.from_entity(application=application)
+        return ApplicationReadDto.from_entity(application)

@@ -1,5 +1,6 @@
 """Contains the command handler class."""
 
+from itertools import zip_longest
 from st_server.shared.application.command.commad_handler import CommandHandler
 from st_server.shared.application.exception.exception import (
     AlreadyExists,
@@ -13,6 +14,14 @@ from st_server.server.application.dto.server import ServerReadDto
 from st_server.server.domain.repository.server_repository import (
     ServerRepository,
 )
+from st_server.server.domain.value_object.environment import Environment
+from st_server.server.domain.value_object.operating_system import (
+    OperatingSystem,
+)
+from st_server.server.domain.value_object.server_status import ServerStatus
+from st_server.server.domain.entity.credential import Credential
+from st_server.server.domain.entity.server import Server
+from st_server.server.domain.entity.application import Application
 
 
 class UpdateServerCommandHandler(CommandHandler):
@@ -27,28 +36,18 @@ class UpdateServerCommandHandler(CommandHandler):
 
     def handle(self, command: UpdateServerCommand) -> ServerReadDto:
         """Handle a command."""
-        server = self._repository.find_one(id=command.id)
+        server = self._repository.find_one(command.id)
         if server is None:
             raise NotFound(
                 "Server with id: {id!r} not found".format(id=command.id)
             )
         if not server.name == command.name:
-            self._check_exists(name=command.name)
-        server.name = command.name or server.name
-        server.cpu = command.cpu or server.cpu
-        server.ram = command.ram or server.ram
-        server.hdd = command.hdd or server.hdd
-        server.environment = command.environment or server.environment
-        server.operating_system = (
-            command.operating_system or server.operating_system
-        )
-        server.credentials = command.credentials or server.credentials
-        server.applications = command.applications or server.applications
-        server.status = command.status or server.status
-        self._repository.save_one(aggregate=server)
-        self._message_bus.publish(domain_events=server.domain_events)
+            self._check_exists(command.name)
+        server.update(command.to_dict())
+        self._repository.save_one(server)
+        self._message_bus.publish(server.domain_events)
         server.clear_domain_events()
-        return ServerReadDto.from_entity(server=server)
+        return ServerReadDto.from_entity(server)
 
     def _check_exists(self, name: str) -> None:
         """Returns True if a server with the given name exists."""

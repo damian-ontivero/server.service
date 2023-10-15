@@ -10,6 +10,7 @@ from st_server.server.infrastructure.mysql.model.credential import (
 from st_server.server.infrastructure.mysql.model.server_application import (
     ServerApplicationDbModel,
 )
+from st_server.server.domain.entity.server import Server
 
 
 class ServerDbModel(db.Base):
@@ -32,64 +33,36 @@ class ServerDbModel(db.Base):
     )
     applications = relationship("ServerApplicationDbModel", lazy="joined")
 
-    @classmethod
-    def from_dict(cls, data: dict) -> "ServerDbModel":
-        return cls(
-            id=data.get("id"),
-            name=data.get("name"),
-            cpu=data.get("cpu"),
-            ram=data.get("ram"),
-            hdd=data.get("hdd"),
-            environment=data.get("environment"),
-            operating_system=data.get("operating_system"),
-            credentials=[
-                CredentialDbModel.from_dict(data=credential)
-                for credential in data.get("credentials")
-            ],
-            applications=data.get("applications") or [],
-            status=data.get("status"),
-            discarded=data.get("discarded"),
-        )
-
-    def to_dict(self, exclude: list[str] | None = None) -> dict:
-        if exclude is None:
-            exclude = []
-        data = {
-            "id": self.id,
-            "name": self.name,
-            "cpu": self.cpu,
-            "ram": self.ram,
-            "hdd": self.hdd,
-            "environment": self.environment,
-            "operating_system": self.operating_system
-            if self.operating_system
-            else None,
-            "credentials": [
-                credential.to_dict() for credential in self.credentials
-            ],
-            "applications": [
-                application.to_dict() for application in self.applications
-            ],
-            "status": self.status,
-            "discarded": self.discarded,
-        }
-        return {k: v for k, v in data.items() if k not in exclude}
-
-    def update(self, data: dict) -> None:
-        """Updates the server model from a dictionary."""
-        self.name = data.get("name")
-        self.cpu = data.get("cpu")
-        self.ram = data.get("ram")
-        self.hdd = data.get("hdd")
-        self.environment = data.get("environment")
-        self.operating_system = data.get("operating_system")
-        self.status = data.get("status")
-        self.discarded = data.get("discarded")
+    def update(self, entity: Server):
+        """Updates the server model from a server entity."""
+        self.name = entity.name
+        self.cpu = entity.cpu
+        self.ram = entity.ram
+        self.hdd = entity.hdd
+        self.environment = entity.environment.value
+        self.operating_system = entity.operating_system.__dict__
         self.credentials = [
-            CredentialDbModel.from_dict(data=credential)
-            for credential in data.get("credentials")
+            CredentialDbModel(
+                id=credential.id.value,
+                connection_type=credential.connection_type.value,
+                username=credential.username,
+                password=credential.password,
+                local_ip=credential.local_ip,
+                local_port=credential.local_port,
+                public_ip=credential.public_ip,
+                public_port=credential.public_port,
+                discarded=credential.discarded,
+            )
+            for credential in entity.credentials
         ]
         self.applications = [
-            ServerApplicationDbModel.from_dict(data=application)
-            for application in data.get("applications")
+            ServerApplicationDbModel(
+                server_id=entity.id.value,
+                application_id=application.id.value,
+                install_dir=application.install_dir,
+                log_dir=application.log_dir,
+            )
+            for application in entity.applications
         ]
+        self.status = entity.status.value
+        self.discarded = entity.discarded

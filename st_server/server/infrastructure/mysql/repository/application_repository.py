@@ -139,7 +139,7 @@ class ApplicationRepositoryImpl(ApplicationRepository):
         with self._session as session:
             query = session.query(ApplicationDbModel)
             if filter:
-                query = query.filter(_build_filter(filter=filter))
+                query = query.filter(_build_filter(filter))
             if and_filter:
                 query = query.filter(
                     and_(*[_build_filter(_and) for _and in and_filter])
@@ -149,24 +149,37 @@ class ApplicationRepositoryImpl(ApplicationRepository):
                     or_(*[_build_filter(_or) for _or in or_filter])
                 )
             if sort:
-                query = query.order_by(_build_sort(sort=sort))
+                query = query.order_by(_build_sort(sort))
             total = query.count()
-            query = query.limit(limit=limit or total)
-            query = query.offset(offset=offset)
-            users = query.all()
+            query = query.limit(limit or total)
+            query = query.offset(offset)
+            applications = query.all()
             return RepositoryPageDto(
                 total=total,
                 items=[
-                    Application.from_dict(data=user.to_dict())
-                    for user in users
+                    Application.reconstitute(
+                        id=application.id,
+                        name=application.name,
+                        version=application.version,
+                        architect=application.architect,
+                        discarded=application.discarded,
+                    )
+                    for application in applications
                 ],
             )
 
     def find_one(self, id: int) -> Application | None:
         """Returns an application."""
         with self._session as session:
-            user = session.get(entity=ApplicationDbModel, ident=id)
-            return Application.from_dict(data=user.to_dict()) if user else None
+            application = session.get(entity=ApplicationDbModel, ident=id)
+            if application is not None:
+                return Application.reconstitute(
+                    id=application.id,
+                    name=application.name,
+                    version=application.version,
+                    architect=application.architect,
+                    discarded=application.discarded,
+                )
 
     def save_one(self, aggregate: Application) -> None:
         """Saves an application."""
@@ -175,10 +188,10 @@ class ApplicationRepositoryImpl(ApplicationRepository):
                 entity=ApplicationDbModel, ident=aggregate.id.value
             )
             if model is None:
-                model = ApplicationDbModel.from_dict(data=aggregate.to_dict())
+                model = ApplicationDbModel(**aggregate.to_dict())
                 session.add(model)
             else:
-                model.update(data=aggregate.to_dict())
+                model.update(aggregate.to_dict())
             session.commit()
 
     def delete_one(self, id: int) -> None:

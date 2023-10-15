@@ -27,6 +27,7 @@ class ApplicationReadDto(ApplicationBase):
 
     @classmethod
     def from_entity(cls, application: Application) -> "ApplicationReadDto":
+        """Named constructor to create a DTO from an Application entity."""
         return cls(
             id=application.id.value,
             name=application.name,

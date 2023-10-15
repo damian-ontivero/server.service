@@ -23,11 +23,11 @@ class DeleteApplicationCommandHandler(CommandHandler):
 
     def handle(self, command: DeleteApplicationCommand) -> None:
         """Handle a command."""
-        application = self._repository.find_one(id=command.id)
+        application = self._repository.find_one(command.id)
         if application is None:
             raise NotFound(
                 "Application with id: {id!r} not found".format(id=command.id)
             )
-        self._repository.delete_one(id=command.id)
-        self._message_bus.publish(domain_events=application.domain_events)
+        self._repository.delete_one(command.id)
+        self._message_bus.publish(application.domain_events)
         application.clear_domain_events()

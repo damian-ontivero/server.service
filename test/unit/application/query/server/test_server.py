@@ -21,7 +21,7 @@ def test_find_many_ok(mock_server_query):
 def test_find_one_ok(mock_server_query):
     server = ServerFactory()
 
-    server_found = mock_server_query.find_one(id=server.id.value)
+    server_found = mock_server_query.find_one(server.id.value)
 
     assert isinstance(server_found, ServerReadDto)
     assert server.id.value == server_found.id
@@ -29,4 +29,4 @@ def test_find_one_ok(mock_server_query):
 
 def test_find_one_not_found(mock_server_query):
     with pytest.raises(NotFound):
-        mock_server_query.find_one(id="1234")
+        mock_server_query.find_one("1234")

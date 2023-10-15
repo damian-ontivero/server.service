@@ -7,11 +7,11 @@ class Environment:
     __slots__ = ("_value",)
 
     @classmethod
-    def from_text(cls, value):
-        """Named constructor for creating an Environment from a string."""
-        return cls(value)
+    def from_text(cls, text: str) -> "Environment":
+        """Named constructor to create an Environment from a string."""
+        return cls(text)
 
-    def __new__(cls, value):
+    def __new__(cls, value: str) -> "Environment":
         """Creates a new instance of Environment."""
         if not isinstance(value, str):
             raise TypeError("Environment must be a string")
@@ -21,27 +21,27 @@ class Environment:
         self._value = value
         return self
 
-    def __eq__(self, other):
+    def __eq__(self, other: object) -> bool:
         """Compares if two Environment are equal."""
         if isinstance(other, Environment):
             return self._value == other._value
         return NotImplemented
 
-    def __ne__(self, other):
+    def __ne__(self, other: object) -> bool:
         """Compares if two Environment are not equal."""
         return not self.__eq__(other)
 
-    def __hash__(self):
+    def __hash__(self) -> int:
         """Returns the hash of the Environment."""
         return hash(tuple(sorted(self._value)))
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         """Returns the representation of the Environment."""
         return "{c}(value={value!r})".format(
             c=self.__class__.__name__, value=self._value
         )
 
     @property
-    def value(self):
+    def value(self) -> str:
         """Returns the value of the Environment."""
         return self._value

@@ -90,28 +90,18 @@ class ServerApplication:
             application=self._application,
         )
 
-    def to_dict(self) -> dict:
-        """Returns the dictionary representation of the ServerApplication."""
-        return {
-            "server_id": self._server_id.value,
-            "application_id": self._application_id.value,
-            "install_dir": self._install_dir,
-            "log_dir": self._log_dir,
-            "application": self._application.to_dict(),
-        }
-
     @classmethod
-    def from_dict(cls, data: dict) -> "ServerApplication":
-        """Named constructor for creating a ServerApplication from a dictionary."""
-        for k, v in data.items():
-            if k == "application":
-                data[k] = Application.from_dict(data=v)
+    def create(
+        cls,
+        server_id: EntityId,
+        application_id: EntityId,
+        install_dir: str,
+        log_dir: str,
+    ) -> "ServerApplication":
+        """Named constructor to create a new Server Application."""
         return cls(
-            server_id=EntityId.from_text(value=data.get("server_id")),
-            application_id=EntityId.from_text(
-                value=data.get("application_id")
-            ),
-            install_dir=data.get("install_dir"),
-            log_dir=data.get("log_dir"),
-            application=data.get("application"),
+            server_id=server_id,
+            application_id=application_id,
+            install_dir=install_dir,
+            log_dir=log_dir,
         )

@@ -42,7 +42,7 @@ def mock_server_repository(mock_session, test_db):
         ServerRepositoryImpl,
     )
 
-    yield ServerRepositoryImpl(session=mock_session)
+    yield ServerRepositoryImpl(mock_session)
 
 
 @pytest.fixture(scope="function")
@@ -63,7 +63,7 @@ def mock_application_repository(mock_session, test_db):
         ApplicationRepositoryImpl,
     )
 
-    yield ApplicationRepositoryImpl(session=mock_session)
+    yield ApplicationRepositoryImpl(mock_session)
 
 
 @pytest.fixture(scope="function")

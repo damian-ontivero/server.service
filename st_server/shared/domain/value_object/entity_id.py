@@ -10,13 +10,13 @@ class EntityId:
 
     @classmethod
     def generate(cls) -> "EntityId":
-        """Named constructor for generating a new Entity id."""
-        return cls(value=uuid4().hex)
+        """Named constructor to create an Entity id."""
+        return cls(uuid4().hex)
 
     @classmethod
-    def from_text(cls, value: str) -> "EntityId":
-        """Named constructor for creating an Entity id from a string."""
-        return cls(value=value)
+    def from_text(cls, text: str) -> "EntityId":
+        """Named constructor to create an Entity id from a string."""
+        return cls(text)
 
     def __new__(cls, value: str) -> "EntityId":
         """Creates a new instance of the Entity id."""

@@ -37,6 +37,7 @@ class ServerReadDto(ServerBase):
 
     @classmethod
     def from_entity(cls, server: Server) -> "ServerReadDto":
+        """Named constructor to create a DTO from an Server entity."""
         return cls(
             id=server.id.value,
             name=server.name,
@@ -46,13 +47,11 @@ class ServerReadDto(ServerBase):
             environment=server.environment.value,
             operating_system=server.operating_system.__dict__,
             credentials=[
-                CredentialReadDto.from_entity(credential=credential)
+                CredentialReadDto.from_entity(credential)
                 for credential in server.credentials
             ],
             applications=[
-                ServerApplicationReadDto.from_entity(
-                    server_application=server_application
-                )
+                ServerApplicationReadDto.from_entity(server_application)
                 for server_application in server.applications
             ],
             status=server.status.value,

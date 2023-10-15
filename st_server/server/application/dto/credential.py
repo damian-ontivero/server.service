@@ -9,7 +9,7 @@ from st_server.server.domain.entity.credential import Credential
 class CredentialBase:
     """Base Data Transfer Object for Credential."""
 
-    server_id: str | None = None
+    # server_id: str | None = None
     connection_type: str | None = None
     username: str | None = None
     password: str | None = None
@@ -32,9 +32,9 @@ class CredentialReadDto(CredentialBase):
 
     @classmethod
     def from_entity(cls, credential: Credential) -> "CredentialReadDto":
+        """Named constructor to create a DTO from an Credential entity."""
         return cls(
             id=credential.id.value,
-            server_id=credential.server_id.value,
             connection_type=credential.connection_type.value,
             username=credential.username,
             password=credential.password,

@@ -14,11 +14,11 @@ class CredentialFactory(factory.Factory):
     class Meta:
         model = Credential
 
-    server_id = EntityId.from_text(value="1234")
+    server_id = EntityId.from_text("1234")
     connection_type = factory.fuzzy.FuzzyChoice(
         choices=[
-            ConnectionType.from_text(value="SSH"),
-            ConnectionType.from_text(value="RDP"),
+            ConnectionType.from_text("SSH"),
+            ConnectionType.from_text("RDP"),
         ]
     )
     username = factory.Faker("name")

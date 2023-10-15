@@ -3,6 +3,7 @@
 import sqlalchemy as sa
 
 from st_server.server.infrastructure.mysql import db
+from st_server.server.domain.entity.credential import Credential
 
 
 class CredentialDbModel(db.Base):
@@ -21,34 +22,13 @@ class CredentialDbModel(db.Base):
     password = sa.Column(sa.String(255), nullable=False)
     discarded = sa.Column(sa.Boolean, nullable=False)
 
-    @classmethod
-    def from_dict(cls, data: dict) -> "CredentialDbModel":
-        return cls(
-            id=data.get("id"),
-            server_id=data.get("server_id"),
-            connection_type=data.get("connection_type"),
-            local_ip=data.get("local_ip"),
-            local_port=data.get("local_port"),
-            public_ip=data.get("public_ip"),
-            public_port=data.get("public_port"),
-            username=data.get("username"),
-            password=data.get("password"),
-            discarded=data.get("discarded"),
-        )
-
-    def to_dict(self, exclude: list[str] | None = None) -> dict:
-        if exclude is None:
-            exclude = []
-        data = {
-            "id": self.id,
-            "server_id": self.server_id,
-            "connection_type": self.connection_type,
-            "local_ip": self.local_ip,
-            "local_port": self.local_port,
-            "public_ip": self.public_ip,
-            "public_port": self.public_port,
-            "username": self.username,
-            "password": self.password,
-            "discarded": self.discarded,
-        }
-        return {k: v for k, v in data.items() if k not in exclude}
+    def update(self, entity: Credential) -> None:
+        """Updates the credential model from a credential entity."""
+        self.connection_type = entity.connection_type.value
+        self.local_ip = entity.local_ip
+        self.local_port = entity.local_port
+        self.public_ip = entity.public_ip
+        self.public_port = entity.public_port
+        self.username = entity.username
+        self.password = entity.password
+        self.discarded = entity.discarded

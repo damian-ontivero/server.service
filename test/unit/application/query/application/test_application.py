@@ -25,9 +25,7 @@ def test_find_many_ok(mock_application_query):
 def test_find_one_ok(mock_application_query):
     application = ApplicationFactory()
 
-    application_found = mock_application_query.find_one(
-        id=application.id.value
-    )
+    application_found = mock_application_query.find_one(application.id.value)
 
     assert isinstance(application_found, ApplicationReadDto)
     assert application.id.value == application_found.id
@@ -35,4 +33,4 @@ def test_find_one_ok(mock_application_query):
 
 def test_find_one_not_found(mock_application_query):
     with pytest.raises(NotFound):
-        mock_application_query.find_one(id="1234")
+        mock_application_query.find_one("1234")

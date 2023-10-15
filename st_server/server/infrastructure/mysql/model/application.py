@@ -3,6 +3,7 @@
 import sqlalchemy as sa
 
 from st_server.server.infrastructure.mysql import db
+from st_server.server.domain.entity.application import Application
 
 
 class ApplicationDbModel(db.Base):
@@ -15,41 +16,6 @@ class ApplicationDbModel(db.Base):
     version = sa.Column(sa.String(255), nullable=False)
     architect = sa.Column(sa.String(255), nullable=False)
     discarded = sa.Column(sa.Boolean, nullable=False)
-
-    def __repr__(self) -> str:
-        return (
-            "{c}(id={id!r}, name={name!r}, version={version!r}, "
-            "architect={architect!r}, discarded={discarded!r})"
-        ).format(
-            c=self.__class__.__name__,
-            id=self.id,
-            name=self.name,
-            version=self.version,
-            architect=self.architect,
-            discarded=self.discarded,
-        )
-
-    @classmethod
-    def from_dict(cls, data: dict) -> "ApplicationDbModel":
-        return cls(
-            id=data.get("id"),
-            name=data.get("name"),
-            version=data.get("version"),
-            architect=data.get("architect"),
-            discarded=data.get("discarded"),
-        )
-
-    def to_dict(self, exclude: list[str] | None = None) -> dict:
-        if exclude is None:
-            exclude = []
-        data = {
-            "id": self.id,
-            "name": self.name,
-            "version": self.version,
-            "architect": self.architect,
-            "discarded": self.discarded,
-        }
-        return {k: v for k, v in data.items() if k not in exclude}
 
     def update(self, data: dict) -> None:
         """Updates the application model from a dictionary."""

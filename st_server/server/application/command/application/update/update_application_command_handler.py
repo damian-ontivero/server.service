@@ -27,20 +27,20 @@ class UpdateApplicationCommandHandler(CommandHandler):
 
     def handle(self, command: UpdateApplicationCommand) -> ApplicationReadDto:
         """Handle a command."""
-        application = self._repository.find_one(id=command.id)
+        application = self._repository.find_one(command.id)
         if application is None:
             raise NotFound(
                 "Application with id: {id!r} not found".format(id=command.id)
             )
         if not application.name == command.name:
-            self._check_exists(name=command.name)
+            self._check_exists(command.name)
         application.name = command.name or application.name
         application.version = command.version or application.version
         application.architect = command.architect or application.architect
-        self._repository.save_one(aggregate=application)
-        self._message_bus.publish(domain_events=application.domain_events)
+        self._repository.save_one(application)
+        self._message_bus.publish(application.domain_events)
         application.clear_domain_events()
-        return ApplicationReadDto.from_entity(application=application)
+        return ApplicationReadDto.from_entity(application)
 
     def _check_exists(self, name: str) -> None:
         """Returns True if an application with the given name exists."""

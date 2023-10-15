@@ -7,15 +7,17 @@ class OperatingSystem:
     __slots__ = ("_name", "_version", "_architecture")
 
     @classmethod
-    def from_dict(cls, value):
-        """Named constructor for creating a Operating System from a dictionary."""
+    def from_data(cls, data: dict) -> "OperatingSystem":
+        """Named constructor to create an Operating System from a dictionary."""
         return cls(
-            name=value.get("name"),
-            version=value.get("version"),
-            architecture=value.get("architecture"),
+            name=data.get("name"),
+            version=data.get("version"),
+            architecture=data.get("architecture"),
         )
 
-    def __new__(cls, name, version, architecture):
+    def __new__(
+        cls, name: str, version: str, architecture: str
+    ) -> "OperatingSystem":
         """Creates a new instance of Operating System."""
         if not isinstance(name, str):
             raise TypeError("Operating system name must be a string")
@@ -35,7 +37,7 @@ class OperatingSystem:
         self._architecture = architecture
         return self
 
-    def __eq__(self, other):
+    def __eq__(self, other: object) -> bool:
         """Compares if two Operating System are equal."""
         if isinstance(other, OperatingSystem):
             return (
@@ -45,15 +47,15 @@ class OperatingSystem:
             )
         return NotImplemented
 
-    def __ne__(self, other):
+    def __ne__(self, other: object) -> bool:
         """Compares if two Operating System are not equal."""
         return not self.__eq__(other)
 
-    def __hash__(self):
+    def __hash__(self) -> int:
         """Returns the hash of the Operating System."""
         return hash((self.name, self.version, self.architecture))
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         """Returns the representation of the Operating System."""
         return (
             "{c}(name={name!r}, version={version!r}, "
@@ -66,22 +68,22 @@ class OperatingSystem:
         )
 
     @property
-    def name(self):
+    def name(self) -> str:
         """Returns the name of the Operating System."""
         return self._name
 
     @property
-    def version(self):
+    def version(self) -> str:
         """Returns the version of the Operating System."""
         return self._version
 
     @property
-    def architecture(self):
+    def architecture(self) -> str:
         """Returns the architecture of the Operating System."""
         return self._architecture
 
     @property
-    def __dict__(self):
+    def __dict__(self) -> dict:
         """Returns the Operating System as a dictionary."""
         return {
             "name": self.name,

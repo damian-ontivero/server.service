@@ -12,6 +12,15 @@ from st_server.server.infrastructure.mysql.model.server import ServerDbModel
 from st_server.shared.domain.repository.repository_page_dto import (
     RepositoryPageDto,
 )
+from st_server.server.domain.entity.server import Credential
+from st_server.server.domain.entity.server import ServerApplication
+from st_server.server.domain.value_object.environment import Environment
+from st_server.server.domain.value_object.operating_system import (
+    OperatingSystem,
+)
+from st_server.server.domain.value_object.server_status import ServerStatus
+from st_server.shared.domain.value_object.entity_id import EntityId
+from st_server.server.domain.value_object.connection_type import ConnectionType
 
 
 def _build_filter(filter: dict):
@@ -137,7 +146,7 @@ class ServerRepositoryImpl(ServerRepository):
         with self._session as session:
             query = session.query(ServerDbModel)
             if filter:
-                query = query.filter(_build_filter(filter=filter))
+                query = query.filter(_build_filter(filter))
             if and_filter:
                 query = query.filter(
                     and_(*[_build_filter(_and) for _and in and_filter])
@@ -147,33 +156,113 @@ class ServerRepositoryImpl(ServerRepository):
                     or_(*[_build_filter(_or) for _or in or_filter])
                 )
             if sort:
-                query = query.order_by(_build_sort(sort=sort))
+                query = query.order_by(_build_sort(sort))
             total = query.count()
-            query = query.limit(limit=limit or total)
-            query = query.offset(offset=offset)
-            users = query.all()
+            query = query.limit(limit or total)
+            query = query.offset(offset)
+            servers = query.all()
             return RepositoryPageDto(
                 total=total,
                 items=[
-                    Server.from_dict(data=user.to_dict()) for user in users
+                    Server(
+                        id=EntityId.from_text(text=server.id),
+                        name=server.name,
+                        cpu=server.cpu,
+                        ram=server.ram,
+                        hdd=server.hdd,
+                        environment=Environment.from_text(server.environment),
+                        operating_system=OperatingSystem.from_data(
+                            server.operating_system
+                        ),
+                        credentials=[
+                            Credential(
+                                id=EntityId.from_text(credential.id),
+                                server_id=EntityId.from_text(server.id),
+                                connection_type=ConnectionType.from_text(
+                                    credential.connection_type
+                                ),
+                                username=credential.username,
+                                password=credential.password,
+                                local_ip=credential.local_ip,
+                                local_port=credential.local_port,
+                                public_ip=credential.public_ip,
+                                public_port=credential.public_port,
+                                discarded=credential.discarded,
+                            )
+                            for credential in server.credentials
+                        ],
+                        applications=[
+                            ServerApplication(
+                                server_id=EntityId.from_text(server.id),
+                                application_id=EntityId.from_text(
+                                    application.id
+                                ),
+                                install_dir=application.install_dir,
+                                log_dir=application.log_dir,
+                            )
+                            for application in server.applications
+                        ],
+                        status=ServerStatus.from_text(server.status),
+                        discarded=server.discarded,
+                    )
+                    for server in servers
                 ],
             )
 
     def find_one(self, id: int) -> Server | None:
         """Returns a server."""
         with self._session as session:
-            user = session.get(entity=ServerDbModel, ident=id)
-            return Server.from_dict(data=user.to_dict()) if user else None
+            server = session.get(entity=ServerDbModel, ident=id)
+            if server is not None:
+                return Server(
+                    id=EntityId.from_text(server.id),
+                    name=server.name,
+                    cpu=server.cpu,
+                    ram=server.ram,
+                    hdd=server.hdd,
+                    environment=Environment.from_text(server.environment),
+                    operating_system=OperatingSystem.from_data(
+                        server.operating_system
+                    ),
+                    credentials=[
+                        Credential(
+                            id=EntityId.from_text(credential.id),
+                            server_id=EntityId.from_text(server.id),
+                            connection_type=ConnectionType.from_text(
+                                credential.connection_type
+                            ),
+                            username=credential.username,
+                            password=credential.password,
+                            local_ip=credential.local_ip,
+                            local_port=credential.local_port,
+                            public_ip=credential.public_ip,
+                            public_port=credential.public_port,
+                            discarded=credential.discarded,
+                        )
+                        for credential in server.credentials
+                    ],
+                    applications=[
+                        ServerApplication(
+                            server_id=EntityId.from_text(server.id),
+                            application_id=EntityId.from_text(application.id),
+                            install_dir=application.install_dir,
+                            log_dir=application.log_dir,
+                        )
+                        for application in server.applications
+                    ],
+                    status=ServerStatus.from_text(server.status),
+                    discarded=server.discarded,
+                )
 
     def save_one(self, aggregate: Server) -> None:
         """Saves a server."""
         with self._session as session:
             model = session.get(entity=ServerDbModel, ident=aggregate.id.value)
             if model is None:
-                model = ServerDbModel.from_dict(data=aggregate.to_dict())
+                model = ServerDbModel.from_entity(aggregate)
                 session.add(model)
             else:
-                model.update(data=aggregate.to_dict())
+                model.update(aggregate)
             session.commit()
 
     def delete_one(self, id: int) -> None:

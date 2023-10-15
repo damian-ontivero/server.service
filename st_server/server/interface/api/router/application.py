@@ -74,7 +74,7 @@ def get_db_session():
 
 def get_repository(session: db.SessionLocal = Depends(get_db_session)):
     """Yields an application repository."""
-    yield ApplicationRepositoryImpl(session=session)
+    yield ApplicationRepositoryImpl(session)
 
 
 def get_message_bus():
@@ -183,7 +183,7 @@ def create(
         )
         application = AddApplicationCommandHandler(
             repository=repository, message_bus=message_bus
-        ).handle(command=command)
+        ).handle(command)
         return JSONResponse(
             content=jsonable_encoder(obj=application),
             status_code=status.HTTP_201_CREATED,
@@ -224,7 +224,7 @@ def update(
         )
         application = UpdateApplicationCommandHandler(
             repository=repository, message_bus=message_bus
-        ).handle(command=command)
+        ).handle(command)
         return JSONResponse(
             content=jsonable_encoder(obj=application),
             status_code=status.HTTP_200_OK,
@@ -263,7 +263,7 @@ def delete(
         command = DeleteApplicationCommand(id=id)
         DeleteApplicationCommandHandler(
             repository=repository, message_bus=message_bus
-        ).handle(command=command)
+        ).handle(command)
         return JSONResponse(
             content=jsonable_encoder(
                 obj={"message": "The application has been deleted"}

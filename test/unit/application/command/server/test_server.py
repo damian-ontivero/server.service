@@ -131,7 +131,7 @@ def test_update_one_blank_hdd_field_ok(
 def test_delete_one_ok(mock_server_repository, mock_message_bus):
     server = ServerFactory()
 
-    command = DeleteServerCommand(id=server.id.value)
+    command = DeleteServerCommand(server.id.value)
     DeleteServerCommandHandler(
         repository=mock_server_repository, message_bus=mock_message_bus
     ).handle(command)

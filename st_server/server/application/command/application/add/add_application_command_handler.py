@@ -30,11 +30,11 @@ class AddApplicationCommandHandler(CommandHandler):
             version=command.version,
             architect=command.architect,
         )
-        self._check_exists(name=application.name)
-        self._repository.save_one(aggregate=application)
-        self._message_bus.publish(domain_events=application.domain_events)
+        self._check_exists(application.name)
+        self._repository.save_one(application)
+        self._message_bus.publish(application.domain_events)
         application.clear_domain_events()
-        return ApplicationReadDto.from_entity(application=application)
+        return ApplicationReadDto.from_entity(application)
 
     def _check_exists(self, name: str) -> None:
         """Returns True if an application with the given name exists."""

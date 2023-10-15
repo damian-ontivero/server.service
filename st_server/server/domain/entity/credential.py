@@ -14,35 +14,40 @@ from st_server.shared.domain.value_object.entity_id import EntityId
 class Credential(Entity):
     """Credential entity."""
 
-    class Created(DomainEvent):
-        """Domain event that represents the creation of a Credential."""
-
-    class Discarded(DomainEvent):
-        """Domain event that represents the discarding of a Credential."""
-
-    class ServerIdChanged(DomainEvent):
-        """Domain event that represents the change of the server_id of a Credential."""
-
     class ConnectionTypeChanged(DomainEvent):
         """Domain event that represents the change of the connection_type of a Credential."""
+
+        pass
 
     class UsernameChanged(DomainEvent):
         """Domain event that represents the change of the username of a Credential."""
 
+        pass
+
     class PasswordChanged(DomainEvent):
         """Domain event that represents the change of the password of a Credential."""
+
+        pass
 
     class LocalIpChanged(DomainEvent):
         """Domain event that represents the change of the local_ip of a Credential."""
 
+        pass
+
     class LocalPortChanged(DomainEvent):
         """Domain event that represents the change of the local_port of a Credential."""
+
+        pass
 
     class PublicIpChanged(DomainEvent):
         """Domain event that represents the change of the public_ip of a Credential."""
 
+        pass
+
     class PublicPortChanged(DomainEvent):
         """Domain event that represents the change of the public_port of a Credential."""
+
+        pass
 
     def __init__(
         self,
@@ -57,11 +62,11 @@ class Credential(Entity):
         public_port: str | None = None,
         discarded: bool | None = None,
     ) -> None:
-        """Initialize the Credential.
+        """Initializes the Credential.
 
         Important:
             Do not use directly to create a new Credential.
-            Use the factory method `Credential.create` instead.
+            Use the named constructor `Credential.create` instead.
         """
         super().__init__(id=id, discarded=discarded)
         self._server_id = server_id
@@ -164,7 +169,7 @@ class Credential(Entity):
     def __repr__(self) -> str:
         """Returns the representation of the Credential."""
         return (
-            "{d}{c}(id={id!r}, server_id={server_id!r}, "
+            "{d}{c}(id={id!r}, "
             "connection_type={connection_type!r}, "
             "username={username!r}, password={password!r}, "
             "local_ip={local_ip!r}, local_port={local_port!r}, "
@@ -174,7 +179,6 @@ class Credential(Entity):
             d="*Discarded* " if self._discarded else "",
             c=self.__class__.__name__,
             id=self._id.value,
-            server_id=self._server_id.value,
             connection_type=self._connection_type.value,
             username=self._username,
             password=self._password,
@@ -185,45 +189,9 @@ class Credential(Entity):
             discarded=self._discarded,
         )
 
-    def to_dict(self) -> dict:
-        """Returns the dictionary representation of the Credential."""
-        return {
-            "id": self._id.value,
-            "server_id": self._server_id.value,
-            "connection_type": self._connection_type.value,
-            "username": self._username,
-            "password": self._password,
-            "local_ip": self._local_ip,
-            "local_port": self._local_port,
-            "public_ip": self._public_ip,
-            "public_port": self._public_port,
-            "discarded": self._discarded,
-        }
-
-    @classmethod
-    def from_dict(cls, data: dict) -> "Credential":
-        """Named constructor for creating a Credential from a dictionary."""
-        return cls(
-            id=EntityId.from_text(value=data.get("id"))
-            if data.get("id")
-            else None,
-            server_id=EntityId.from_text(value=data.get("server_id")),
-            connection_type=ConnectionType.from_text(
-                value=data.get("connection_type")
-            ),
-            username=data.get("username"),
-            password=data.get("password"),
-            local_ip=data.get("local_ip"),
-            local_port=data.get("local_port"),
-            public_ip=data.get("public_ip"),
-            public_port=data.get("public_port"),
-            discarded=data.get("discarded"),
-        )
-
     @classmethod
     def create(
         cls,
-        server_id: EntityId,
         connection_type: ConnectionType,
         username: str,
         password: str,
@@ -232,7 +200,7 @@ class Credential(Entity):
         public_ip: str | None = None,
         public_port: int | None = None,
     ) -> "Credential":
-        """Named constructor for creating a new Credential.
+        """Named constructor to create a new Credential.
 
         Important:
             This method is only used to create a new Credential.
@@ -241,7 +209,6 @@ class Credential(Entity):
         """
         return cls(
             id=EntityId.generate(),
-            server_id=server_id,
             connection_type=connection_type,
             username=username,
             password=password,
@@ -252,48 +219,46 @@ class Credential(Entity):
             discarded=False,
         )
 
-    def update(
-        self,
-        server_id: EntityId | None = None,
-        connection_type: ConnectionType | None = None,
-        username: str | None = None,
-        password: str | None = None,
-        local_ip: str | None = ...,
-        local_port: int | None = ...,
-        public_ip: str | None = ...,
-        public_port: int | None = ...,
-    ) -> None:
+    def update(self, data: dict) -> None:
         """Updates the Credential.
 
         Important:
-            This method is only used to update an Credential.
-            When updating the attributes, the domain events
-            are registered by setters.
+            This method is only used to update an existing Credential.
         """
-        if not server_id == self._server_id:
-            self.server_id = server_id
-        if not connection_type == self._connection_type:
-            self.connection_type = connection_type
-        if not username == self._username:
-            self.username = username
-        if not password == self._password:
-            self.password = password
-        if local_ip is not ... and not local_ip == self._local_ip:
-            self.local_ip = local_ip
-        if local_port is not ... and not local_port == self._local_port:
-            self.local_port = local_port
-        if public_ip is not ... and not public_ip == self._public_ip:
-            self.public_ip = public_ip
-        if public_port is not ... and not public_port == self._public_port:
-            self.public_port = public_port
-        return self
+        self._check_not_discarded()
+        if "connection_type" in data:
+            self._connection_type = ConnectionType.from_text(
+                data["connection_type"]
+            )
+        if "username" in data:
+            self._username = data["username"]
+        if "password" in data:
+            self._password = data["password"]
+        if "local_ip" in data:
+            self._local_ip = data["local_ip"]
+        if "local_port" in data:
+            self._local_port = data["local_port"]
+        if "public_ip" in data:
+            self._public_ip = data["public_ip"]
+        if "public_port" in data:
+            self._public_port = data["public_port"]
 
-    def discard(self) -> None:
-        """Discards the Credential.
+    @classmethod
+    def from_data(cls, data: dict) -> "Credential":
+        """Named constructor to reconstitute a Credential from a dictionary.
 
         Important:
-            This method is only used to discard an credential.
-            When discarding an credential, the discarded attribute is set to True
-            and a domain event is registered.
+            This method is only used to reconstitute a Credential.
         """
-        self._discarded = True
+        return cls(
+            id=EntityId.from_text(data["id"]),
+            server_id=EntityId.from_text(data["server_id"]),
+            connection_type=ConnectionType.from_text(data["connection_type"]),
+            username=data["username"],
+            password=data["password"],
+            local_ip=data["local_ip"],
+            local_port=data["local_port"],
+            public_ip=data["public_ip"],
+            public_port=data["public_port"],
+            discarded=data["discarded"],
+        )
