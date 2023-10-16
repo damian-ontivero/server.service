@@ -43,7 +43,21 @@ class UpdateServerCommandHandler(CommandHandler):
             )
         if not server.name == command.name:
             self._check_exists(command.name)
-        server.update(command.to_dict())
+        server.update(
+            name=command.name,
+            cpu=command.cpu,
+            ram=command.ram,
+            hdd=command.hdd,
+            environment=command.environment,
+            operating_system=command.operating_system,
+            credentials=[
+                credential.to_dict() for credential in command.credentials
+            ],
+            applications=[
+                application.to_dict() for application in command.applications
+            ],
+            status=command.status,
+        )
         self._repository.save_one(server)
         self._message_bus.publish(server.domain_events)
         server.clear_domain_events()

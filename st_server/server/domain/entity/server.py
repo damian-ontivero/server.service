@@ -304,8 +304,12 @@ class Server(AggregateRoot):
             cpu=cpu,
             ram=ram,
             hdd=hdd,
-            environment=Environment.from_text(environment),
-            operating_system=OperatingSystem.from_data(operating_system),
+            environment=Environment.from_text(environment)
+            if environment
+            else None,
+            operating_system=OperatingSystem.from_data(operating_system)
+            if operating_system
+            else None,
             credentials=[
                 Credential.create(
                     connection_type=credential["connection_type"],
@@ -333,41 +337,71 @@ class Server(AggregateRoot):
         server.register_domain_event(domain_event)
         return server
 
-    def update(self, data: dict) -> None:
+    def update(
+        self,
+        name: str | None = ...,
+        cpu: str | None = ...,
+        ram: str | None = ...,
+        hdd: str | None = ...,
+        environment: str | None = ...,
+        operating_system: dict | None = ...,
+        credentials: list[dict] | None = ...,
+        applications: list[dict] | None = ...,
+        status: str | None = ...,
+        discarded: bool | None = ...,
+    ) -> None:
         """Updates the Server.
 
         Important:
             This method is only used to update an existing Server.
         """
-        self._check_not_discarded()
-        if "name" in data:
-            self._name = data["name"]
-        if "cpu" in data:
-            self._cpu = data["cpu"]
-        if "ram" in data:
-            self._ram = data["ram"]
-        if "hdd" in data:
-            self._hdd = data["hdd"]
-        if "environment" in data:
-            self._environment = Environment.from_text(data["environment"])
-        if "operating_system" in data:
-            self._operating_system = OperatingSystem.from_data(
-                data["operating_system"]
-            )
+        import ipdb
+
+        ipdb.set_trace()
+        if name is not ...:
+            self.name = name
+        if cpu is not ...:
+            self.cpu = cpu
+        if ram is not ...:
+            self.ram = ram
+        if hdd is not ...:
+            self.hdd = hdd
+        if environment is not ...:
+            self.environment = Environment.from_text(environment)
+        if operating_system is not ...:
+            self.operating_system = OperatingSystem.from_data(operating_system)
+        if credentials is not ...:
+            self._update_credentials(credentials)
+        if applications is not ...:
+            self._update_applications(applications)
+        if status is not ...:
+            self.status = ServerStatus.from_text(status)
+        if discarded is not ...:
+            self.discarded = discarded
+
+    def _update_credentials(self, credentials: list[dict]) -> None:
+        """Updates the credentials of the Server."""
         # Remove credential if not in data.
         for credential in self._credentials:
             if credential.id.value not in [
-                new_credential["id"]
-                for new_credential in data.get("credentials")
+                new_credential["id"] for new_credential in credentials
             ]:
                 self._credentials.remove(credential)
         # Update existing credentials.
         for credential in self._credentials:
-            for new_credential in data.get("credentials"):
+            for new_credential in credentials:
                 if credential.id.value == new_credential["id"]:
-                    credential.update(new_credential)
+                    credential.update(
+                        connection_type=new_credential["connection_type"],
+                        username=new_credential["username"],
+                        password=new_credential["password"],
+                        local_ip=new_credential["local_ip"],
+                        local_port=new_credential["local_port"],
+                        public_ip=new_credential["public_ip"],
+                        public_port=new_credential["public_port"],
+                    )
         # Add new credentials.
-        for new_credential in data.get("credentials"):
+        for new_credential in credentials:
             if new_credential["id"] not in [
                 credential.id.value for credential in self._credentials
             ]:
@@ -384,20 +418,22 @@ class Server(AggregateRoot):
                         public_port=new_credential["public_port"],
                     )
                 )
+
+    def _update_applications(self, applications: list[dict]) -> None:
+        """Updates the applications of the Server."""
         # Remove application if not in data.
         for application in self._applications:
             if application.id.value not in [
-                new_application["id"]
-                for new_application in data.get("applications")
+                new_application["id"] for new_application in applications
             ]:
                 self._applications.remove(application)
         # Update existing applications.
         for application in self._applications:
-            for new_application in data.get("applications"):
+            for new_application in applications:
                 if application.id.value == new_application["id"]:
                     application.update(new_application)
         # Add new applications.
-        for new_application in data.get("applications"):
+        for new_application in applications:
             if new_application["id"] not in [
                 application.id.value for application in self._applications
             ]:
@@ -408,34 +444,3 @@ class Server(AggregateRoot):
                         log_dir=new_application["log_dir"],
                     )
                 )
-        if "status" in data:
-            self._status = ServerStatus.from_text(data["status"])
-
-    @classmethod
-    def from_data(cls, data: dict) -> "Server":
-        """Named constructor to reconstitute a Server from a dictionary.
-
-        Important:
-            This method is only used to reconstitute a Server.
-        """
-        return cls(
-            id=EntityId(data["id"]),
-            name=data["name"],
-            cpu=data["cpu"],
-            ram=data["ram"],
-            hdd=data["hdd"],
-            environment=Environment.from_text(data["environment"]),
-            operating_system=OperatingSystem.from_data(
-                data["operating_system"]
-            ),
-            credentials=[
-                Credential.from_data(credential)
-                for credential in data["credentials"]
-            ],
-            applications=[
-                ServerApplication(application)
-                for application in data["applications"]
-            ],
-            status=ServerStatus.from_text(data["status"]),
-            discarded=data["discarded"],
-        )

@@ -219,46 +219,35 @@ class Credential(Entity):
             discarded=False,
         )
 
-    def update(self, data: dict) -> None:
+    def update(
+        self,
+        connection_type: str | None = ...,
+        username: str | None = ...,
+        password: str | None = ...,
+        local_ip: str | None = ...,
+        local_port: int | None = ...,
+        public_ip: str | None = ...,
+        public_port: int | None = ...,
+        discarded: bool | None = ...,
+    ) -> None:
         """Updates the Credential.
 
         Important:
             This method is only used to update an existing Credential.
         """
-        self._check_not_discarded()
-        if "connection_type" in data:
-            self._connection_type = ConnectionType.from_text(
-                data["connection_type"]
-            )
-        if "username" in data:
-            self._username = data["username"]
-        if "password" in data:
-            self._password = data["password"]
-        if "local_ip" in data:
-            self._local_ip = data["local_ip"]
-        if "local_port" in data:
-            self._local_port = data["local_port"]
-        if "public_ip" in data:
-            self._public_ip = data["public_ip"]
-        if "public_port" in data:
-            self._public_port = data["public_port"]
-
-    @classmethod
-    def from_data(cls, data: dict) -> "Credential":
-        """Named constructor to reconstitute a Credential from a dictionary.
-
-        Important:
-            This method is only used to reconstitute a Credential.
-        """
-        return cls(
-            id=EntityId.from_text(data["id"]),
-            server_id=EntityId.from_text(data["server_id"]),
-            connection_type=ConnectionType.from_text(data["connection_type"]),
-            username=data["username"],
-            password=data["password"],
-            local_ip=data["local_ip"],
-            local_port=data["local_port"],
-            public_ip=data["public_ip"],
-            public_port=data["public_port"],
-            discarded=data["discarded"],
-        )
+        if connection_type is not ...:
+            self.connection_type = ConnectionType.from_text(connection_type)
+        if username is not ...:
+            self.username = username
+        if password is not ...:
+            self.password = password
+        if local_ip is not ...:
+            self.local_ip = local_ip
+        if local_port is not ...:
+            self.local_port = local_port
+        if public_ip is not ...:
+            self.public_ip = public_ip
+        if public_port is not ...:
+            self.public_port = public_port
+        if discarded is not ...:
+            self.discarded = discarded

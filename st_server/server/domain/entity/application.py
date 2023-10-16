@@ -131,3 +131,21 @@ class Application(AggregateRoot):
         domain_event = Application.Created(aggregate_id=application._id.value)
         application.register_domain_event(domain_event)
         return application
+
+    def update(
+        self,
+        name: str | None = ...,
+        version: str | None = ...,
+        architect: str | None = ...,
+    ) -> None:
+        """Updates the Application.
+
+        Important:
+            This method is only used to update an existing Application.
+        """
+        if name is not ...:
+            self.name = name
+        if version is not ...:
+            self.version = version
+        if architect is not ...:
+            self.architect = architect

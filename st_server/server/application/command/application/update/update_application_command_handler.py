@@ -34,9 +34,11 @@ class UpdateApplicationCommandHandler(CommandHandler):
             )
         if not application.name == command.name:
             self._check_exists(command.name)
-        application.name = command.name or application.name
-        application.version = command.version or application.version
-        application.architect = command.architect or application.architect
+        application.update(
+            name=command.name,
+            version=command.version,
+            architect=command.architect,
+        )
         self._repository.save_one(application)
         self._message_bus.publish(application.domain_events)
         application.clear_domain_events()
