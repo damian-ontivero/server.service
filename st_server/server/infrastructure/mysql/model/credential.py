@@ -23,7 +23,7 @@ class CredentialDbModel(db.Base):
     discarded = sa.Column(sa.Boolean, nullable=False)
 
     def update(self, entity: Credential) -> None:
-        """Updates the credential model from a credential entity."""
+        """Updates the Credential model from a Credential entity."""
         self.connection_type = entity.connection_type.value
         self.local_ip = entity.local_ip
         self.local_port = entity.local_port

@@ -73,7 +73,7 @@ def get_db_session():
 
 
 def get_repository(session: db.SessionLocal = Depends(get_db_session)):
-    """Yields an application repository."""
+    """Yields an Application repository."""
     yield ApplicationRepositoryImpl(session)
 
 
@@ -91,7 +91,7 @@ def get_query(
     repository: ApplicationRepositoryImpl = Depends(get_repository),
     message_bus: RabbitMQMessageBus = Depends(get_message_bus),
 ):
-    """Yields an application query."""
+    """Yields an Application query."""
     yield ApplicationQuery(repository=repository, message_bus=message_bus)
 
 
@@ -148,7 +148,7 @@ def get(
     authorization: HTTPAuthorizationCredentials = Depends(auth_scheme),
     query: ApplicationQuery = Depends(get_query),
 ):
-    """Route to get an application by id."""
+    """Route to get an Application by id."""
     try:
         application = query.find_one(
             id=id, access_token=authorization.credentials
@@ -174,7 +174,7 @@ def create(
     repository: ApplicationRepositoryImpl = Depends(get_repository),
     message_bus: RabbitMQMessageBus = Depends(get_message_bus),
 ):
-    """Route to create an application."""
+    """Route to create an Application."""
     try:
         command = AddApplicationCommand(
             name=application_in.name,
@@ -214,7 +214,7 @@ def update(
     repository: ApplicationRepositoryImpl = Depends(get_repository),
     message_bus: RabbitMQMessageBus = Depends(get_message_bus),
 ):
-    """Route to update an application."""
+    """Route to update an Application."""
     try:
         command = UpdateApplicationCommand(
             id=id,
@@ -258,7 +258,7 @@ def delete(
     repository: ApplicationRepositoryImpl = Depends(get_repository),
     message_bus: RabbitMQMessageBus = Depends(get_message_bus),
 ):
-    """Route to discard an application."""
+    """Route to delete an Application."""
     try:
         command = DeleteApplicationCommand(id=id)
         DeleteApplicationCommandHandler(
@@ -266,7 +266,7 @@ def delete(
         ).handle(command)
         return JSONResponse(
             content=jsonable_encoder(
-                obj={"message": "The application has been deleted"}
+                obj={"message": "The Application has been deleted"}
             ),
             status_code=status.HTTP_200_OK,
         )

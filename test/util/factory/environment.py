@@ -10,14 +10,14 @@ class EnvironmentFactory(factory.Factory):
     class Meta:
         model = Environment
 
-    value = factory.Faker("pystr")
+    text = factory.Faker("pystr")
 
     @classmethod
     def _create(cls, model_class, *args, **kwargs):
         environment = model_class.from_text(*args, **kwargs)
-        return environment
+        return environment.value
 
     @classmethod
     def _build(cls, model_class, *args, **kwargs):
         environment = model_class.from_text(*args, **kwargs)
-        return environment
+        return environment.value

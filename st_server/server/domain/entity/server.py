@@ -1,6 +1,6 @@
 """Server entity.
 
-This is the aggregate root entity of the server aggregate.
+This is the aggregate root entity of the Server aggregate.
 """
 
 from st_server.server.domain.entity.credential import Credential
@@ -284,31 +284,147 @@ class Server(AggregateRoot):
             if operating_system
             else None,
             credentials=[
-                Credential.create(
-                    connection_type=credential["connection_type"],
+                Credential(
+                    id=EntityId.generate(),
+                    connection_type=ConnectionType.from_text(
+                        credential["connection_type"]
+                    ),
                     username=credential["username"],
                     password=credential["password"],
                     local_ip=credential["local_ip"],
                     local_port=credential["local_port"],
                     public_ip=credential["public_ip"],
                     public_port=credential["public_port"],
+                    discarded=False,
                 )
                 for credential in credentials or []
             ],
             applications=[
-                ServerApplication.create(
-                    application_id=application["application_id"],
+                ServerApplication(
+                    application_id=EntityId.from_text(
+                        application["application_id"]
+                    ),
                     install_dir=application["install_dir"],
                     log_dir=application["log_dir"],
                 )
                 for application in applications or []
             ],
-            status="stopped",
+            status=ServerStatus.from_text("stopped"),
             discarded=False,
         )
         domain_event = Server.Created(aggregate_id=server.id.value)
         server.register_domain_event(domain_event)
         return server
+
+    def update(
+        self,
+        name: str | None = None,
+        cpu: str | None = None,
+        ram: str | None = None,
+        hdd: str | None = None,
+        environment: str | None = None,
+        operating_system: dict | None = None,
+        credentials: list[dict] | None = None,
+        applications: list[dict] | None = None,
+        status: str | None = None,
+        discarded: bool | None = None,
+    ) -> None:
+        """Updates the Server.
+
+        Important:
+            This method is only used to update an existing Server.
+        """
+        if name is not None:
+            self._name = name
+        if cpu is not None:
+            self._cpu = cpu
+        if ram is not None:
+            self._ram = ram
+        if hdd is not None:
+            self._hdd = hdd
+        if environment is not None:
+            self._environment = Environment.from_text(environment)
+        if operating_system is not None:
+            self._operating_system = OperatingSystem.from_data(
+                operating_system
+            )
+        if credentials is not None:
+            self._update_credentials(credentials)
+        if applications is not None:
+            self._update_applications(applications)
+        if status is not None:
+            self.status = ServerStatus.from_text(status)
+        if discarded is not None:
+            self.discarded = discarded
+
+    def _update_credentials(self, credentials: list[dict]) -> None:
+        """Updates the credentials of the Server."""
+        # Remove Credential if not in data.
+        for credential in self._credentials:
+            if credential.id.value not in [
+                new_credential["id"] for new_credential in credentials
+            ]:
+                self._credentials.remove(credential)
+        # Update existing Credentials.
+        for credential in self._credentials:
+            for new_credential in credentials:
+                if credential.id.value == new_credential["id"]:
+                    credential.connection_type = ConnectionType.from_text(
+                        new_credential["connection_type"]
+                    )
+                    credential.username = new_credential["username"]
+                    credential.password = new_credential["password"]
+                    credential.local_ip = new_credential["local_ip"]
+                    credential.local_port = new_credential["local_port"]
+                    credential.public_ip = new_credential["public_ip"]
+                    credential.public_port = new_credential["public_port"]
+
+        # Add new Credentials.
+        for new_credential in credentials:
+            if new_credential["id"] not in [
+                credential.id.value for credential in self._credentials
+            ]:
+                self._credentials.append(
+                    Credential(
+                        id=EntityId.generate(),
+                        connection_type=ConnectionType.from_text(
+                            new_credential["connection_type"]
+                        ),
+                        username=new_credential["username"],
+                        password=new_credential["password"],
+                        local_ip=new_credential["local_ip"],
+                        local_port=new_credential["local_port"],
+                        public_ip=new_credential["public_ip"],
+                        public_port=new_credential["public_port"],
+                        discarded=False,
+                    )
+                )
+
+    def _update_applications(self, applications: list[dict]) -> None:
+        """Updates the applications of the Server."""
+        # Remove Application if not in data.
+        for application in self._applications:
+            if application.id.value not in [
+                new_application["id"] for new_application in applications
+            ]:
+                self._applications.remove(application)
+        # Update existing Applications.
+        for application in self._applications:
+            for new_application in applications:
+                if application.id.value == new_application["id"]:
+                    application.update(new_application)
+        # Add new Applications.
+        for new_application in applications:
+            if new_application["id"] not in [
+                application.id.value for application in self._applications
+            ]:
+                self._applications.append(
+                    ServerApplication.create(
+                        application_id=new_application["application_id"],
+                        install_dir=new_application["install_dir"],
+                        log_dir=new_application["log_dir"],
+                    )
+                )
 
     def __repr__(self) -> str:
         """Returns the string representation of the Server."""

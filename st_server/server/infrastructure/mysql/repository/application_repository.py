@@ -14,6 +14,7 @@ from st_server.server.infrastructure.mysql.model.application import (
 from st_server.shared.domain.repository.repository_page_dto import (
     RepositoryPageDto,
 )
+from st_server.shared.domain.value_object.entity_id import EntityId
 
 
 def _build_filter(filter: dict):
@@ -157,8 +158,8 @@ class ApplicationRepositoryImpl(ApplicationRepository):
             return RepositoryPageDto(
                 total=total,
                 items=[
-                    Application.reconstitute(
-                        id=application.id,
+                    Application(
+                        id=EntityId.from_text(application.id),
                         name=application.name,
                         version=application.version,
                         architect=application.architect,
@@ -169,12 +170,12 @@ class ApplicationRepositoryImpl(ApplicationRepository):
             )
 
     def find_one(self, id: int) -> Application | None:
-        """Returns an application."""
+        """Returns an Application."""
         with self._session as session:
             application = session.get(entity=ApplicationDbModel, ident=id)
             if application is not None:
-                return Application.reconstitute(
-                    id=application.id,
+                return Application(
+                    id=EntityId.from_text(application.id),
                     name=application.name,
                     version=application.version,
                     architect=application.architect,
@@ -182,22 +183,22 @@ class ApplicationRepositoryImpl(ApplicationRepository):
                 )
 
     def save_one(self, aggregate: Application) -> None:
-        """Saves an application."""
+        """Saves an Application."""
         with self._session as session:
             model = session.get(
                 entity=ApplicationDbModel, ident=aggregate.id.value
             )
             if model is None:
-                model = ApplicationDbModel(**aggregate.to_dict())
+                model = ApplicationDbModel.from_entity(aggregate)
                 session.add(model)
             else:
-                model.update(aggregate.to_dict())
+                model.update(aggregate)
             session.commit()
 
     def delete_one(self, id: int) -> None:
-        """Deletes an application."""
+        """Deletes an Application."""
         with self._session as session:
-            session.query(ApplicationDbModel).filter(
-                ApplicationDbModel.id == id
-            ).delete()
-            session.commit()
+            application = session.get(entity=ApplicationDbModel, ident=id)
+            if application is not None:
+                session.delete(application)
+                session.commit()

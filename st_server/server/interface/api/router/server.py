@@ -74,7 +74,7 @@ def get_db_session():
 
 
 def get_repository(session: db.SessionLocal = Depends(get_db_session)):
-    """Yields a server repository."""
+    """Yields a Server repository."""
     yield ServerRepositoryImpl(session)
 
 
@@ -92,7 +92,7 @@ def get_query(
     repository: ServerRepositoryImpl = Depends(get_repository),
     message_bus: RabbitMQMessageBus = Depends(get_message_bus),
 ):
-    """Yields a server query."""
+    """Yields a Server query."""
     yield ServerQuery(repository=repository, message_bus=message_bus)
 
 
@@ -153,7 +153,7 @@ def get(
     authorization: HTTPAuthorizationCredentials = Depends(auth_scheme),
     query: ServerQuery = Depends(get_query),
 ):
-    """Route to get a server by id."""
+    """Route to get a Server by id."""
     try:
         server = query.find_one(id=id, access_token=authorization.credentials)
         return JSONResponse(content=jsonable_encoder(obj=server))
@@ -174,7 +174,7 @@ def create(
     repository: ServerRepositoryImpl = Depends(get_repository),
     message_bus: RabbitMQMessageBus = Depends(get_message_bus),
 ):
-    """Route to create a server."""
+    """Route to create a Server."""
     try:
         command = AddServerCommand(
             name=server_in.name,
@@ -219,7 +219,7 @@ def update(
     repository: ServerRepositoryImpl = Depends(get_repository),
     message_bus: RabbitMQMessageBus = Depends(get_message_bus),
 ):
-    """Route to update a server."""
+    """Route to update a Server."""
     try:
         command = UpdateServerCommand(
             id=id,
@@ -269,7 +269,7 @@ def delete(
     repository: ServerRepositoryImpl = Depends(get_repository),
     message_bus: RabbitMQMessageBus = Depends(get_message_bus),
 ):
-    """Route to discard a server."""
+    """Route to discard a Server."""
     try:
         command = DeleteServerCommand(id=id)
         DeleteServerCommandHandler(
@@ -277,7 +277,7 @@ def delete(
         ).handle(command)
         return JSONResponse(
             content=jsonable_encoder(
-                obj={"message": "The server has been deleted"}
+                obj={"message": "The Server has been deleted"}
             ),
             status_code=status.HTTP_200_OK,
         )

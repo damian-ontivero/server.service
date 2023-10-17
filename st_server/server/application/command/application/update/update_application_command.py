@@ -1,4 +1,4 @@
-"""Commands for the application."""
+"""Commands for the Application."""
 
 from dataclasses import dataclass
 
@@ -7,7 +7,7 @@ from st_server.shared.application.command.command import Command
 
 @dataclass(frozen=True)
 class UpdateApplicationCommand(Command):
-    """Command to update an application."""
+    """Command to update an Application."""
 
     id: str
     name: str

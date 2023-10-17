@@ -17,9 +17,20 @@ class ApplicationDbModel(db.Base):
     architect = sa.Column(sa.String(255), nullable=False)
     discarded = sa.Column(sa.Boolean, nullable=False)
 
-    def update(self, data: dict) -> None:
-        """Updates the application model from a dictionary."""
-        self.name = data.get("name")
-        self.version = data.get("version")
-        self.architect = data.get("architect")
-        self.discarded = data.get("discarded")
+    @classmethod
+    def from_entity(cls, entity: Application) -> "ApplicationDbModel":
+        """Named constructor to create an Application model from an Application entity."""
+        return cls(
+            id=entity.id.value,
+            name=entity.name,
+            version=entity.version,
+            architect=entity.architect,
+            discarded=entity.discarded,
+        )
+
+    def update(self, entity: Application) -> None:
+        """Updates the Application model from an Application entity."""
+        self.name = entity.name
+        self.version = entity.version
+        self.architect = entity.architect
+        self.discarded = entity.discarded

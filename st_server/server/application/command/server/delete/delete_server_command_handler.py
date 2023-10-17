@@ -12,7 +12,7 @@ from st_server.server.domain.repository.server_repository import (
 
 
 class DeleteServerCommandHandler(CommandHandler):
-    """Command handler for deleting a server."""
+    """Command handler for deleting a Server."""
 
     def __init__(
         self, repository: ServerRepository, message_bus: MessageBus

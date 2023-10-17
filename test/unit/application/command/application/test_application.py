@@ -21,12 +21,11 @@ from st_server.server.application.command.application.delete.delete_application_
 
 def test_add_one_ok(mock_application_repository, mock_message_bus):
     application = ApplicationFactory.build()
-    data = application.to_dict()
 
     command = AddApplicationCommand(
-        name=data["name"],
-        version=data["version"],
-        architect=data["architect"],
+        name=application.name,
+        version=application.version,
+        architect=application.architect,
     )
     AddApplicationCommandHandler(
         repository=mock_application_repository, message_bus=mock_message_bus

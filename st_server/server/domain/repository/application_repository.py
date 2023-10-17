@@ -93,20 +93,20 @@ class ApplicationRepository(metaclass=ABCMeta):
         or_filter: list[dict],
         sort: list[dict],
     ) -> RepositoryPageDto:
-        """Returns a list of applications."""
+        """Returns a list of Applications."""
         raise NotImplementedError
 
     @abstractmethod
     def find_one(self, id: int) -> Application | None:
-        """Returns an application."""
+        """Returns an Application."""
         raise NotImplementedError
 
     @abstractmethod
     def save_one(self, aggregate: Application) -> None:
-        """Saves an application."""
+        """Saves an Application."""
         raise NotImplementedError
 
     @abstractmethod
     def delete_one(self, id: int) -> None:
-        """Deletes an application."""
+        """Deletes an Application."""
         raise NotImplementedError

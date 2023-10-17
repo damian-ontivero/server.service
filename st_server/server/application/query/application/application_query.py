@@ -109,7 +109,7 @@ class ApplicationQuery:
     def find_one(
         self, id: str, access_token: str | None = None
     ) -> ApplicationReadDto:
-        """Returns an application."""
+        """Returns an Application."""
         application = self._repository.find_one(id)
         if application is None:
             raise NotFound(

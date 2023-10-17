@@ -1,4 +1,4 @@
-"""Commands for the application."""
+"""Commands for the Server."""
 
 from dataclasses import dataclass
 
@@ -7,7 +7,7 @@ from st_server.shared.application.command.command import Command
 
 @dataclass(frozen=True)
 class AddServerCommand(Command):
-    """Command to add a server."""
+    """Command to add a Server."""
 
     name: str
     cpu: str

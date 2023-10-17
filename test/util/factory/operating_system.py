@@ -13,7 +13,7 @@ class OperatingSystemFactory(factory.Factory):
     class Meta:
         model = OperatingSystem
 
-    value = {
+    data = {
         "name": "Ubuntu",
         "version": "20.04",
         "architecture": "x86_64",
@@ -22,9 +22,9 @@ class OperatingSystemFactory(factory.Factory):
     @classmethod
     def _create(cls, model_class, *args, **kwargs):
         operating_system = model_class.from_data(*args, **kwargs)
-        return operating_system
+        return operating_system.__dict__
 
     @classmethod
     def _build(cls, model_class, *args, **kwargs):
         operating_system = model_class.from_data(*args, **kwargs)
-        return operating_system
+        return operating_system.__dict__

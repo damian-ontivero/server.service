@@ -14,7 +14,7 @@ from st_server.server.domain.repository.application_repository import (
 
 
 class AddApplicationCommandHandler(CommandHandler):
-    """Command handler for adding an application."""
+    """Command handler for adding an Application."""
 
     def __init__(
         self, repository: ApplicationRepository, message_bus: MessageBus
@@ -25,11 +25,7 @@ class AddApplicationCommandHandler(CommandHandler):
 
     def handle(self, command: AddApplicationCommand) -> ApplicationReadDto:
         """Handle a command."""
-        application = Application.create(
-            name=command.name,
-            version=command.version,
-            architect=command.architect,
-        )
+        application = Application.create(**command.to_dict())
         self._check_exists(application.name)
         self._repository.save_one(application)
         self._message_bus.publish(application.domain_events)
@@ -37,7 +33,7 @@ class AddApplicationCommandHandler(CommandHandler):
         return ApplicationReadDto.from_entity(application)
 
     def _check_exists(self, name: str) -> None:
-        """Returns True if an application with the given name exists."""
+        """Returns True if an Application with the given name exists."""
         applications = self._repository.find_many(
             filter={"name": {"eq": name}}
         )

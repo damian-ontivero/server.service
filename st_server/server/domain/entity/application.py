@@ -1,6 +1,6 @@
 """Application entity.
 
-This is the aggregate root entity of the application aggregate.
+This is the aggregate root entity of the Application aggregate.
 """
 
 from st_server.shared.domain.entity.aggregate_root import AggregateRoot
@@ -115,6 +115,16 @@ class Application(AggregateRoot):
         domain_event = Application.Created(aggregate_id=application._id.value)
         application.register_domain_event(domain_event)
         return application
+
+    def update(self, name: str, version: str, architect: str) -> None:
+        """Updates the Application.
+
+        Important:
+            This method is only used to update an existing Application.
+        """
+        self.name = name
+        self.version = version
+        self.architect = architect
 
     def __repr__(self) -> str:
         """Returns the string representation of the Application."""

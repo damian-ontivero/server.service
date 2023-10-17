@@ -18,4 +18,4 @@ class ServerApplicationDbModel(db.Base):
     install_dir = sa.Column(sa.String(255), nullable=True)
     log_dir = sa.Column(sa.String(255), nullable=True)
 
-    application = relationship("ApplicationDbModel", lazy="joined")
+    application = relationship("ApplicationDbModel", lazy="subquery")

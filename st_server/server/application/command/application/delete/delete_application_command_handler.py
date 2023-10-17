@@ -12,7 +12,7 @@ from st_server.server.domain.repository.application_repository import (
 
 
 class DeleteApplicationCommandHandler(CommandHandler):
-    """Command handler for deleting an application."""
+    """Command handler for deleting an Application."""
 
     def __init__(
         self, repository: ApplicationRepository, message_bus: MessageBus

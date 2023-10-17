@@ -29,12 +29,50 @@ class ServerDbModel(db.Base):
     discarded = sa.Column(sa.Boolean, nullable=False)
 
     credentials = relationship(
-        "CredentialDbModel", lazy="joined", cascade="all, delete-orphan"
+        "CredentialDbModel", lazy="subquery", cascade="all, delete-orphan"
     )
-    applications = relationship("ServerApplicationDbModel", lazy="joined")
+    applications = relationship("ServerApplicationDbModel", lazy="subquery")
 
-    def update(self, entity: Server):
-        """Updates the server model from a server entity."""
+    @classmethod
+    def from_entity(cls, entity: Server) -> "ServerDbModel":
+        """Named constructor to create a Server model from a Server entity."""
+        return cls(
+            id=entity.id.value,
+            name=entity.name,
+            cpu=entity.cpu,
+            ram=entity.ram,
+            hdd=entity.hdd,
+            environment=entity.environment.value,
+            operating_system=entity.operating_system.__dict__,
+            credentials=[
+                CredentialDbModel(
+                    id=credential.id.value,
+                    connection_type=credential.connection_type.value,
+                    username=credential.username,
+                    password=credential.password,
+                    local_ip=credential.local_ip,
+                    local_port=credential.local_port,
+                    public_ip=credential.public_ip,
+                    public_port=credential.public_port,
+                    discarded=credential.discarded,
+                )
+                for credential in entity.credentials
+            ],
+            applications=[
+                ServerApplicationDbModel(
+                    server_id=entity.id.value,
+                    application_id=application.id.value,
+                    install_dir=application.install_dir,
+                    log_dir=application.log_dir,
+                )
+                for application in entity.applications
+            ],
+            status=entity.status.value,
+            discarded=entity.discarded,
+        )
+
+    def update(self, entity: Server) -> None:
+        """Updates the Server model from a Server entity."""
         self.name = entity.name
         self.cpu = entity.cpu
         self.ram = entity.ram

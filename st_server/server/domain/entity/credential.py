@@ -1,6 +1,6 @@
 """Credential entity.
 
-This is the aggregate root entity of the credential aggregate.
+This is the aggregate root entity of the Credential aggregate.
 """
 
 from st_server.server.domain.value_object.connection_type import (
@@ -80,12 +80,12 @@ class Credential(Entity):
 
     @property
     def server_id(self) -> EntityId:
-        """Returns the server id of the Credential."""
+        """Returns the Server id of the Credential."""
         return self._server_id
 
     @server_id.setter
     def server_id(self, server_id: EntityId) -> None:
-        """Sets the server id of the Credential."""
+        """Sets the Server id of the Credential."""
         self._check_not_discarded()
         self._server_id = server_id
 

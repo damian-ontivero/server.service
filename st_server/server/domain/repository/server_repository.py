@@ -93,20 +93,20 @@ class ServerRepository(metaclass=ABCMeta):
         or_filter: list[dict],
         sort: list[dict],
     ) -> RepositoryPageDto:
-        """Returns a list of servers."""
+        """Returns a list of Servers."""
         raise NotImplementedError
 
     @abstractmethod
     def find_one(self, id: int) -> Server | None:
-        """Returns a server."""
+        """Returns a Server."""
         raise NotImplementedError
 
     @abstractmethod
     def save_one(self, aggregate: Server) -> None:
-        """Saves a server."""
+        """Saves a Server."""
         raise NotImplementedError
 
     @abstractmethod
     def delete_one(self, id: int) -> None:
-        """Deletes a server."""
+        """Deletes a Server."""
         raise NotImplementedError

@@ -109,7 +109,7 @@ class ServerQuery:
     def find_one(
         self, id: str, access_token: str | None = None
     ) -> ServerReadDto:
-        """Returns a server."""
+        """Returns a Server."""
         server = self._repository.find_one(id)
         if server is None:
             raise NotFound("Server with id: {id!r} not found".format(id=id))

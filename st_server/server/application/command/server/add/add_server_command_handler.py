@@ -11,14 +11,10 @@ from st_server.server.domain.entity.server import Server
 from st_server.server.domain.repository.server_repository import (
     ServerRepository,
 )
-from st_server.server.domain.value_object.operating_system import (
-    OperatingSystem,
-)
-from st_server.server.domain.value_object.environment import Environment
 
 
 class AddServerCommandHandler(CommandHandler):
-    """Command handler for adding a server."""
+    """Command handler for adding a Server."""
 
     def __init__(
         self, repository: ServerRepository, message_bus: MessageBus
@@ -29,18 +25,7 @@ class AddServerCommandHandler(CommandHandler):
 
     def handle(self, command: AddServerCommand) -> ServerReadDto:
         """Handle a command."""
-        server = Server.create(
-            name=command.name,
-            cpu=command.cpu,
-            ram=command.ram,
-            hdd=command.hdd,
-            environment=Environment.from_text(command.environment),
-            operating_system=OperatingSystem.from_data(
-                command.operating_system
-            ),
-            credentials=command.credentials,
-            applications=command.applications,
-        )
+        server = Server.create(**command.to_dict())
         self._check_exists(server.name)
         self._repository.save_one(server)
         self._message_bus.publish(server.domain_events)
@@ -48,7 +33,7 @@ class AddServerCommandHandler(CommandHandler):
         return ServerReadDto.from_entity(server)
 
     def _check_exists(self, name: str) -> None:
-        """Returns True if a server with the given name exists."""
+        """Returns True if a Server with the given name exists."""
         servers = self._repository.find_many(filter={"name": {"eq": name}})
         if servers.total:
             raise AlreadyExists(

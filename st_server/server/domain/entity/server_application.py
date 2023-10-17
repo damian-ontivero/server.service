@@ -1,11 +1,11 @@
-"""ServerApplication relationship."""
+"""Server Application relationship."""
 
 from st_server.server.domain.entity.application import Application
 from st_server.shared.domain.value_object.entity_id import EntityId
 
 
 class ServerApplication:
-    """ServerApplication relationship."""
+    """Server Application relationship."""
 
     def __init__(
         self,
@@ -15,10 +15,10 @@ class ServerApplication:
         log_dir: str | None = None,
         application: Application | None = None,
     ) -> None:
-        """Initialize the ServerApplication.
+        """Initialize the Server Application.
 
         Important:
-            Do not use directly to create a new ServerApplication.
+            Do not use directly to create a new Server Application.
         """
         self._server_id = server_id
         self._application_id = application_id
@@ -28,52 +28,52 @@ class ServerApplication:
 
     @property
     def server_id(self) -> EntityId:
-        """Returns the server id of the ServerApplication."""
+        """Returns the Server id of the Server Application."""
         return self._server_id
 
     @server_id.setter
     def server_id(self, server_id: EntityId) -> None:
-        """Sets the server id of the ServerApplication."""
+        """Sets the Server id of the Server Application."""
         self._server_id = server_id
 
     @property
     def application_id(self) -> EntityId:
-        """Returns the application id of the ServerApplication."""
+        """Returns the Application id of the Server Application."""
         return self._application_id
 
     @application_id.setter
     def application_id(self, application_id: EntityId) -> None:
-        """Sets the application id of the ServerApplication."""
+        """Sets the Application id of the Server Application."""
         self._application_id = application_id
 
     @property
     def install_dir(self) -> str:
-        """Returns the install dir of the ServerApplication."""
+        """Returns the install dir of the Server Application."""
         return self._install_dir
 
     @install_dir.setter
     def install_dir(self, install_dir: str) -> None:
-        """Sets the install dir of the ServerApplication."""
+        """Sets the install dir of the Server Application."""
         self._install_dir = install_dir
 
     @property
     def log_dir(self) -> str:
-        """Returns the log dir of the ServerApplication."""
+        """Returns the log dir of the Server Application."""
         return self._log_dir
 
     @log_dir.setter
     def log_dir(self, log_dir: str) -> None:
-        """Sets the log dir of the ServerApplication."""
+        """Sets the log dir of the Server Application."""
         self._log_dir = log_dir
 
     @property
     def application(self) -> Application:
-        """Returns the application of the ServerApplication."""
+        """Returns the Application of the Server Application."""
         return self._application
 
     @application.setter
     def application(self, application: Application) -> None:
-        """Sets the application of the ServerApplication."""
+        """Sets the Application of the Server Application."""
         self._application = application
 
     @classmethod
@@ -93,7 +93,7 @@ class ServerApplication:
         )
 
     def __repr__(self) -> str:
-        """Returns the representation of the ServerApplication."""
+        """Returns the representation of the Server Application."""
         return (
             "{c}(server_id={server_id!r}, application_id={application_id!r}, "
             "install_dir={install_dir!r}, log_dir={log_dir!r}, application={application!r})"

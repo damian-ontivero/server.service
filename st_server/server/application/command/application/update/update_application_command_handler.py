@@ -16,7 +16,7 @@ from st_server.server.domain.repository.application_repository import (
 
 
 class UpdateApplicationCommandHandler(CommandHandler):
-    """Command handler for updating an application."""
+    """Command handler for updating an Application."""
 
     def __init__(
         self, repository: ApplicationRepository, message_bus: MessageBus
@@ -45,7 +45,7 @@ class UpdateApplicationCommandHandler(CommandHandler):
         return ApplicationReadDto.from_entity(application)
 
     def _check_exists(self, name: str) -> None:
-        """Returns True if an application with the given name exists."""
+        """Returns True if an Application with the given name exists."""
         applications = self._repository.find_many(
             filter={"name": {"eq": name}}
         )

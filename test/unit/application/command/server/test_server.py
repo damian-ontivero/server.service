@@ -21,17 +21,16 @@ from st_server.server.application.command.server.delete.delete_server_command_ha
 
 def test_add_one_ok(mock_server_repository, mock_message_bus):
     server = ServerFactory.build()
-    data = server.to_dict()
 
     command = AddServerCommand(
-        name=data["name"],
-        cpu=data["cpu"],
-        ram=data["ram"],
-        hdd=data["hdd"],
-        environment=data["environment"],
-        operating_system=data["operating_system"],
-        credentials=data["credentials"],
-        applications=data["applications"],
+        name=server.name,
+        cpu=server.cpu,
+        ram=server.ram,
+        hdd=server.hdd,
+        environment=server.environment.value,
+        operating_system=server.operating_system.__dict__,
+        credentials=server.credentials,
+        applications=server.applications,
     )
     AddServerCommandHandler(
         repository=mock_server_repository, message_bus=mock_message_bus
@@ -48,11 +47,11 @@ def test_update_one_ok(mock_server_repository, mock_message_bus):
         cpu=server.cpu,
         ram=server.ram,
         hdd=server.hdd,
-        environment=server.environment,
-        operating_system=server.operating_system,
+        environment=server.environment.value,
+        operating_system=server.operating_system.__dict__,
         credentials=server.credentials,
         applications=server.applications,
-        status=server.status,
+        status=server.status.value,
     )
     UpdateServerCommandHandler(
         repository=mock_server_repository, message_bus=mock_message_bus
@@ -71,11 +70,11 @@ def test_update_one_blank_cpu_field_ok(
         cpu=server.cpu,
         ram=server.ram,
         hdd=server.hdd,
-        environment=server.environment,
-        operating_system=server.operating_system,
+        environment=server.environment.value,
+        operating_system=server.operating_system.__dict__,
         credentials=server.credentials,
         applications=server.applications,
-        status=server.status,
+        status=server.status.value,
     )
     UpdateServerCommandHandler(
         repository=mock_server_repository, message_bus=mock_message_bus
@@ -94,11 +93,11 @@ def test_update_one_blank_ram_field_ok(
         cpu=server.cpu,
         ram=server.ram,
         hdd=server.hdd,
-        environment=server.environment,
-        operating_system=server.operating_system,
+        environment=server.environment.value,
+        operating_system=server.operating_system.__dict__,
         credentials=server.credentials,
         applications=server.applications,
-        status=server.status,
+        status=server.status.value,
     )
     UpdateServerCommandHandler(
         repository=mock_server_repository, message_bus=mock_message_bus
@@ -117,11 +116,11 @@ def test_update_one_blank_hdd_field_ok(
         cpu=server.cpu,
         ram=server.ram,
         hdd=server.hdd,
-        environment=server.environment,
-        operating_system=server.operating_system,
+        environment=server.environment.value,
+        operating_system=server.operating_system.__dict__,
         credentials=server.credentials,
         applications=server.applications,
-        status=server.status,
+        status=server.status.value,
     )
     UpdateServerCommandHandler(
         repository=mock_server_repository, message_bus=mock_message_bus

@@ -210,7 +210,7 @@ class ServerRepositoryImpl(ServerRepository):
             )
 
     def find_one(self, id: int) -> Server | None:
-        """Returns a server."""
+        """Returns a Server."""
         with self._session as session:
             server = session.get(entity=ServerDbModel, ident=id)
             if server is not None:
@@ -255,7 +255,7 @@ class ServerRepositoryImpl(ServerRepository):
                 )
 
     def save_one(self, aggregate: Server) -> None:
-        """Saves a server."""
+        """Saves a Server."""
         with self._session as session:
             model = session.get(entity=ServerDbModel, ident=aggregate.id.value)
             if model is None:
@@ -266,9 +266,9 @@ class ServerRepositoryImpl(ServerRepository):
             session.commit()
 
     def delete_one(self, id: int) -> None:
-        """Deletes a server."""
+        """Deletes a Server."""
         with self._session as session:
-            session.query(ServerDbModel).filter(
-                ServerDbModel.id == id
-            ).delete()
-            session.commit()
+            server = session.get(entity=ServerDbModel, ident=id)
+            if server is not None:
+                session.delete(server)
+                session.commit()
