@@ -53,7 +53,7 @@ class OperatingSystem:
 
     def __hash__(self) -> int:
         """Returns the hash of the Operating System."""
-        return hash((self.name, self.version, self.architecture))
+        return hash((self._name, self._version, self._architecture))
 
     def __repr__(self) -> str:
         """Returns the representation of the Operating System."""

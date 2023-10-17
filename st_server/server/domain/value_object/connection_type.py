@@ -33,7 +33,7 @@ class ConnectionType:
 
     def __hash__(self) -> int:
         """Returns the hash of the Connection Type."""
-        return hash(tuple(sorted(self._value)))
+        return hash(self._value)
 
     def __repr__(self) -> str:
         """Returns the representation of the Connection Type."""

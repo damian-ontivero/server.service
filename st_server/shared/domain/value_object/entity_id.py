@@ -40,7 +40,7 @@ class EntityId:
 
     def __hash__(self) -> int:
         """Returns the hash of the Entity id."""
-        return hash(tuple(sorted(self._value)))
+        return hash(self._value)
 
     def __repr__(self) -> str:
         """Returns the representation of the Entity id."""

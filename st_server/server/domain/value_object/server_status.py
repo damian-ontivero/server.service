@@ -40,7 +40,7 @@ class ServerStatus:
 
     def __hash__(self):
         """Returns the hash of the Server status."""
-        return hash(tuple(sorted(self._value)))
+        return hash(self._value)
 
     def __repr__(self):
         """Returns the representation of the Server status."""

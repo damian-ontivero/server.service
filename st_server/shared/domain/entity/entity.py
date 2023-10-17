@@ -43,7 +43,7 @@ class Entity(metaclass=ABCMeta):
     def __eq__(self, other: object) -> bool:
         """Compares if two entities are equal."""
         if isinstance(other, self.__class__):
-            return self.id == other.id
+            return self._id == other._id
         return NotImplemented
 
     def __ne__(self, other: object) -> bool:
@@ -52,7 +52,7 @@ class Entity(metaclass=ABCMeta):
 
     def __hash__(self) -> int:
         """Returns the hash of the entity."""
-        return hash((self.__class__.__name__, self._id.value))
+        return hash(self._id)
 
     @abstractmethod
     def __repr__(self) -> str:
