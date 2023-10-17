@@ -76,20 +76,6 @@ class ServerApplication:
         """Sets the application of the ServerApplication."""
         self._application = application
 
-    def __repr__(self) -> str:
-        """Returns the representation of the ServerApplication."""
-        return (
-            "{c}(server_id={server_id!r}, application_id={application_id!r}, "
-            "install_dir={install_dir!r}, log_dir={log_dir!r}, application={application!r})"
-        ).format(
-            c=self.__class__.__name__,
-            server_id=self._server_id.value,
-            application_id=self._application_id.value,
-            install_dir=self._install_dir,
-            log_dir=self._log_dir,
-            application=self._application,
-        )
-
     @classmethod
     def create(
         cls,
@@ -104,4 +90,18 @@ class ServerApplication:
             application_id=application_id,
             install_dir=install_dir,
             log_dir=log_dir,
+        )
+
+    def __repr__(self) -> str:
+        """Returns the representation of the ServerApplication."""
+        return (
+            "{c}(server_id={server_id!r}, application_id={application_id!r}, "
+            "install_dir={install_dir!r}, log_dir={log_dir!r}, application={application!r})"
+        ).format(
+            c=self.__class__.__name__,
+            server_id=self._server_id.value,
+            application_id=self._application_id.value,
+            install_dir=self._install_dir,
+            log_dir=self._log_dir,
+            application=self._application,
         )

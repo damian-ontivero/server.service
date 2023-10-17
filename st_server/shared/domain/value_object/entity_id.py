@@ -8,16 +8,6 @@ class EntityId:
 
     __slots__ = ("_value",)
 
-    @classmethod
-    def generate(cls) -> "EntityId":
-        """Named constructor to create an Entity id."""
-        return cls(uuid4().hex)
-
-    @classmethod
-    def from_text(cls, text: str) -> "EntityId":
-        """Named constructor to create an Entity id from a string."""
-        return cls(text)
-
     def __new__(cls, value: str) -> "EntityId":
         """Creates a new instance of the Entity id."""
         if not isinstance(value, str):
@@ -27,6 +17,21 @@ class EntityId:
         self = object.__new__(cls)
         self._value = value
         return self
+
+    @property
+    def value(self) -> str:
+        """Returns the value of the Entity id."""
+        return self._value
+
+    @classmethod
+    def generate(cls) -> "EntityId":
+        """Named constructor to create an Entity id."""
+        return cls(uuid4().hex)
+
+    @classmethod
+    def from_text(cls, text: str) -> "EntityId":
+        """Named constructor to create an Entity id from a string."""
+        return cls(text)
 
     def __eq__(self, other: object) -> bool:
         """Compares if two Entity id are equal."""
@@ -47,8 +52,3 @@ class EntityId:
         return "{c}(value={value!r})".format(
             c=self.__class__.__name__, value=self._value
         )
-
-    @property
-    def value(self) -> str:
-        """Returns the value of the Entity id."""
-        return self._value

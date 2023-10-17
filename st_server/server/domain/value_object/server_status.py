@@ -11,11 +11,6 @@ class ServerStatus:
 
     __slots__ = ("_value",)
 
-    @classmethod
-    def from_text(cls, text: str) -> "ServerStatus":
-        """Named constructor to create a Server status from a string."""
-        return cls(text)
-
     def __new__(cls, value):
         """Creates a new instance of Server status."""
         if not isinstance(value, str):
@@ -27,6 +22,16 @@ class ServerStatus:
         self = object.__new__(cls)
         self._value = value
         return self
+
+    @property
+    def value(self):
+        """Returns the value of the Server status."""
+        return self._value
+
+    @classmethod
+    def from_text(cls, text: str) -> "ServerStatus":
+        """Named constructor to create a Server status from a string."""
+        return cls(text)
 
     def __eq__(self, other):
         """Compares if two Server status are equal."""
@@ -47,8 +52,3 @@ class ServerStatus:
         return "{c}(value={value!r})".format(
             c=self.__class__.__name__, value=self._value
         )
-
-    @property
-    def value(self):
-        """Returns the value of the Server status."""
-        return self._value

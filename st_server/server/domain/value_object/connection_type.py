@@ -6,11 +6,6 @@ class ConnectionType:
 
     __slots__ = ("_value",)
 
-    @classmethod
-    def from_text(cls, text: str) -> "ConnectionType":
-        """Named constructor to create a Connection Type from a string."""
-        return cls(text)
-
     def __new__(cls, value: str) -> "ConnectionType":
         """Creates a new instance of Connection Type."""
         if not isinstance(value, str):
@@ -20,6 +15,16 @@ class ConnectionType:
         self = object.__new__(cls)
         self._value = value
         return self
+
+    @property
+    def value(self) -> str:
+        """Returns the value of the Connection Type."""
+        return self._value
+
+    @classmethod
+    def from_text(cls, text: str) -> "ConnectionType":
+        """Named constructor to create a Connection Type from a string."""
+        return cls(text)
 
     def __eq__(self, other: object) -> bool:
         """Compares if two Connection Type are equal."""
@@ -40,8 +45,3 @@ class ConnectionType:
         return "{c}(value={value!r})".format(
             c=self.__class__.__name__, value=self._value
         )
-
-    @property
-    def value(self) -> str:
-        """Returns the value of the Connection Type."""
-        return self._value

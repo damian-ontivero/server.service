@@ -96,22 +96,6 @@ class Application(AggregateRoot):
         self._architect = architect
         self.register_domain_event(domain_event)
 
-    def __repr__(self) -> str:
-        """Returns the string representation of the Application."""
-        return (
-            "{d}{c}(id={id!r}, name={name!r}, "
-            "version={version!r}, architect={architect!r}, "
-            "discarded={discarded!r})"
-        ).format(
-            d="*Discarded*" if self._discarded else "",
-            c=self.__class__.__name__,
-            id=self._id.value,
-            name=self._name,
-            version=self._version,
-            architect=self._architect,
-            discarded=self._discarded,
-        )
-
     @classmethod
     def create(cls, name: str, version: str, architect: str) -> "Application":
         """Named constructor to create a new Application.
@@ -132,20 +116,18 @@ class Application(AggregateRoot):
         application.register_domain_event(domain_event)
         return application
 
-    def update(
-        self,
-        name: str | None = ...,
-        version: str | None = ...,
-        architect: str | None = ...,
-    ) -> None:
-        """Updates the Application.
-
-        Important:
-            This method is only used to update an existing Application.
-        """
-        if name is not ...:
-            self.name = name
-        if version is not ...:
-            self.version = version
-        if architect is not ...:
-            self.architect = architect
+    def __repr__(self) -> str:
+        """Returns the string representation of the Application."""
+        return (
+            "{d}{c}(id={id!r}, name={name!r}, "
+            "version={version!r}, architect={architect!r}, "
+            "discarded={discarded!r})"
+        ).format(
+            d="*Discarded*" if self._discarded else "",
+            c=self.__class__.__name__,
+            id=self._id.value,
+            name=self._name,
+            version=self._version,
+            architect=self._architect,
+            discarded=self._discarded,
+        )
