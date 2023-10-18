@@ -3,10 +3,10 @@
 from fastapi import FastAPI
 from fastapi.middleware import cors
 
-from st_server.server.interface.api.router.application import (
+from st_server.server.interface.api.application.router import (
     router as application_router,
 )
-from st_server.server.interface.api.router.server import (
+from st_server.server.interface.api.server.router import (
     router as server_router,
 )
 
