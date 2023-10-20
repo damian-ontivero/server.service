@@ -5,7 +5,7 @@ import pytest
 
 @pytest.fixture(scope="function", autouse=True)
 def mock_message_bus():
-    from st_server.server.infrastructure.message_bus.rabbitmq_message_bus import (
+    from st_server.server.infrastructure.messaging.rabbitmq import (
         RabbitMQMessageBus,
     )
 
@@ -47,7 +47,7 @@ def mock_server_repository(mock_session, test_db):
 
 @pytest.fixture(scope="function")
 def mock_server_query(mock_server_repository, mock_message_bus):
-    from st_server.server.application.server.queries.server_query import (
+    from st_server.server.application.query.server.server_query import (
         ServerQuery,
     )
 
@@ -68,7 +68,7 @@ def mock_application_repository(mock_session, test_db):
 
 @pytest.fixture(scope="function")
 def mock_application_query(mock_application_repository, mock_message_bus):
-    from st_server.server.application.application.queries.application_query import (
+    from st_server.server.application.query.application.application_query import (
         ApplicationQuery,
     )
 

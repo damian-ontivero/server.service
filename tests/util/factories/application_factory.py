@@ -1,7 +1,7 @@
 import factory
 import factory.fuzzy
 
-from st_server.server.domain.application.factories.application_factory import (
+from st_server.server.domain.factory.application.application_factory import (
     ApplicationFactory as BaseApplicationFactory,
 )
 from st_server.server.infrastructure.mysql.application.repositories.application_repository import (

@@ -1,9 +1,9 @@
 import pytest
 
-from st_server.server.application.application.dtos.application import (
+from st_server.server.application.dto.application.application import (
     ApplicationReadDto,
 )
-from st_server.shared.application.exceptions.exception import NotFound
+from st_server.shared.application.exception.exception import NotFound
 from tests.util.factories.application_factory import ApplicationFactory
 
 

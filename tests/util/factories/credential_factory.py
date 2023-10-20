@@ -1,8 +1,8 @@
 import factory
 import factory.fuzzy
 
-from st_server.server.domain.server.entities.credential import Credential
-from st_server.server.domain.server.value_objects.connection_type import (
+from st_server.server.domain.entity.server.credential import Credential
+from st_server.server.domain.value_object.server.connection_type import (
     ConnectionType,
 )
 from st_server.shared.domain.value_objects.entity_id import EntityId

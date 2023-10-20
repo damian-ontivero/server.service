@@ -1,9 +1,7 @@
 import factory
 import factory.fuzzy
 
-from st_server.server.domain.server.value_objects.environment import (
-    Environment,
-)
+from st_server.server.domain.value_object.server.environment import Environment
 
 
 class EnvironmentFactory(factory.Factory):

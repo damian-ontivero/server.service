@@ -1,19 +1,19 @@
-from st_server.server.application.server.commands.add.add_server_command import (
+from st_server.server.application.command.serveradd.add_server_command import (
     AddServerCommand,
 )
-from st_server.server.application.server.commands.add.add_server_command_handler import (
+from st_server.server.application.command.serveradd.add_server_command_handler import (
     AddServerCommandHandler,
 )
-from st_server.server.application.server.commands.delete.delete_server_command import (
+from st_server.server.application.command.serverdelete.delete_server_command import (
     DeleteServerCommand,
 )
-from st_server.server.application.server.commands.delete.delete_server_command_handler import (
+from st_server.server.application.command.serverdelete.delete_server_command_handler import (
     DeleteServerCommandHandler,
 )
-from st_server.server.application.server.commands.update.update_server_command import (
+from st_server.server.application.command.serverupdate.update_server_command import (
     UpdateServerCommand,
 )
-from st_server.server.application.server.commands.update.update_server_command_handler import (
+from st_server.server.application.command.serverupdate.update_server_command_handler import (
     UpdateServerCommandHandler,
 )
 from tests.util.factories.server_factory import ServerFactory
@@ -32,9 +32,7 @@ def test_add_one_ok(mock_server_repository, mock_message_bus):
         credentials=server.credentials,
         applications=server.applications,
     )
-    AddServerCommandHandler(
-        repository=mock_server_repository, message_bus=mock_message_bus
-    ).handle(command)
+    AddServerCommandHandler(command)
 
 
 def test_update_one_ok(mock_server_repository, mock_message_bus):

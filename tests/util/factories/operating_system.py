@@ -1,7 +1,7 @@
 import factory
 import factory.fuzzy
 
-from st_server.server.domain.server.value_objects.operating_system import (
+from st_server.server.domain.value_object.server.operating_system import (
     OperatingSystem,
 )
 

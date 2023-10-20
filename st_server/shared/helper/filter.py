@@ -2,7 +2,7 @@
 
 from functools import wraps
 
-from st_server.shared.application.exceptions.exception import FilterError
+from st_server.shared.application.exception.exception import FilterError
 
 OPERATORS = ["eq", "gt", "ge", "lt", "le", "in", "btw", "lk"]
 
