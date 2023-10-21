@@ -2,7 +2,7 @@
 
 from dataclasses import dataclass
 
-from st_server.shared.command.application.command import Command
+from st_server.shared.application.command.command import Command
 
 
 @dataclass(frozen=True)
