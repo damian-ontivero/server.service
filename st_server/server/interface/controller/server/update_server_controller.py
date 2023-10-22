@@ -4,7 +4,9 @@ from st_server.server.application.bus.command_bus import CommandBus
 from st_server.server.application.server.command.update_server_command import (
     UpdateServerCommand,
 )
-from st_server.server.infrastructure.bus.rabbitmq import RabbitMQMessageBus
+from st_server.server.infrastructure.bus.rabbitmq_message_bus import (
+    RabbitMQMessageBus,
+)
 from st_server.server.infrastructure.persistence.mysql import session
 from st_server.server.infrastructure.persistence.mysql.server.server_repository import (
     ServerRepositoryImpl,
