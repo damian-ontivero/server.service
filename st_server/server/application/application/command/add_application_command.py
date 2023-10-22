@@ -9,6 +9,6 @@ from st_server.shared.application.command import Command
 class AddApplicationCommand(Command):
     """Command to add a Application."""
 
-    name: str
-    version: str
-    architect: str
+    name: str | None = None
+    version: str | None = None
+    architect: str | None = None

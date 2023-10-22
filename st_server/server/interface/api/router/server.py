@@ -1,6 +1,6 @@
 """Server router."""
 
-from fastapi import APIRouter, Depends, status
+from fastapi import APIRouter, Depends, Query, status
 from fastapi.encoders import jsonable_encoder
 from fastapi.responses import JSONResponse
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
@@ -44,10 +44,23 @@ auth_scheme = HTTPBearer()
 
 @router.get("", response_model=QueryResponse)
 def get_all(
-    query: FindManyServerQuery,
+    limit: int = Query(default=25),
+    offset: int = Query(default=0),
+    filter: str = Query(default="{}"),
+    and_filter: str = Query(default="[]"),
+    or_filter: str = Query(default="[]"),
+    sort: str = Query(default="[]"),
     authorization: HTTPAuthorizationCredentials = Depends(auth_scheme),
 ):
     """Route to get all servers."""
+    query = FindManyServerQuery(
+        limit=limit,
+        offset=offset,
+        filter=filter,
+        and_filter=and_filter,
+        or_filter=or_filter,
+        sort=sort,
+    )
     servers = FindManyServerController.handle(query)
     if servers.total == 0:
         return JSONResponse(status_code=status.HTTP_204_NO_CONTENT)
@@ -59,10 +72,11 @@ def get_all(
 
 @router.get("/{id}", response_model=ServerReadDto)
 def get(
-    query: FindOneServerQuery,
+    id: str,
     authorization: HTTPAuthorizationCredentials = Depends(auth_scheme),
 ):
     """Route to get a Server by id."""
+    query = FindOneServerQuery(id=id)
     server = FindOneServerController.handle(query)
     return JSONResponse(
         content=jsonable_encoder(obj=server), status_code=status.HTTP_200_OK
@@ -84,6 +98,7 @@ def create(
 
 @router.put("/{id}", response_model=ServerReadDto)
 def update(
+    id: str,
     command: UpdateServerCommand,
     authorization: HTTPAuthorizationCredentials = Depends(auth_scheme),
 ):
@@ -97,10 +112,11 @@ def update(
 
 @router.delete("/{id}")
 def delete(
-    command: DeleteServerCommand,
+    id: str,
     authorization: HTTPAuthorizationCredentials = Depends(auth_scheme),
 ):
     """Route to discard a Server."""
+    command = DeleteServerCommand(id=id)
     DeleteServerController.handle(command)
     return JSONResponse(
         content=jsonable_encoder(

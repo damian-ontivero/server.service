@@ -1,6 +1,6 @@
 """Application router."""
 
-from fastapi import APIRouter, Depends, status
+from fastapi import APIRouter, Depends, Query, status
 from fastapi.encoders import jsonable_encoder
 from fastapi.responses import JSONResponse
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
@@ -46,10 +46,23 @@ auth_scheme = HTTPBearer()
 
 @router.get("", response_model=QueryResponse)
 def get_all(
-    query: FindManyApplicationQuery,
+    limit: int = Query(default=25),
+    offset: int = Query(default=0),
+    filter: str = Query(default="{}"),
+    and_filter: str = Query(default="[]"),
+    or_filter: str = Query(default="[]"),
+    sort: str = Query(default="[]"),
     authorization: HTTPAuthorizationCredentials = Depends(auth_scheme),
 ):
     """Route to get all applications."""
+    query = FindManyApplicationQuery(
+        limit=limit,
+        offset=offset,
+        filter=filter,
+        and_filter=and_filter,
+        or_filter=or_filter,
+        sort=sort,
+    )
     applications = FindManyApplicationController.handle(query)
     if applications.total == 0:
         return JSONResponse(status_code=status.HTTP_204_NO_CONTENT)
@@ -61,10 +74,11 @@ def get_all(
 
 @router.get("/{id}", response_model=ApplicationReadDto)
 def get(
-    query: FindOneApplicationQuery,
+    id: str,
     authorization: HTTPAuthorizationCredentials = Depends(auth_scheme),
 ):
     """Route to get an Application by id."""
+    query = FindOneApplicationQuery(id=id)
     application = FindOneApplicationController.handle(query)
     return JSONResponse(
         content=jsonable_encoder(obj=application),
@@ -87,6 +101,7 @@ def create(
 
 @router.put("/{id}", response_model=ApplicationReadDto)
 def update(
+    id: str,
     command: UpdateApplicationCommand,
     authorization: HTTPAuthorizationCredentials = Depends(auth_scheme),
 ):
@@ -100,10 +115,11 @@ def update(
 
 @router.delete("/{id}")
 def delete(
-    command: DeleteApplicationCommand,
+    id: str,
     authorization: HTTPAuthorizationCredentials = Depends(auth_scheme),
 ):
     """Route to delete an Application."""
+    command = DeleteApplicationCommand(id=id)
     DeleteApplicationController.handle(command)
     return JSONResponse(
         content=jsonable_encoder(
