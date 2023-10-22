@@ -1,7 +1,7 @@
 """Query handler for finding many Servers."""
 
 from st_server.server.application.server.dto.server import ServerReadDto
-from st_server.server.application.server.query.find_many_query import (
+from st_server.server.application.server.query.find_many_server_query import (
     FindManyServerQuery,
 )
 from st_server.server.domain.server.server_repository import ServerRepository

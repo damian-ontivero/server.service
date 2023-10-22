@@ -3,7 +3,7 @@
 from st_server.server.application.application.dto.application import (
     ApplicationReadDto,
 )
-from st_server.server.application.application.query.find_many_query import (
+from st_server.server.application.application.query.find_many_application_query import (
     FindManyApplicationQuery,
 )
 from st_server.server.domain.application.application_repository import (

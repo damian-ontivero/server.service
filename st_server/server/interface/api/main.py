@@ -33,7 +33,7 @@ app.include_router(
 
 
 @app.middleware("http")
-async def catch_exceptions(request: Request, call_next):
+async def exception_handler(request: Request, call_next):
     try:
         return await call_next(request)
     except Exception as exception:

@@ -1,8 +1,6 @@
 """Server router."""
 
-import json
-
-from fastapi import APIRouter, Depends, Query, status
+from fastapi import APIRouter, Depends, status
 from fastapi.encoders import jsonable_encoder
 from fastapi.responses import JSONResponse
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
@@ -10,33 +8,33 @@ from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from st_server.server.application.server.command.add_server_command import (
     AddServerCommand,
 )
-from st_server.server.application.server.command.add_server_command_handler import (
-    AddServerCommandHandler,
-)
 from st_server.server.application.server.command.delete_server_command import (
     DeleteServerCommand,
-)
-from st_server.server.application.server.command.delete_server_command_handler import (
-    DeleteServerCommandHandler,
 )
 from st_server.server.application.server.command.update_server_command import (
     UpdateServerCommand,
 )
-from st_server.server.application.server.command.update_server_command_handler import (
-    UpdateServerCommandHandler,
-)
 from st_server.server.application.server.dto.server import ServerReadDto
-from st_server.server.application.server.query.find_many_query import (
+from st_server.server.application.server.query.find_many_server_query import (
     FindManyServerQuery,
 )
-from st_server.server.application.server.query.find_many_query_handler import (
-    FindManyServerQueryHandler,
-)
-from st_server.server.application.server.query.find_one_query import (
+from st_server.server.application.server.query.find_one_server_query import (
     FindOneServerQuery,
 )
-from st_server.server.application.server.query.find_one_query_handler import (
-    FindOneServerQueryHandler,
+from st_server.server.interface.controller.server.add_server_controller import (
+    AddServerController,
+)
+from st_server.server.interface.controller.server.delete_server_controller import (
+    DeleteServerController,
+)
+from st_server.server.interface.controller.server.find_many_server_controller import (
+    FindManyServerController,
+)
+from st_server.server.interface.controller.server.find_one_server_controller import (
+    FindOneServerController,
+)
+from st_server.server.interface.controller.server.update_server_controller import (
+    UpdateServerController,
 )
 from st_server.shared.application.query_response import QueryResponse
 
@@ -50,7 +48,7 @@ def get_all(
     authorization: HTTPAuthorizationCredentials = Depends(auth_scheme),
 ):
     """Route to get all servers."""
-    servers = FindManyServerQueryHandler().handle(query)
+    servers = FindManyServerController.handle(query)
     if servers.total == 0:
         return JSONResponse(status_code=status.HTTP_204_NO_CONTENT)
     return JSONResponse(
@@ -65,7 +63,7 @@ def get(
     authorization: HTTPAuthorizationCredentials = Depends(auth_scheme),
 ):
     """Route to get a Server by id."""
-    server = FindOneServerQueryHandler().handle(query)
+    server = FindOneServerController.handle(query)
     return JSONResponse(
         content=jsonable_encoder(obj=server), status_code=status.HTTP_200_OK
     )
@@ -77,7 +75,7 @@ def create(
     authorization: HTTPAuthorizationCredentials = Depends(auth_scheme),
 ):
     """Route to create a Server."""
-    AddServerCommandHandler(command)
+    AddServerController.handle(command)
     return JSONResponse(
         content=jsonable_encoder(obj=command),
         status_code=status.HTTP_201_CREATED,
@@ -90,7 +88,7 @@ def update(
     authorization: HTTPAuthorizationCredentials = Depends(auth_scheme),
 ):
     """Route to update a Server."""
-    UpdateServerCommandHandler().handle(command)
+    UpdateServerController.handle(command)
     return JSONResponse(
         content=jsonable_encoder(obj=command),
         status_code=status.HTTP_200_OK,
@@ -103,7 +101,7 @@ def delete(
     authorization: HTTPAuthorizationCredentials = Depends(auth_scheme),
 ):
     """Route to discard a Server."""
-    DeleteServerCommandHandler().handle(command)
+    DeleteServerController.handle(command)
     return JSONResponse(
         content=jsonable_encoder(
             obj={"message": "The Server has been deleted"}

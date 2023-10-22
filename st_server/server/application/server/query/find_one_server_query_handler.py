@@ -1,7 +1,7 @@
 """Query handler for finding one Server."""
 
 from st_server.server.application.server.dto.server import ServerReadDto
-from st_server.server.application.server.query.find_one_query import (
+from st_server.server.application.server.query.find_one_server_query import (
     FindOneServerQuery,
 )
 from st_server.server.domain.server.server_repository import ServerRepository

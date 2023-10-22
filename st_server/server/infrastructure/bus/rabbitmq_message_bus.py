@@ -5,10 +5,9 @@ import json
 import pika
 
 from st_server.shared.domain.domain_event import DomainEvent
-from st_server.shared.infrastructure.bus import Bus
 
 
-class RabbitMQMessageBus(Bus):
+class RabbitMQMessageBus:
     """RabbitMQ message bus implementation.
 
     Exchange:

@@ -1,8 +1,6 @@
 """Application router."""
 
-import json
-
-from fastapi import APIRouter, Depends, Query, status
+from fastapi import APIRouter, Depends, status
 from fastapi.encoders import jsonable_encoder
 from fastapi.responses import JSONResponse
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
@@ -10,35 +8,35 @@ from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from st_server.server.application.application.command.add_application_command import (
     AddApplicationCommand,
 )
-from st_server.server.application.application.command.add_application_command_handler import (
-    AddApplicationCommandHandler,
-)
 from st_server.server.application.application.command.delete_application_command import (
     DeleteApplicationCommand,
-)
-from st_server.server.application.application.command.delete_application_command_handler import (
-    DeleteApplicationCommandHandler,
 )
 from st_server.server.application.application.command.update_application_command import (
     UpdateApplicationCommand,
 )
-from st_server.server.application.application.command.update_application_command_handler import (
-    UpdateApplicationCommandHandler,
-)
 from st_server.server.application.application.dto.application import (
     ApplicationReadDto,
 )
-from st_server.server.application.application.query.find_many_query import (
+from st_server.server.application.application.query.find_many_application_query import (
     FindManyApplicationQuery,
 )
-from st_server.server.application.application.query.find_many_query_handler import (
-    FindManyApplicationQueryHandler,
-)
-from st_server.server.application.application.query.find_one_query import (
+from st_server.server.application.application.query.find_one_application_query import (
     FindOneApplicationQuery,
 )
-from st_server.server.application.application.query.find_one_query_handler import (
-    FindOneApplicationQueryHandler,
+from st_server.server.interface.controller.application.add_application_controller import (
+    AddApplicationController,
+)
+from st_server.server.interface.controller.application.delete_application_controller import (
+    DeleteApplicationController,
+)
+from st_server.server.interface.controller.application.find_many_application_controller import (
+    FindManyApplicationController,
+)
+from st_server.server.interface.controller.application.find_one_application_controller import (
+    FindOneApplicationController,
+)
+from st_server.server.interface.controller.application.update_application_controller import (
+    UpdateApplicationController,
 )
 from st_server.shared.application.query_response import QueryResponse
 
@@ -52,7 +50,7 @@ def get_all(
     authorization: HTTPAuthorizationCredentials = Depends(auth_scheme),
 ):
     """Route to get all applications."""
-    applications = FindManyApplicationQueryHandler().handle(query)
+    applications = FindManyApplicationController.handle(query)
     if applications.total == 0:
         return JSONResponse(status_code=status.HTTP_204_NO_CONTENT)
     return JSONResponse(
@@ -67,7 +65,7 @@ def get(
     authorization: HTTPAuthorizationCredentials = Depends(auth_scheme),
 ):
     """Route to get an Application by id."""
-    application = FindOneApplicationQueryHandler().handle(query)
+    application = FindOneApplicationController.handle(query)
     return JSONResponse(
         content=jsonable_encoder(obj=application),
         status_code=status.HTTP_200_OK,
@@ -80,7 +78,7 @@ def create(
     authorization: HTTPAuthorizationCredentials = Depends(auth_scheme),
 ):
     """Route to create an Application."""
-    AddApplicationCommandHandler().handle(command)
+    AddApplicationController.handle(command)
     return JSONResponse(
         content=jsonable_encoder(obj=command),
         status_code=status.HTTP_201_CREATED,
@@ -93,7 +91,7 @@ def update(
     authorization: HTTPAuthorizationCredentials = Depends(auth_scheme),
 ):
     """Route to update an Application."""
-    UpdateApplicationCommandHandler().handle(command)
+    UpdateApplicationController.handle(command)
     return JSONResponse(
         content=jsonable_encoder(obj=command),
         status_code=status.HTTP_200_OK,
@@ -106,7 +104,7 @@ def delete(
     authorization: HTTPAuthorizationCredentials = Depends(auth_scheme),
 ):
     """Route to delete an Application."""
-    DeleteApplicationCommandHandler().handle(command)
+    DeleteApplicationController.handle(command)
     return JSONResponse(
         content=jsonable_encoder(
             obj={"message": "The Application has been deleted"}

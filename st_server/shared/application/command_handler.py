@@ -9,5 +9,5 @@ class CommandHandler(metaclass=ABCMeta):
     """Abstract class for command handlers."""
 
     @abstractmethod
-    def __call__(self, command: Command) -> None:
+    def handle(self, command: Command) -> None:
         raise NotImplementedError

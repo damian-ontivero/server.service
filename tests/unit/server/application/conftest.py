@@ -5,7 +5,9 @@ import pytest
 
 @pytest.fixture(scope="function", autouse=True)
 def mock_message_bus():
-    from st_server.server.infrastructure.bus.rabbitmq import RabbitMQMessageBus
+    from st_server.server.infrastructure.bus.rabbitmq_message_bus import (
+        RabbitMQMessageBus,
+    )
 
     message_bus = RabbitMQMessageBus(
         host="localhost", port=5672, username="admin", password="admin"

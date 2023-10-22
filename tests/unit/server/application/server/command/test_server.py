@@ -1,6 +1,9 @@
 from st_server.server.application.server.command.add_server_command import (
     AddServerCommand,
 )
+from st_server.server.application.server.command.add_server_command_handler import (
+    AddServerCommandHandler,
+)
 from st_server.server.application.server.command.delete_server_command import (
     DeleteServerCommand,
 )
@@ -13,7 +16,6 @@ from st_server.server.application.server.command.update_server_command import (
 from st_server.server.application.server.command.update_server_command_handler import (
     UpdateServerCommandHandler,
 )
-from st_server.server.interface.controller.server import ServerController
 from tests.util.factory.server_factory import ServerFactory
 
 
@@ -30,7 +32,9 @@ def test_add_one_ok(mock_server_repository, mock_message_bus):
         credentials=server.credentials,
         applications=server.applications,
     )
-    ServerController.handle(command)
+    AddServerCommandHandler(
+        repository=mock_server_repository, message_bus=mock_message_bus
+    ).handle(command)
 
 
 def test_update_one_ok(mock_server_repository, mock_message_bus):

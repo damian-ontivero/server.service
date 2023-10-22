@@ -8,18 +8,20 @@ from st_server.server.domain.server.server_factory import ServerFactory
 from st_server.server.domain.server.server_repository import ServerRepository
 from st_server.shared.application.command_handler import CommandHandler
 from st_server.shared.application.exception import AlreadyExists
-from st_server.shared.infrastructure.bus import Bus
+from st_server.shared.infrastructure.message_bus import MessageBus
 
 
 class AddServerCommandHandler(CommandHandler):
     """Command handler for adding a Server."""
 
-    def __init__(self, repository: ServerRepository, message_bus: Bus) -> None:
+    def __init__(
+        self, repository: ServerRepository, message_bus: MessageBus
+    ) -> None:
         """Initialize the handler."""
         self._repository = repository
         self._message_bus = message_bus
 
-    def __call__(self, command: AddServerCommand) -> ServerReadDto:
+    def handle(self, command: AddServerCommand) -> ServerReadDto:
         """Handle a command."""
         self._check_exists(command.name)
         server = ServerFactory.build(**command.to_dict())

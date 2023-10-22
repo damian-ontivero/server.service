@@ -18,33 +18,14 @@ from st_server.server.application.server.command.update_server_command import (
 from st_server.server.application.server.command.update_server_command_handler import (
     UpdateServerCommandHandler,
 )
-from st_server.shared.application.command import Command
-from st_server.shared.application.command_handler import CommandHandler
+from st_server.shared.application.command_bus import BaseCommandBus
 from st_server.shared.domain.repository import Repository
-from st_server.shared.infrastructure.bus import Bus
+from st_server.shared.infrastructure.message_bus import MessageBus
 
 
-class CommandBus(Bus):
-    def __init__(self, repository: Repository, message_bus: Bus):
-        self._repository = repository
-        self._message_bus = message_bus
-        self._handlers: dict[type[Command], CommandHandler] = dict()
-        self._register_handlers()
-
-    def _register_handlers(self):
+class CommandBus(BaseCommandBus):
+    def __init__(self, repository: Repository, message_bus: MessageBus):
+        super().__init__(repository=repository, message_bus=message_bus)
         self._handlers[AddServerCommand] = AddServerCommandHandler
         self._handlers[UpdateServerCommand] = UpdateServerCommandHandler
         self._handlers[DeleteServerCommand] = DeleteServerCommandHandler
-
-    def dispatch(self, command: Command) -> None:
-        handler = self._handlers.get(type(command))
-        if handler is None:
-            raise Exception("No handler registered for command")
-        handler = handler(
-            repository=self._repository, message_bus=self._message_bus
-        )
-        handler(command)
-
-    def publish(self) -> None:
-        """Publishes the domain events."""
-        raise NotImplementedError
