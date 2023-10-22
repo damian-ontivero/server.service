@@ -24,7 +24,7 @@ from st_server.shared.domain.repository import Repository
 from st_server.shared.infrastructure.bus import Bus
 
 
-class CommandBus(Bus):
+class QueryBus(Bus):
     def __init__(self, repository: Repository, message_bus: Bus):
         self._repository = repository
         self._message_bus = message_bus

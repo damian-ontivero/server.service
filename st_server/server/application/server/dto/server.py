@@ -1,6 +1,6 @@
 """Data Transfer Objects for Server."""
 
-from dataclasses import asdict, dataclass, field
+from dataclasses import dataclass, field
 
 from st_server.server.application.server.dto.credential import (
     CredentialReadDto,
@@ -9,12 +9,14 @@ from st_server.server.application.server.dto.server_application import (
     ServerApplicationReadDto,
 )
 from st_server.server.domain.server.server import Server
+from st_server.shared.application.dto import DTO
 
 
 @dataclass(frozen=True)
-class ServerBase:
-    """Base Data Transfer Object for Server."""
+class ServerReadDto(DTO):
+    """Data Transfer Object for reading an Server."""
 
+    id: str | None = None
     name: str | None = None
     cpu: str | None = None
     ram: str | None = None
@@ -24,22 +26,11 @@ class ServerBase:
     credentials: list[CredentialReadDto] = field(default_factory=list)
     applications: list[ServerApplicationReadDto] = field(default_factory=list)
     status: str | None = None
-
-    def to_dict(self) -> dict:
-        """Converts the DTO to a dictionary."""
-        return asdict(self)
-
-
-@dataclass(frozen=True)
-class ServerReadDto(ServerBase):
-    """Data Transfer Object for reading an Server."""
-
-    id: str | None = None
     discarded: bool | None = None
 
     @classmethod
     def from_entity(cls, server: Server) -> "ServerReadDto":
-        """Named constructor to create a DTO from an Server entity."""
+        """Named constructor to create a DTO from an entity."""
         return cls(
             id=server.id.value,
             name=server.name,
@@ -59,13 +50,3 @@ class ServerReadDto(ServerBase):
             status=server.status.value,
             discarded=server.discarded,
         )
-
-
-@dataclass(frozen=True)
-class ServerUpdateDto(ServerBase):
-    """Data Transfer Object for updating an Server."""
-
-
-@dataclass(frozen=True)
-class ServerCreateDto(ServerBase):
-    """Data Transfer Object for creating an Server."""

@@ -14,14 +14,14 @@ from st_server.server.domain.application.application_repository import (
 )
 from st_server.shared.application.command_handler import CommandHandler
 from st_server.shared.application.exception import AlreadyExists
-from st_server.shared.infrastructure.message_bus import MessageBus
+from st_server.shared.infrastructure.bus import Bus
 
 
 class AddApplicationCommandHandler(CommandHandler):
     """Command handler for adding an Application."""
 
     def __init__(
-        self, repository: ApplicationRepository, message_bus: MessageBus
+        self, repository: ApplicationRepository, message_bus: Bus
     ) -> None:
         """Initialize the handler."""
         self._repository = repository

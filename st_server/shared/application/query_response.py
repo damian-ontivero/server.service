@@ -10,6 +10,18 @@ class QueryResponse:
     total: int
     limit: int
     offset: int
-    prev_offset: int | None = None
-    next_offset: int | None = None
     items: list = field(default_factory=list)
+
+    @property
+    def prev_offset(self) -> int | None:
+        """Return the previous offset."""
+        return self.offset - self.limit if self.offset > 0 else None
+
+    @property
+    def next_offset(self) -> int | None:
+        """Return the next offset."""
+        return (
+            self.offset + self.limit
+            if self.offset + self.limit < self.total
+            else None
+        )

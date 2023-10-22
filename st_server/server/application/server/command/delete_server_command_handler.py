@@ -6,15 +6,13 @@ from st_server.server.application.server.command.delete_server_command import (
 from st_server.server.domain.server.server_repository import ServerRepository
 from st_server.shared.application.command_handler import CommandHandler
 from st_server.shared.application.exception import NotFound
-from st_server.shared.infrastructure.message_bus import MessageBus
+from st_server.shared.infrastructure.bus import Bus
 
 
 class DeleteServerCommandHandler(CommandHandler):
     """Command handler for deleting a Server."""
 
-    def __init__(
-        self, repository: ServerRepository, message_bus: MessageBus
-    ) -> None:
+    def __init__(self, repository: ServerRepository, message_bus: Bus) -> None:
         """Initialize the handler."""
         self._repository = repository
         self._message_bus = message_bus

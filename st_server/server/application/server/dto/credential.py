@@ -1,14 +1,16 @@
 """Data Transfer Objects for Credential."""
 
-from dataclasses import asdict, dataclass
+from dataclasses import dataclass
 
 from st_server.server.domain.server.credential import Credential
+from st_server.shared.application.dto import DTO
 
 
 @dataclass(frozen=True)
-class CredentialBase:
-    """Base Data Transfer Object for Credential."""
+class CredentialReadDto(DTO):
+    """Data Transfer Object for reading an Credential."""
 
+    id: str | None = None
     # server_id: str | None = None
     connection_type: str | None = None
     username: str | None = None
@@ -17,17 +19,6 @@ class CredentialBase:
     local_port: str | None = None
     public_ip: str | None = None
     public_port: str | None = None
-
-    def to_dict(self) -> dict:
-        """Converts the DTO to a dictionary."""
-        return asdict(self)
-
-
-@dataclass(frozen=True)
-class CredentialReadDto(CredentialBase):
-    """Data Transfer Object for reading an Credential."""
-
-    id: str | None = None
     discarded: bool | None = None
 
     @classmethod
@@ -44,13 +35,3 @@ class CredentialReadDto(CredentialBase):
             public_port=credential.public_port,
             discarded=credential.discarded,
         )
-
-
-@dataclass(frozen=True)
-class CredentialUpdateDto(CredentialBase):
-    """Data Transfer Object for updating an Credential."""
-
-
-@dataclass(frozen=True)
-class CredentialCreateDto(CredentialBase):
-    """Data Transfer Object for creating an Credential."""
