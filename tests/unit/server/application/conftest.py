@@ -5,9 +5,7 @@ import pytest
 
 @pytest.fixture(scope="function", autouse=True)
 def mock_message_bus():
-    from st_server.server.infrastructure.messaging.rabbitmq import (
-        RabbitMQMessageBus,
-    )
+    from st_server.server.infrastructure.bus.rabbitmq import RabbitMQMessageBus
 
     message_bus = RabbitMQMessageBus(
         host="localhost", port=5672, username="admin", password="admin"
@@ -38,7 +36,7 @@ def mock_message_bus():
 
 @pytest.fixture(scope="function")
 def mock_server_repository(mock_session, test_db):
-    from st_server.server.infrastructure.mysql.server.repositories.server_repository import (
+    from st_server.server.infrastructure.persistence.mysql.server.server_repository import (
         ServerRepositoryImpl,
     )
 
@@ -47,7 +45,7 @@ def mock_server_repository(mock_session, test_db):
 
 @pytest.fixture(scope="function")
 def mock_server_query(mock_server_repository, mock_message_bus):
-    from st_server.server.application.query.server.server_query import (
+    from st_server.server.application.server.query.server_query import (
         ServerQuery,
     )
 
@@ -59,7 +57,7 @@ def mock_server_query(mock_server_repository, mock_message_bus):
 
 @pytest.fixture(scope="function")
 def mock_application_repository(mock_session, test_db):
-    from st_server.server.infrastructure.mysql.application.repositories.application_repository import (
+    from st_server.server.infrastructure.persistence.mysql.application.application_repository import (
         ApplicationRepositoryImpl,
     )
 
@@ -68,7 +66,7 @@ def mock_application_repository(mock_session, test_db):
 
 @pytest.fixture(scope="function")
 def mock_application_query(mock_application_repository, mock_message_bus):
-    from st_server.server.application.query.application.application_query import (
+    from st_server.server.application.application.query.application_query import (
         ApplicationQuery,
     )
 
