@@ -19,77 +19,67 @@ If you want to learn more about creating good readme files then refer the follow
 - [Visual Studio Code](https://github.com/Microsoft/vscode)
 - [Chakra Core](https://github.com/Microsoft/ChakraCore)
 
-# Architecture
-
-project/
+# Project structure
+```
+src/
 ├── migrations/
 |   ├── __init__.py
 |   └── versions/
 |       ├── __init__.py
 |       └── 0001_initial.py
 |
-├── st_server/
+├── rt_buildplatf/
 |   ├── __init__.py
 |   ├── application/
 |   │   ├── __init__.py
-|   |   └── aggregate/                                              One package per aggregate
+|   |   └── aggregate/                                          One package per aggregate
 |   |       ├── __init__.py
-|   |       ├── commands/                                           Commands are used to perform actions that modify the aggregate
+|   |       ├── command/                                        Commands are used to perform actions that modify the aggregate
+|   |       |    ├── __init__.py
+|   |       |    ├── command.py                                 Command that represents the action to be performed
+|   |       |    └── command_handler.py                         Command handler that executes the command and mutates the aggregate
+|   |       ├── query/                                          Queries are used for retrieving data or performing complex searches
 |   |       |   ├── __init__.py
-|   |       │   └── command/                                        One package per command
-|   |       │       ├── __init__.py
-|   |       │       ├── command.py                                  Command that represents the action to be performed
-|   |       │       └── command_handle.py                           Command handler that executes the command and mutates the aggregate
-|   |       ├── queries/                                            Queries are used to read data from the 
-|   |       |   ├── __init__.py
-|   |       │   └── query.py                                        Queries are used for retrieving data or performing complex searches
-|   |       └── dtos/
+|   |       |   ├── query.py                                    Query that represents the search to be performed
+|   |       │   └── query_handler.py                            Query handler that executes the query
+|   |       |   
+|   |       └── dto/
 |   |           ├── __init__.py
-|   |           └── dto.py                                          DTO to represent the data of the aggregate
+|   |           └── dto.py                                      Data transfer object to represent the data of the aggregate
 |   │
 |   ├── domain/
 |   │   ├── __init__.py
-|   |   └── aggregate/                                              One package per aggregate
-|   |       ├── entities/
-|   |       |   ├── __init__.py
-|   |       |   ├── root_entity.py                                  The root entity of the aggregate
-|   |       │   └── other_entity.py                                 Other entities of the aggregate
-|   |       ├── value_objects/
-|   |       |   ├── __init__.py
-|   |       │   └── value_object.py                                 Value object of the aggregate
-|   |       ├── factories/
-|   |       |   ├── __init__.py
-|   |       │   └── aggregate.py                                    Factory to build and rebuild the aggregate
-|   |       └── repositories
-|   |           ├── __init__.py
-|   |           └── aggregate.py                                    Abstract repository for the aggregate
+|   |   └── aggregate/                                          One package per aggregate
+|   |       ├── __init__.py
+|   |       ├── root_entity.py                                  The root entity of the aggregate
+|   |       ├── other_entity.py                                 Other entities of the aggregate
+|   |       ├── value_object.py                                 Value object of the aggregate
+|   |       ├── factory.py                                      Factory to build and rebuild the aggregate
+|   |       └── repository.py                                   Abstract repository for the aggregate
 |   │
 |   ├── infrastructure/
 |   │   ├── __init__.py
-|   |   ├── messaging/
+|   |   ├── bus/
 |   |   |   ├── __init__.py
-|   |   |   ├── in_memory.py
 |   |   |   └── rabbitmq.py
-|   |   └── aggregate/                                              One package per aggregate
+|   |   └── persistence/
 |   |       ├── __init__.py
-|   |       └── mysql/
+|   |       └── mysql/                                          One package per persistence technology
 |   |           ├── __init__.py
-|   |           ├── models/
-|   |           |   ├── __init__.py
-|   |           |   ├── root_entity.py
-|   |           |   └── other_entity.py
-|   |           └── repositories/
+|   |           ├── aggregate/                                  One package per aggregate
 |   |               ├── __init__.py
-|   |               └── aggregate.py
+|   |               ├── model_root_entity.py
+|   |               ├── model_other_entity.py
+|   |               └── repository.py
 |   │
-|   └── interfaces/
+|   └── interface/
 |       ├── __init__.py
-|       └── controllers/
+|       └── controller/                                         API entrypoint
 |           ├── __init__.py
-|           └── aggregate/                                          One package per aggregate
+|           └── aggregate/                                      One package per aggregate
 |               ├── __init__.py
-|               ├── command.py
-|               └── query.py
+|               ├── command_controller.py
+|               └── query_controller.py
 |
 ├── tests/
 |   ├── __init__.py
@@ -97,70 +87,59 @@ project/
 |   |   ├── __init__.py
 |   |   ├── application/
 |   |   |   ├── __init__.py
-|   |   |   └── aggregate/                                          One package per aggregate
+|   |   |   └── aggregate/                                      One package per aggregate
 |   |   |       ├── __init__.py
-|   |   |       ├── commands/
+|   |   |       ├── command/
 |   |   |       |   ├── __init__.py
 |   |   |       |   └── test_command.py
-|   |   |       ├── queries/
+|   |   |       ├── query/
 |   |   |       |   ├── __init__.py
 |   |   |       │   └── test_query.py
-|   |   |       └── dtos/
+|   |   |       └── dto/
 |   |   |           ├── __init__.py
 |   |   |           └── test_dto.py
 |   |   │
 |   |   ├── domain/
 |   |   |   ├── __init__.py
-|   |   |   └── aggregate/                                          One package per aggregate
-|   |   |       ├── entities/
-|   |   |       |   ├── __init__.py
-|   |   |       |   ├── root_entity.py                              The root entity of the aggregate
-|   |   |       │   └── other_entity.py                             Other entities of the aggregate
-|   |   |       ├── value_objects/
-|   |   |       |   ├── __init__.py
-|   |   |       │   └── value_object.py                             Value object of the aggregate
-|   |   |       ├── factories/
-|   |   |       |   ├── __init__.py
-|   |   |       │   └── aggregate.py                                Factory for build and rebuild the aggregate
-|   |   |       └── repositories
-|   |   |           ├── __init__.py
-|   |   |           └── aggregate.py                                Abstract repository for the aggregate
+|   |   |   └── aggregate/                                      One package per aggregate
+|   |   |       ├── __init__.py
+|   |   |       ├── root_entity.py                              The root entity of the aggregate
+|   |   |       ├── other_entity.py                             Other entities of the aggregate
+|   |   |       ├── value_object.py                             Value object of the aggregate
+|   |   |       ├── factory.py                                  Factory to build and rebuild the aggregate
+|   |   |       └── repository.py                               Abstract repository for the aggregate
 |   |   │
 |   |   ├── infrastructure/
-|   |   |   ├── __init__.py
-|   |   |   ├── messaging/
+|   |   │   ├── __init__.py
+|   |   |   ├── bus/
 |   |   |   |   ├── __init__.py
-|   |   |   |   ├── in_memory.py
 |   |   |   |   └── rabbitmq.py
 |   |   |   └── persistence/
 |   |   |       ├── __init__.py
-|   |   |       └── aggregate/                                      One package per aggregate
+|   |   |       └── mysql/                                      One package per persistence technology
 |   |   |           ├── __init__.py
-|   |   |           └── mysql/
+|   |   |           ├── aggregate/                              One package per aggregate
 |   |   |               ├── __init__.py
-|   |   |               ├── models/
-|   |   |               |   ├── __init__.py
-|   |   |               |   ├── root_entity.py
-|   |   |               |   └── other_entity.py
-|   |   |               └── repositories/
-|   |   |                   ├── __init__.py
-|   |   |                   └── aggregate.py
+|   |   |               ├── model_root_entity.py
+|   |   |               ├── model_other_entity.py
+|   |   |               └── repository.py
 |   |   │
-|   |   └── interfaces/
+|   |   └── interface/
 |   |       ├── __init__.py
-|   |       └── controllers/
+|   |       └── controller/
 |   |           ├── __init__.py
-|   |           └── aggregate/                                      One package per aggregate
+|   |           └── aggregate/                                  One package per aggregate
 |   |               ├── __init__.py
-|   |               ├── command.py
-|   |               └── query.py
+|   |               ├── command_controller.py
+|   |               └── query_controller.py
 |   │
 |   └── util/
 |       ├── __init__.py
-|       └── aggregate/                                              One package per aggregate
-|           └── factories/
+|       └── aggregate/                                          One package per aggregate
+|           └── factory/
 |               ├── __init__.py
-|               └── aggregate.py
+|               ├── root_entity.py
+|               └── value_object.py
 │
 ├── .env
 ├── .env.example
@@ -170,3 +149,4 @@ project/
 ├── pyproject.toml
 ├── README.md
 └── setup.cfg
+```
