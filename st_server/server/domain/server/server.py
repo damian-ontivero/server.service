@@ -311,9 +311,7 @@ class Server(AggregateRoot):
 
         # Add new Credentials.
         for new_credential in credentials:
-            if new_credential["id"] not in [
-                credential.id.value for credential in self._credentials
-            ]:
+            if new_credential.get("id") is None:
                 self._credentials.append(
                     Credential(
                         id=EntityId.generate(),
@@ -345,11 +343,10 @@ class Server(AggregateRoot):
                     application.update(new_application)
         # Add new Applications.
         for new_application in applications:
-            if new_application["id"] not in [
-                application.id.value for application in self._applications
-            ]:
+            if new_application.get("id") is None:
                 self._applications.append(
                     ServerApplication.create(
+                        server_id=self._id.value,
                         application_id=new_application["application_id"],
                         install_dir=new_application["install_dir"],
                         log_dir=new_application["log_dir"],

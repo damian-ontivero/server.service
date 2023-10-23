@@ -37,5 +37,7 @@ app.include_router(
 def exception_handler(request: Request, exception: Exception):
     return JSONResponse(
         content={"message": str(exception)},
-        status_code=EXCEPTION_TO_HTTP_STATUS_CODE[exception.__class__],
+        status_code=EXCEPTION_TO_HTTP_STATUS_CODE.get(
+            exception.__class__, 500
+        ),
     )

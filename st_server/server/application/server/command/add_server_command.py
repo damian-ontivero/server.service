@@ -5,7 +5,7 @@ from dataclasses import dataclass, field
 from st_server.shared.application.command import Command
 
 
-@dataclass(frozen=True)
+@dataclass
 class AddServerCommand(Command):
     """Command to add a Server."""
 
@@ -13,7 +13,7 @@ class AddServerCommand(Command):
     cpu: str | None = None
     ram: str | None = None
     hdd: str | None = None
-    environment: dict | None = None
+    environment: str | None = None
     operating_system: dict | None = None
     credentials: list[dict] = field(default_factory=list)
     applications: list[dict] = field(default_factory=list)

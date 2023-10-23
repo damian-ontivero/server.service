@@ -5,7 +5,7 @@ from dataclasses import dataclass
 from st_server.shared.application.command import Command
 
 
-@dataclass(frozen=True)
+@dataclass
 class AddApplicationCommand(Command):
     """Command to add a Application."""
 

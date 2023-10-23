@@ -3,7 +3,7 @@
 from dataclasses import asdict, dataclass
 
 
-@dataclass(frozen=True)
+@dataclass
 class Command:
     """Base class for commands."""
 

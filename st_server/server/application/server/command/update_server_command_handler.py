@@ -36,12 +36,8 @@ class UpdateServerCommandHandler(CommandHandler):
             hdd=command.hdd,
             environment=command.environment,
             operating_system=command.operating_system,
-            credentials=[
-                credential.to_dict() for credential in command.credentials
-            ],
-            applications=[
-                application.to_dict() for application in command.applications
-            ],
+            credentials=command.credentials,
+            applications=command.applications,
             status=command.status,
         )
         self._repository.save_one(server)

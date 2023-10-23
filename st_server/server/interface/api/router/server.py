@@ -105,6 +105,7 @@ def update(
     authorization: HTTPAuthorizationCredentials = Depends(auth_scheme),
 ):
     """Route to update a Server."""
+    command.id = id
     UpdateServerController.handle(command)
     return JSONResponse(
         content=jsonable_encoder(obj=command),

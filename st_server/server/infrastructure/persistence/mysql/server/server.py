@@ -116,7 +116,7 @@ class ServerDbModel(session.Base):
         self.applications = [
             ServerApplicationDbModel(
                 server_id=entity.id.value,
-                application_id=application.id.value,
+                application_id=application.application_id,
                 install_dir=application.install_dir,
                 log_dir=application.log_dir,
             )
