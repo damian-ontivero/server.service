@@ -1,5 +1,7 @@
 """Application router."""
 
+import json
+
 from fastapi import APIRouter, Depends, Query, status
 from fastapi.encoders import jsonable_encoder
 from fastapi.responses import JSONResponse
@@ -58,14 +60,14 @@ def get_all(
     query = FindManyApplicationQuery(
         limit=limit,
         offset=offset,
-        filter=filter,
-        and_filter=and_filter,
-        or_filter=or_filter,
-        sort=sort,
+        filter=json.loads(filter),
+        and_filter=json.loads(and_filter),
+        or_filter=json.loads(or_filter),
+        sort=json.loads(sort),
     )
     applications = FindManyApplicationController.handle(query)
     if applications.total == 0:
-        return JSONResponse(status_code=status.HTTP_204_NO_CONTENT)
+        return JSONResponse(content=[], status_code=status.HTTP_204_NO_CONTENT)
     return JSONResponse(
         content=jsonable_encoder(obj=applications),
         status_code=status.HTTP_200_OK,
@@ -106,6 +108,7 @@ def update(
     authorization: HTTPAuthorizationCredentials = Depends(auth_scheme),
 ):
     """Route to update an Application."""
+    command.id = id
     UpdateApplicationController.handle(command)
     return JSONResponse(
         content=jsonable_encoder(obj=command),

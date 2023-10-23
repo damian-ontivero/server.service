@@ -1,10 +1,10 @@
 import configparser
 
-from st_server.server.application.server.query.find_many_server_query_handler import (
-    FindManyServerQueryHandler,
-)
 from st_server.server.application.server.query.find_one_server_query import (
     FindOneServerQuery,
+)
+from st_server.server.application.server.query.find_one_server_query_handler import (
+    FindOneServerQueryHandler,
 )
 from st_server.server.infrastructure.persistence.mysql import session
 from st_server.server.infrastructure.persistence.mysql.server.server_repository import (
@@ -32,5 +32,5 @@ class FindOneServerController(Controller):
     def handle(query: FindOneServerQuery):
         """Handle the given query."""
         repository = ServerRepositoryImpl(session.SessionLocal())
-        handler = FindManyServerQueryHandler(repository=repository)
+        handler = FindOneServerQueryHandler(repository=repository)
         return handler.handle(query)

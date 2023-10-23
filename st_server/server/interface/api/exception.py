@@ -11,6 +11,7 @@ from st_server.shared.application.exception import (
 )
 
 EXCEPTION_TO_HTTP_STATUS_CODE = {
+    Exception: status.HTTP_500_INTERNAL_SERVER_ERROR,
     AuthenticationError: status.HTTP_403_FORBIDDEN,
     ExpiredSignatureError: status.HTTP_403_FORBIDDEN,
     PermissionError: status.HTTP_403_FORBIDDEN,

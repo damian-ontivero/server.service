@@ -9,7 +9,7 @@ from st_server.shared.application.command import Command
 class UpdateServerCommand(Command):
     """Command to update a Server."""
 
-    id: str | None = None
+    id: str
     name: str | None = None
     cpu: str | None = None
     ram: str | None = None

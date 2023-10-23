@@ -9,4 +9,4 @@ from st_server.shared.application.command import Command
 class DeleteServerCommand(Command):
     """Command to delete a Server."""
 
-    id: int | None = None
+    id: int

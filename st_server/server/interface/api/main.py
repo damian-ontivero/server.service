@@ -1,7 +1,8 @@
 """API module."""
 
-from fastapi import FastAPI, HTTPException, Request
+from fastapi import FastAPI, Request
 from fastapi.middleware import cors
+from fastapi.responses import JSONResponse
 
 from st_server.server.interface.api.exception import (
     EXCEPTION_TO_HTTP_STATUS_CODE,
@@ -32,14 +33,9 @@ app.include_router(
 )
 
 
-@app.middleware("http")
-async def exception_handler(request: Request, call_next):
-    try:
-        return await call_next(request)
-    except Exception as exception:
-        if exception.__class__ in EXCEPTION_TO_HTTP_STATUS_CODE:
-            raise HTTPException(
-                status_code=EXCEPTION_TO_HTTP_STATUS_CODE[exception.__class__],
-                detail=str(exception),
-            )
-        raise exception
+@app.exception_handler(Exception)
+def exception_handler(request: Request, exception: Exception):
+    return JSONResponse(
+        content={"message": str(exception)},
+        status_code=EXCEPTION_TO_HTTP_STATUS_CODE[exception.__class__],
+    )

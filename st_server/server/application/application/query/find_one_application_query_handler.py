@@ -24,6 +24,6 @@ class FindOneApplicationQueryHandler:
         application = self._repository.find_one(**query.to_dict())
         if application is None:
             raise NotFound(
-                "Application with id: {id!r} not found".format(id=id)
+                "Application with id: {id!r} not found".format(id=query.id)
             )
         return ApplicationReadDto.from_entity(application)

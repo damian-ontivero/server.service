@@ -9,4 +9,4 @@ from st_server.shared.application.query import Query
 class FindOneApplicationQuery(Query):
     """Query to find one Application."""
 
-    id: str | None = None
+    id: str

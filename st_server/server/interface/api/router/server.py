@@ -1,5 +1,7 @@
 """Server router."""
 
+import json
+
 from fastapi import APIRouter, Depends, Query, status
 from fastapi.encoders import jsonable_encoder
 from fastapi.responses import JSONResponse
@@ -56,14 +58,14 @@ def get_all(
     query = FindManyServerQuery(
         limit=limit,
         offset=offset,
-        filter=filter,
-        and_filter=and_filter,
-        or_filter=or_filter,
-        sort=sort,
+        filter=json.loads(filter),
+        and_filter=json.loads(and_filter),
+        or_filter=json.loads(or_filter),
+        sort=json.loads(sort),
     )
     servers = FindManyServerController.handle(query)
     if servers.total == 0:
-        return JSONResponse(status_code=status.HTTP_204_NO_CONTENT)
+        return JSONResponse(content=[], status_code=status.HTTP_204_NO_CONTENT)
     return JSONResponse(
         content=jsonable_encoder(obj=servers),
         status_code=status.HTTP_200_OK,

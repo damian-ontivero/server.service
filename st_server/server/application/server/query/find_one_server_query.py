@@ -9,4 +9,4 @@ from st_server.shared.application.query import Query
 class FindOneServerQuery(Query):
     """Query to find one Server."""
 
-    id: str | None = None
+    id: str

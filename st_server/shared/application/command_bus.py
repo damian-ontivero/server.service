@@ -16,14 +16,13 @@ class BaseCommandBus:
         """Initialize the command bus."""
         self._repository = repository
         self._message_bus = message_bus
-        self._handlers: dict[type[Command], CommandHandler] = dict()
+        self._handlers: dict[Command, CommandHandler] = dict()
 
     def dispatch(self, command: Command) -> None:
         """Dispatch a command."""
-        handler = self._handlers.get(type(command))
+        handler = self._handlers.get(type(command), None)
         if handler is None:
             raise Exception("No handler registered for command")
-        handler = handler(
+        handler(
             repository=self._repository, message_bus=self._message_bus
-        )
-        handler(command)
+        ).handle(command)

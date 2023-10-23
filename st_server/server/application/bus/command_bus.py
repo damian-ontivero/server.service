@@ -1,5 +1,23 @@
 """Command bus implementation."""
 
+from st_server.server.application.application.command.add_application_command import (
+    AddApplicationCommand,
+)
+from st_server.server.application.application.command.add_application_command_handler import (
+    AddApplicationCommandHandler,
+)
+from st_server.server.application.application.command.delete_application_command import (
+    DeleteApplicationCommand,
+)
+from st_server.server.application.application.command.delete_application_command_handler import (
+    DeleteApplicationCommandHandler,
+)
+from st_server.server.application.application.command.update_application_command import (
+    UpdateApplicationCommand,
+)
+from st_server.server.application.application.command.update_application_command_handler import (
+    UpdateApplicationCommandHandler,
+)
 from st_server.server.application.server.command.add_server_command import (
     AddServerCommand,
 )
@@ -29,3 +47,10 @@ class CommandBus(BaseCommandBus):
         self._handlers[AddServerCommand] = AddServerCommandHandler
         self._handlers[UpdateServerCommand] = UpdateServerCommandHandler
         self._handlers[DeleteServerCommand] = DeleteServerCommandHandler
+        self._handlers[AddApplicationCommand] = AddApplicationCommandHandler
+        self._handlers[
+            UpdateApplicationCommand
+        ] = UpdateApplicationCommandHandler
+        self._handlers[
+            DeleteApplicationCommand
+        ] = DeleteApplicationCommandHandler
