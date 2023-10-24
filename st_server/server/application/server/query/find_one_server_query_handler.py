@@ -1,9 +1,9 @@
 """Query handler for finding one Server."""
 
-from st_server.server.application.server.dto.server import ServerReadDto
 from st_server.server.application.server.query.find_one_server_query import (
     FindOneServerQuery,
 )
+from st_server.server.domain.server.server import Server
 from st_server.server.domain.server.server_repository import ServerRepository
 from st_server.shared.application.exception import NotFound
 
@@ -15,11 +15,11 @@ class FindOneServerQueryHandler:
         """Initialize the handler."""
         self._repository = repository
 
-    def handle(self, query: FindOneServerQuery) -> ServerReadDto:
+    def handle(self, query: FindOneServerQuery) -> Server:
         """Handles a query."""
-        application = self._repository.find_one(**query.to_dict())
-        if application is None:
+        server = self._repository.find_one(**query.to_dict())
+        if server is None:
             raise NotFound(
                 "Server with id: {id!r} not found".format(id=query.id)
             )
-        return ServerReadDto.from_entity(application)
+        return server

@@ -3,7 +3,7 @@
 from dataclasses import dataclass
 
 from st_server.server.domain.server.credential import Credential
-from st_server.shared.application.dto import DTO
+from st_server.shared.presentation.dto import DTO
 
 
 @dataclass(frozen=True)

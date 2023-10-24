@@ -16,7 +16,7 @@ from st_server.server.application.server.command.update_server_command import (
 from st_server.server.application.server.command.update_server_command_handler import (
     UpdateServerCommandHandler,
 )
-from tests.util.factory.server_factory import ServerFactory
+from tests.util.server.factory.server_factory import ServerFactory
 
 
 def test_add_one_ok(mock_server_repository, mock_message_bus):

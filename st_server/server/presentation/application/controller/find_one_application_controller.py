@@ -10,6 +10,9 @@ from st_server.server.infrastructure.persistence.mysql import session
 from st_server.server.infrastructure.persistence.mysql.application.application_repository import (
     ApplicationRepositoryImpl,
 )
+from st_server.server.presentation.application.dto.application import (
+    ApplicationReadDto,
+)
 from st_server.shared.presentation.controller import Controller
 
 config = configparser.ConfigParser()
@@ -33,4 +36,5 @@ class FindOneApplicationController(Controller):
         """Handle the given query."""
         repository = ApplicationRepositoryImpl(session.SessionLocal())
         handler = FindOneApplicationQueryHandler(repository=repository)
-        return handler.handle(query)
+        result = handler.handle(query)
+        return ApplicationReadDto.from_entity(result)

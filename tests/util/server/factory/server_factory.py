@@ -8,8 +8,8 @@ from st_server.server.infrastructure.persistence.mysql.server.server_repository 
     ServerRepositoryImpl,
 )
 from tests.conftest import SessionLocal
-from tests.util.factory.environment import EnvironmentFactory
-from tests.util.factory.operating_system import OperatingSystemFactory
+from tests.util.server.factory.environment import EnvironmentFactory
+from tests.util.server.factory.operating_system import OperatingSystemFactory
 
 
 class ServerFactory(factory.Factory):

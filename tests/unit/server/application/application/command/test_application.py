@@ -16,7 +16,9 @@ from st_server.server.application.application.command.update_application_command
 from st_server.server.application.application.command.update_application_command_handler import (
     UpdateApplicationCommandHandler,
 )
-from tests.util.factory.application_factory import ApplicationFactory
+from tests.util.application.factory.application_factory import (
+    ApplicationFactory,
+)
 
 
 def test_add_one_ok(mock_application_repository, mock_message_bus):

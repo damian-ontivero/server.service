@@ -3,7 +3,7 @@
 from st_server.server.application.server.command.update_server_command import (
     UpdateServerCommand,
 )
-from st_server.server.application.server.dto.server import ServerReadDto
+from st_server.server.domain.server.server import Server
 from st_server.server.domain.server.server_repository import ServerRepository
 from st_server.shared.application.command_handler import CommandHandler
 from st_server.shared.application.exception import AlreadyExists, NotFound
@@ -20,7 +20,7 @@ class UpdateServerCommandHandler(CommandHandler):
         self._repository = repository
         self._message_bus = message_bus
 
-    def handle(self, command: UpdateServerCommand) -> ServerReadDto:
+    def handle(self, command: UpdateServerCommand) -> Server:
         """Handle a command."""
         server = self._repository.find_one(command.id)
         if server is None:
@@ -43,7 +43,7 @@ class UpdateServerCommandHandler(CommandHandler):
         self._repository.save_one(server)
         self._message_bus.publish(server.domain_events)
         server.clear_domain_events()
-        return ServerReadDto.from_entity(server)
+        return server
 
     def _check_exists(self, name: str) -> None:
         """Returns True if a Server with the given name exists."""

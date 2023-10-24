@@ -10,6 +10,10 @@ from st_server.server.infrastructure.persistence.mysql import session
 from st_server.server.infrastructure.persistence.mysql.application.application_repository import (
     ApplicationRepositoryImpl,
 )
+from st_server.server.presentation.application.dto.application import (
+    ApplicationReadDto,
+)
+from st_server.shared.application.query_response import QueryResponse
 from st_server.shared.presentation.controller import Controller
 
 config = configparser.ConfigParser()
@@ -29,8 +33,17 @@ class FindManyApplicationController(Controller):
     """
 
     @staticmethod
-    def handle(query: FindManyApplicationQuery):
+    def handle(query: FindManyApplicationQuery) -> QueryResponse:
         """Handle the given query."""
         repository = ApplicationRepositoryImpl(session.SessionLocal())
         handler = FindManyApplicationQueryHandler(repository=repository)
-        return handler.handle(query)
+        result = handler.handle(query)
+        return QueryResponse(
+            total=result.total,
+            limit=query.limit,
+            offset=query.offset,
+            items=[
+                ApplicationReadDto.from_entity(application)
+                for application in result.items
+            ],
+        )

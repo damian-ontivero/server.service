@@ -4,10 +4,10 @@ from fastapi import FastAPI, Request
 from fastapi.middleware import cors
 from fastapi.responses import JSONResponse
 
-from st_server.server.presentation.api.exception import (
+from st_server.server.interface.api.exception import (
     EXCEPTION_TO_HTTP_STATUS_CODE,
 )
-from st_server.server.presentation.api.router import application, server
+from st_server.server.interface.api.router import application, server
 
 app = FastAPI()
 

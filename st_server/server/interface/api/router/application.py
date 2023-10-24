@@ -16,29 +16,29 @@ from st_server.server.application.application.command.delete_application_command
 from st_server.server.application.application.command.update_application_command import (
     UpdateApplicationCommand,
 )
-from st_server.server.application.application.dto.application import (
-    ApplicationReadDto,
-)
 from st_server.server.application.application.query.find_many_application_query import (
     FindManyApplicationQuery,
 )
 from st_server.server.application.application.query.find_one_application_query import (
     FindOneApplicationQuery,
 )
-from st_server.server.presentation.controller.application.add_application_controller import (
+from st_server.server.presentation.application.controller.add_application_controller import (
     AddApplicationController,
 )
-from st_server.server.presentation.controller.application.delete_application_controller import (
+from st_server.server.presentation.application.controller.delete_application_controller import (
     DeleteApplicationController,
 )
-from st_server.server.presentation.controller.application.find_many_application_controller import (
+from st_server.server.presentation.application.controller.find_many_application_controller import (
     FindManyApplicationController,
 )
-from st_server.server.presentation.controller.application.find_one_application_controller import (
+from st_server.server.presentation.application.controller.find_one_application_controller import (
     FindOneApplicationController,
 )
-from st_server.server.presentation.controller.application.update_application_controller import (
+from st_server.server.presentation.application.controller.update_application_controller import (
     UpdateApplicationController,
+)
+from st_server.server.presentation.application.dto.application import (
+    ApplicationReadDto,
 )
 from st_server.shared.application.query_response import QueryResponse
 
