@@ -25,19 +25,19 @@ from st_server.server.application.application.query.find_many_application_query 
 from st_server.server.application.application.query.find_one_application_query import (
     FindOneApplicationQuery,
 )
-from st_server.server.interface.controller.application.add_application_controller import (
+from st_server.server.presentation.controller.application.add_application_controller import (
     AddApplicationController,
 )
-from st_server.server.interface.controller.application.delete_application_controller import (
+from st_server.server.presentation.controller.application.delete_application_controller import (
     DeleteApplicationController,
 )
-from st_server.server.interface.controller.application.find_many_application_controller import (
+from st_server.server.presentation.controller.application.find_many_application_controller import (
     FindManyApplicationController,
 )
-from st_server.server.interface.controller.application.find_one_application_controller import (
+from st_server.server.presentation.controller.application.find_one_application_controller import (
     FindOneApplicationController,
 )
-from st_server.server.interface.controller.application.update_application_controller import (
+from st_server.server.presentation.controller.application.update_application_controller import (
     UpdateApplicationController,
 )
 from st_server.shared.application.query_response import QueryResponse

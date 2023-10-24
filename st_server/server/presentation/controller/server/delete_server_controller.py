@@ -1,8 +1,8 @@
 import configparser
 
 from st_server.server.application.bus.command_bus import CommandBus
-from st_server.server.application.server.command.add_server_command import (
-    AddServerCommand,
+from st_server.server.application.server.command.delete_server_command import (
+    DeleteServerCommand,
 )
 from st_server.server.infrastructure.bus.rabbitmq_message_bus import (
     RabbitMQMessageBus,
@@ -11,7 +11,7 @@ from st_server.server.infrastructure.persistence.mysql import session
 from st_server.server.infrastructure.persistence.mysql.server.server_repository import (
     ServerRepositoryImpl,
 )
-from st_server.shared.interface.controller import Controller
+from st_server.shared.presentation.controller import Controller
 
 config = configparser.ConfigParser()
 config.read("st_server/config.ini")
@@ -22,8 +22,8 @@ rabbitmq_user = config.get("rabbitmq", "user")
 rabbitmq_pass = config.get("rabbitmq", "pass")
 
 
-class AddServerController(Controller):
-    """This is the entry point to add a Server.
+class DeleteServerController(Controller):
+    """This is the entry point to delete a Server.
 
     It will handle the command and dispatch it to the command bus
     to be handled by the command handler
@@ -32,7 +32,7 @@ class AddServerController(Controller):
     """
 
     @staticmethod
-    def handle(command: AddServerCommand):
+    def handle(command: DeleteServerCommand):
         """Handle the given command."""
         repository = ServerRepositoryImpl(session.SessionLocal())
         message_bus = RabbitMQMessageBus(

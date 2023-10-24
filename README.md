@@ -21,23 +21,23 @@ If you want to learn more about creating good readme files then refer the follow
 
 # Project structure
 ```
-src/
+server.domain/
 ├── migrations/
 |   ├── __init__.py
 |   └── versions/
 |       ├── __init__.py
 |       └── 0001_initial.py
 |
-├── rt_buildplatf/
+├── st_server/
 |   ├── __init__.py
 |   ├── application/
 |   │   ├── __init__.py
 |   |   └── aggregate/                                          One package per aggregate
 |   |       ├── __init__.py
 |   |       ├── command/                                        Commands are used to perform actions that modify the aggregate
-|   |       |    ├── __init__.py
-|   |       |    ├── command.py                                 Command that represents the action to be performed
-|   |       |    └── command_handler.py                         Command handler that executes the command and mutates the aggregate
+|   |       |   ├── __init__.py
+|   |       |   ├── command.py                                 Command that represents the action to be performed
+|   |       |   └── command_handler.py                         Command handler that executes the command and mutates the aggregate
 |   |       ├── query/                                          Queries are used for retrieving data or performing complex searches
 |   |       |   ├── __init__.py
 |   |       |   ├── query.py                                    Query that represents the search to be performed
@@ -66,13 +66,13 @@ src/
 |   |       ├── __init__.py
 |   |       └── mysql/                                          One package per persistence technology
 |   |           ├── __init__.py
-|   |           ├── aggregate/                                  One package per aggregate
+|   |           └── aggregate/                                  One package per aggregate
 |   |               ├── __init__.py
 |   |               ├── model_root_entity.py
 |   |               ├── model_other_entity.py
 |   |               └── repository.py
 |   │
-|   └── interface/
+|   └── presentation/
 |       ├── __init__.py
 |       └── controller/                                         API entrypoint
 |           ├── __init__.py
@@ -118,13 +118,13 @@ src/
 |   |   |       ├── __init__.py
 |   |   |       └── mysql/                                      One package per persistence technology
 |   |   |           ├── __init__.py
-|   |   |           ├── aggregate/                              One package per aggregate
+|   |   |           └── aggregate/                              One package per aggregate
 |   |   |               ├── __init__.py
 |   |   |               ├── model_root_entity.py
 |   |   |               ├── model_other_entity.py
 |   |   |               └── repository.py
 |   |   │
-|   |   └── interface/
+|   |   └── presentation/
 |   |       ├── __init__.py
 |   |       └── controller/
 |   |           ├── __init__.py
@@ -141,10 +141,10 @@ src/
 |               ├── root_entity.py
 |               └── value_object.py
 │
-├── .env
-├── .env.example
-├── .env.example.test
+├── .gitignore
 ├── alembic.ini
+├── compose.dev.yaml
+├── Dockerfile
 ├── poetry.lock
 ├── pyproject.toml
 ├── README.md

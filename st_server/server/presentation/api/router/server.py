@@ -23,19 +23,19 @@ from st_server.server.application.server.query.find_many_server_query import (
 from st_server.server.application.server.query.find_one_server_query import (
     FindOneServerQuery,
 )
-from st_server.server.interface.controller.server.add_server_controller import (
+from st_server.server.presentation.controller.server.add_server_controller import (
     AddServerController,
 )
-from st_server.server.interface.controller.server.delete_server_controller import (
+from st_server.server.presentation.controller.server.delete_server_controller import (
     DeleteServerController,
 )
-from st_server.server.interface.controller.server.find_many_server_controller import (
+from st_server.server.presentation.controller.server.find_many_server_controller import (
     FindManyServerController,
 )
-from st_server.server.interface.controller.server.find_one_server_controller import (
+from st_server.server.presentation.controller.server.find_one_server_controller import (
     FindOneServerController,
 )
-from st_server.server.interface.controller.server.update_server_controller import (
+from st_server.server.presentation.controller.server.update_server_controller import (
     UpdateServerController,
 )
 from st_server.shared.application.query_response import QueryResponse
