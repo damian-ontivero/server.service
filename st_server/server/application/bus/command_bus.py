@@ -1,5 +1,3 @@
-"""Command bus implementation."""
-
 from st_server.server.application.application.command.add_application_command import (
     AddApplicationCommand,
 )
@@ -18,6 +16,7 @@ from st_server.server.application.application.command.update_application_command
 from st_server.server.application.application.command.update_application_command_handler import (
     UpdateApplicationCommandHandler,
 )
+from st_server.server.application.bus.message_bus import MessageBus
 from st_server.server.application.server.command.add_server_command import (
     AddServerCommand,
 )
@@ -36,21 +35,32 @@ from st_server.server.application.server.command.update_server_command import (
 from st_server.server.application.server.command.update_server_command_handler import (
     UpdateServerCommandHandler,
 )
-from st_server.shared.application.command_bus import BaseCommandBus
+from st_server.shared.application.command import Command
 from st_server.shared.domain.repository import Repository
-from st_server.shared.infrastructure.message_bus import MessageBus
 
 
-class CommandBus(BaseCommandBus):
+class CommandBus:
+    """Command bus dispatches commands to their handlers."""
+
     def __init__(self, repository: Repository, message_bus: MessageBus):
-        super().__init__(repository=repository, message_bus=message_bus)
-        self._handlers[AddServerCommand] = AddServerCommandHandler
-        self._handlers[UpdateServerCommand] = UpdateServerCommandHandler
-        self._handlers[DeleteServerCommand] = DeleteServerCommandHandler
-        self._handlers[AddApplicationCommand] = AddApplicationCommandHandler
-        self._handlers[
-            UpdateApplicationCommand
-        ] = UpdateApplicationCommandHandler
-        self._handlers[
-            DeleteApplicationCommand
-        ] = DeleteApplicationCommandHandler
+        self._repository = repository
+        self._message_bus = message_bus
+        self._handlers = {
+            AddServerCommand: AddServerCommandHandler,
+            UpdateServerCommand: UpdateServerCommandHandler,
+            DeleteServerCommand: DeleteServerCommandHandler,
+            AddApplicationCommand: AddApplicationCommandHandler,
+            UpdateApplicationCommand: UpdateApplicationCommandHandler,
+            DeleteApplicationCommand: DeleteApplicationCommandHandler,
+        }
+
+    def dispatch(self, command: Command) -> None:
+        handler_class = self._handlers.get(type(command))
+        if handler_class is None:
+            raise Exception(
+                f"No handler registered for command {type(command).__name__}"
+            )
+        handler = handler_class(
+            repository=self._repository, message_bus=self._message_bus
+        )
+        handler.handle(command)

@@ -1,6 +1,6 @@
 """Base class for Domain Event."""
 
-from st_server.shared.helper.time import now
+from datetime import datetime
 
 
 class DomainEvent:
@@ -16,7 +16,7 @@ class DomainEvent:
 
     def __init__(self, **kwargs) -> None:
         """Initializes the domain event."""
-        self.__dict__["occurred_on"] = now()
+        self.__dict__["occurred_on"] = datetime.utcnow()
         self.__dict__.update(kwargs)
 
     def __setattr__(self, name: str, value: object) -> None:

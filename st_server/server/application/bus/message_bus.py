@@ -1,4 +1,4 @@
-"""Abstract base class for event bus."""
+"""Abstract base class for message bus."""
 
 from abc import ABCMeta, abstractmethod
 
