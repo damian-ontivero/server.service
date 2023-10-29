@@ -11,7 +11,7 @@ from st_server.server.infrastructure.persistence.mysql.application.application_r
     ApplicationRepositoryImpl,
 )
 from st_server.server.presentation.application.dto.application import (
-    ApplicationReadDto,
+    ApplicationDto,
 )
 from st_server.shared.application.query_response import QueryResponse
 from st_server.shared.presentation.controller import Controller
@@ -43,7 +43,7 @@ class FindManyApplicationController(Controller):
             limit=query.limit,
             offset=query.offset,
             items=[
-                ApplicationReadDto.from_entity(application)
+                ApplicationDto.from_entity(application)
                 for application in result.items
             ],
         )

@@ -10,7 +10,7 @@ from st_server.server.infrastructure.persistence.mysql import session
 from st_server.server.infrastructure.persistence.mysql.server.server_repository import (
     ServerRepositoryImpl,
 )
-from st_server.server.presentation.server.dto.server import ServerReadDto
+from st_server.server.presentation.server.dto.server import ServerDto
 from st_server.shared.application.query_response import QueryResponse
 from st_server.shared.presentation.controller import Controller
 
@@ -40,7 +40,5 @@ class FindManyServerController(Controller):
             total=result.total,
             limit=query.limit,
             offset=query.offset,
-            items=[
-                ServerReadDto.from_entity(server) for server in result.items
-            ],
+            items=[ServerDto.from_entity(server) for server in result.items],
         )

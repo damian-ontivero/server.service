@@ -3,17 +3,15 @@
 from dataclasses import dataclass, field
 
 from st_server.server.domain.server.server import Server
-from st_server.server.presentation.server.dto.credential import (
-    CredentialReadDto,
-)
+from st_server.server.presentation.server.dto.credential import CredentialDto
 from st_server.server.presentation.server.dto.server_application import (
-    ServerApplicationReadDto,
+    ServerApplicationDto,
 )
 from st_server.shared.presentation.dto import DTO
 
 
 @dataclass(frozen=True)
-class ServerReadDto(DTO):
+class ServerDto(DTO):
     """Data Transfer Object for reading an Server."""
 
     id: str | None = None
@@ -23,13 +21,13 @@ class ServerReadDto(DTO):
     hdd: str | None = None
     environment: str | None = None
     operating_system: dict | None = None
-    credentials: list[CredentialReadDto] = field(default_factory=list)
-    applications: list[ServerApplicationReadDto] = field(default_factory=list)
+    credentials: list[CredentialDto] = field(default_factory=list)
+    applications: list[ServerApplicationDto] = field(default_factory=list)
     status: str | None = None
     discarded: bool | None = None
 
     @classmethod
-    def from_entity(cls, server: Server) -> "ServerReadDto":
+    def from_entity(cls, server: Server) -> "ServerDto":
         """Named constructor to create a DTO from an entity."""
         return cls(
             id=server.id.value,
@@ -40,11 +38,11 @@ class ServerReadDto(DTO):
             environment=server.environment.value,
             operating_system=server.operating_system.__dict__,
             credentials=[
-                CredentialReadDto.from_entity(credential)
+                CredentialDto.from_entity(credential)
                 for credential in server.credentials
             ],
             applications=[
-                ServerApplicationReadDto.from_entity(server_application)
+                ServerApplicationDto.from_entity(server_application)
                 for server_application in server.applications
             ],
             status=server.status.value,

@@ -7,7 +7,7 @@ from st_server.shared.presentation.dto import DTO
 
 
 @dataclass(frozen=True)
-class CredentialReadDto(DTO):
+class CredentialDto(DTO):
     """Data Transfer Object for reading an Credential."""
 
     id: str | None = None
@@ -22,7 +22,7 @@ class CredentialReadDto(DTO):
     discarded: bool | None = None
 
     @classmethod
-    def from_entity(cls, credential: Credential) -> "CredentialReadDto":
+    def from_entity(cls, credential: Credential) -> "CredentialDto":
         """Named constructor to create a DTO from an Credential entity."""
         return cls(
             id=credential.id.value,

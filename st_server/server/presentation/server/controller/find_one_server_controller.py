@@ -10,7 +10,7 @@ from st_server.server.infrastructure.persistence.mysql import session
 from st_server.server.infrastructure.persistence.mysql.server.server_repository import (
     ServerRepositoryImpl,
 )
-from st_server.server.presentation.server.dto.server import ServerReadDto
+from st_server.server.presentation.server.dto.server import ServerDto
 from st_server.shared.presentation.controller import Controller
 
 config = configparser.ConfigParser()
@@ -35,4 +35,4 @@ class FindOneServerController(Controller):
         repository = ServerRepositoryImpl(session.SessionLocal())
         handler = FindOneServerQueryHandler(repository=repository)
         result = handler.handle(query)
-        return ServerReadDto.from_entity(result)
+        return ServerDto.from_entity(result)

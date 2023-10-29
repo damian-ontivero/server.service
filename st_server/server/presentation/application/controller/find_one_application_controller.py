@@ -11,7 +11,7 @@ from st_server.server.infrastructure.persistence.mysql.application.application_r
     ApplicationRepositoryImpl,
 )
 from st_server.server.presentation.application.dto.application import (
-    ApplicationReadDto,
+    ApplicationDto,
 )
 from st_server.shared.presentation.controller import Controller
 
@@ -37,4 +37,4 @@ class FindOneApplicationController(Controller):
         repository = ApplicationRepositoryImpl(session.SessionLocal())
         handler = FindOneApplicationQueryHandler(repository=repository)
         result = handler.handle(query)
-        return ApplicationReadDto.from_entity(result)
+        return ApplicationDto.from_entity(result)

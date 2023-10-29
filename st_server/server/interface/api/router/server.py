@@ -37,7 +37,7 @@ from st_server.server.presentation.server.controller.find_one_server_controller 
 from st_server.server.presentation.server.controller.update_server_controller import (
     UpdateServerController,
 )
-from st_server.server.presentation.server.dto.server import ServerReadDto
+from st_server.server.presentation.server.dto.server import ServerDto
 from st_server.shared.application.query_response import QueryResponse
 
 router = APIRouter()
@@ -72,7 +72,7 @@ def get_all(
     )
 
 
-@router.get("/{id}", response_model=ServerReadDto)
+@router.get("/{id}", response_model=ServerDto)
 def get(
     id: str,
     authorization: HTTPAuthorizationCredentials = Depends(auth_scheme),
@@ -85,7 +85,7 @@ def get(
     )
 
 
-@router.post("", response_model=ServerReadDto)
+@router.post("", response_model=ServerDto)
 def create(
     command: AddServerCommand,
     authorization: HTTPAuthorizationCredentials = Depends(auth_scheme),
@@ -98,7 +98,7 @@ def create(
     )
 
 
-@router.put("/{id}", response_model=ServerReadDto)
+@router.put("/{id}", response_model=ServerDto)
 def update(
     id: str,
     command: UpdateServerCommand,

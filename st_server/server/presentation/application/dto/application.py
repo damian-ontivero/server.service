@@ -7,7 +7,7 @@ from st_server.shared.presentation.dto import DTO
 
 
 @dataclass(frozen=True)
-class ApplicationReadDto(DTO):
+class ApplicationDto(DTO):
     """Data Transfer Object for reading an Application."""
 
     id: str | None = None
@@ -17,7 +17,7 @@ class ApplicationReadDto(DTO):
     discarded: bool | None = None
 
     @classmethod
-    def from_entity(cls, application: Application) -> "ApplicationReadDto":
+    def from_entity(cls, application: Application) -> "ApplicationDto":
         """Named constructor to create a DTO from an entity."""
         return cls(
             id=application.id.value,

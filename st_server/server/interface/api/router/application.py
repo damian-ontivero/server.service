@@ -38,7 +38,7 @@ from st_server.server.presentation.application.controller.update_application_con
     UpdateApplicationController,
 )
 from st_server.server.presentation.application.dto.application import (
-    ApplicationReadDto,
+    ApplicationDto,
 )
 from st_server.shared.application.query_response import QueryResponse
 
@@ -74,7 +74,7 @@ def get_all(
     )
 
 
-@router.get("/{id}", response_model=ApplicationReadDto)
+@router.get("/{id}", response_model=ApplicationDto)
 def get(
     id: str,
     authorization: HTTPAuthorizationCredentials = Depends(auth_scheme),
@@ -88,7 +88,7 @@ def get(
     )
 
 
-@router.post("", response_model=ApplicationReadDto)
+@router.post("", response_model=ApplicationDto)
 def create(
     command: AddApplicationCommand,
     authorization: HTTPAuthorizationCredentials = Depends(auth_scheme),
@@ -101,7 +101,7 @@ def create(
     )
 
 
-@router.put("/{id}", response_model=ApplicationReadDto)
+@router.put("/{id}", response_model=ApplicationDto)
 def update(
     id: str,
     command: UpdateApplicationCommand,
