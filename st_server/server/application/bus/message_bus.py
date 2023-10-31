@@ -12,6 +12,6 @@ class MessageBus(metaclass=ABCMeta):
     """
 
     @abstractmethod
-    def publish(self, messages: list[DomainEvent]) -> None:
-        """Publish messages."""
+    def publish(self, domain_events: list[DomainEvent]) -> None:
+        """Publishes a domain events."""
         raise NotImplementedError

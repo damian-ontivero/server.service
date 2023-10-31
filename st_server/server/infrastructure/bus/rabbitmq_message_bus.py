@@ -11,30 +11,13 @@ from st_server.shared.domain.domain_event import DomainEvent
 class RabbitMQMessageBus(MessageBus):
     """RabbitMQ message bus implementation.
 
-    Exchange:
-        Aggregate root which published the event.
-            User.FirstNameChanged -> user
-
-    Routing key:
-        If the domain event is a property changed event:
-            User.FirstNameChanged -> firstname.changed
-
-        If the domain event is not a property changed event:
-            User.Created -> created
-
-    Body:
-        User.FirstNameChanged -> {
-            "occurred_on": "2023-06-05 22:06:19.683588",
-            "aggregate_id": "3af25ebdf13a421080910ef6b4b8b474",
-            "old_value": "John",
-            "new_value": "Johny"
-        }
+    Publishes domain events to RabbitMQ exchanges.
     """
 
     def __init__(
         self, host: str, port: int, username: str, password: str
     ) -> None:
-        """Initializes the RabbitMQ message bus."""
+        """Initializes the message bus."""
         self._connection = pika.BlockingConnection(
             pika.ConnectionParameters(
                 host=host,
@@ -46,7 +29,7 @@ class RabbitMQMessageBus(MessageBus):
         self._channel = self._connection.channel()
 
     def publish(self, domain_events: list[DomainEvent]) -> None:
-        """Publishes a list of domain events."""
+        """Publishes a domain events."""
         for domain_event in domain_events:
             aggregate, event = domain_event.__class__.__qualname__.split(".")
             routing_key = (
