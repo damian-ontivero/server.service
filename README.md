@@ -55,7 +55,6 @@ server.domain/
 |   |   ├── message_bus/
 |   |   |   ├── __init__.py
 |   |   |   └── rabbitmq_message_bus.py
-|   |   |
 |   |   ├── persistence/
 |   |   |   ├── __init__.py
 |   |   |   └── mysql/                                # One package per persistence technology
@@ -65,14 +64,13 @@ server.domain/
 |   |   |           ├── model_root_entity.py
 |   |   |           ├── model_other_entity.py
 |   |   |           └── repository_impl.py            # Repository implementation
-|   |   |
 |   |   └── ui/
 |   |       ├── __init__.py
-|   |       └── api/                                  # One package per persistence technology
+|   |       └── api/                                  # One package per user interface technology
 |   |           ├── __init__.py
-|   |           ├── router
-|   |           |    ├── __init__.py
-|   |           |    └── aggregate.py                 # One router per aggregate
+|   |           ├── router/
+|   |           |   ├── __init__.py
+|   |           |   └── aggregate.py                  # One router per aggregate
 |   |           ├── exception.py
 |   |           └── main.py
 |   │
