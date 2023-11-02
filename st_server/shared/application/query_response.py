@@ -1,11 +1,11 @@
-"""Dataclasses to represent the paginated query response."""
+"""Represents the paginated query response."""
 
 from dataclasses import dataclass, field
 
 
 @dataclass(frozen=True)
 class QueryResponse:
-    """Dataclass to represent the paginated query response."""
+    """Represents the paginated query response."""
 
     total: int
     limit: int
