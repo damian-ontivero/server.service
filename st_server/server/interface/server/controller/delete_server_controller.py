@@ -1,17 +1,17 @@
 import configparser
 
-from st_server.server.application.bus.command_bus import CommandBus
+from st_server.server.application.command_bus.command_bus import CommandBus
 from st_server.server.application.server.command.delete_server_command import (
     DeleteServerCommand,
 )
-from st_server.server.infrastructure.bus.rabbitmq_message_bus import (
+from st_server.server.infrastructure.message_bus.rabbitmq_message_bus import (
     RabbitMQMessageBus,
 )
 from st_server.server.infrastructure.persistence.mysql import session
 from st_server.server.infrastructure.persistence.mysql.server.server_repository import (
     ServerRepositoryImpl,
 )
-from st_server.shared.presentation.controller import Controller
+from st_server.shared.interface.controller import Controller
 
 config = configparser.ConfigParser()
 config.read("st_server/config.ini")

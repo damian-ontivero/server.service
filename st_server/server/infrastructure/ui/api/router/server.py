@@ -22,25 +22,25 @@ from st_server.server.application.server.query.find_many_server_query import (
 from st_server.server.application.server.query.find_one_server_query import (
     FindOneServerQuery,
 )
-from st_server.server.presentation.server.controller.add_server_controller import (
+from st_server.server.interface.server.controller.add_server_controller import (
     AddServerController,
 )
-from st_server.server.presentation.server.controller.delete_server_controller import (
+from st_server.server.interface.server.controller.delete_server_controller import (
     DeleteServerController,
 )
-from st_server.server.presentation.server.controller.find_many_server_controller import (
+from st_server.server.interface.server.controller.find_many_server_controller import (
     FindManyServerController,
 )
-from st_server.server.presentation.server.controller.find_one_server_controller import (
+from st_server.server.interface.server.controller.find_one_server_controller import (
     FindOneServerController,
 )
-from st_server.server.presentation.server.controller.update_server_controller import (
+from st_server.server.interface.server.controller.update_server_controller import (
     UpdateServerController,
 )
-from st_server.server.presentation.server.dto.server import ServerDto
+from st_server.server.interface.server.dto.server import ServerDto
 from st_server.shared.application.query_response import QueryResponse
 
-router = APIRouter()
+router = APIRouter(prefix="/server/servers", tags=["Server"])
 auth_scheme = HTTPBearer()
 
 
@@ -67,7 +67,7 @@ def get_all(
     if servers.total == 0:
         return JSONResponse(content=[], status_code=status.HTTP_204_NO_CONTENT)
     return JSONResponse(
-        content=jsonable_encoder(obj=servers),
+        content=jsonable_encoder(obj=servers.to_dict()),
         status_code=status.HTTP_200_OK,
     )
 

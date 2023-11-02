@@ -3,11 +3,11 @@
 from dataclasses import dataclass, field
 
 from st_server.server.domain.server.server import Server
-from st_server.server.presentation.server.dto.credential import CredentialDto
-from st_server.server.presentation.server.dto.server_application import (
+from st_server.server.interface.server.dto.credential import CredentialDto
+from st_server.server.interface.server.dto.server_application import (
     ServerApplicationDto,
 )
-from st_server.shared.presentation.dto import DTO
+from st_server.shared.interface.dto import DTO
 
 
 @dataclass(frozen=True)

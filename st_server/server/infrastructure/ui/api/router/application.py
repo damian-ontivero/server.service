@@ -22,27 +22,27 @@ from st_server.server.application.application.query.find_many_application_query 
 from st_server.server.application.application.query.find_one_application_query import (
     FindOneApplicationQuery,
 )
-from st_server.server.presentation.application.controller.add_application_controller import (
+from st_server.server.interface.application.controller.add_application_controller import (
     AddApplicationController,
 )
-from st_server.server.presentation.application.controller.delete_application_controller import (
+from st_server.server.interface.application.controller.delete_application_controller import (
     DeleteApplicationController,
 )
-from st_server.server.presentation.application.controller.find_many_application_controller import (
+from st_server.server.interface.application.controller.find_many_application_controller import (
     FindManyApplicationController,
 )
-from st_server.server.presentation.application.controller.find_one_application_controller import (
+from st_server.server.interface.application.controller.find_one_application_controller import (
     FindOneApplicationController,
 )
-from st_server.server.presentation.application.controller.update_application_controller import (
+from st_server.server.interface.application.controller.update_application_controller import (
     UpdateApplicationController,
 )
-from st_server.server.presentation.application.dto.application import (
+from st_server.server.interface.application.dto.application import (
     ApplicationDto,
 )
 from st_server.shared.application.query_response import QueryResponse
 
-router = APIRouter()
+router = APIRouter(prefix="/server/applications", tags=["Application"])
 auth_scheme = HTTPBearer()
 
 
@@ -69,7 +69,7 @@ def get_all(
     if applications.total == 0:
         return JSONResponse(content=[], status_code=status.HTTP_204_NO_CONTENT)
     return JSONResponse(
-        content=jsonable_encoder(obj=applications),
+        content=jsonable_encoder(obj=applications.to_dict()),
         status_code=status.HTTP_200_OK,
     )
 

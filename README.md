@@ -7,14 +7,17 @@ At the moment contains:
   - SQLAlchemy
   - Alembic
   - MySQL
+  - RabbitMQ
 
 - Dessign patterns:
   - Domain-Driven Design
+    - Aggregate
     - Factory
     - Repository
     - Value Object
   - Clean Architecture
   - CQRS
+  - Domain Events
 
 # Project structure
 ```
@@ -33,7 +36,7 @@ server.domain/
 |   |   |        ├── __init__.py
 |   |   |        ├── query.py                              Query that represents the search to be performed
 |   |   |        └── query_handler.py                      Query handler that executes the query
-|   |   └── bus/
+|   |   └── command_bus/
 |   |       ├── __init__.py
 |   |       └── command_bus.py                             Command bus that invokes the command handler
 |   │
@@ -49,21 +52,31 @@ server.domain/
 |   │
 |   ├── infrastructure/
 |   │   ├── __init__.py
-|   |   └── bus/
+|   |   ├── message_bus/
+|   |   |   ├── __init__.py
+|   |   |   └── rabbitmq_message_bus.py
+|   |   |
+|   |   ├── persistence/
+|   |   |   ├── __init__.py
+|   |   |   └── mysql/                                         One package per persistence technology
+|   |   |       ├── __init__.py
+|   |   |       └── aggregate/                                 One package per aggregate
+|   |   |           ├── __init__.py
+|   |   |           ├── model_root_entity.py
+|   |   |           ├── model_other_entity.py
+|   |   |           └── repository_impl.py                     Repository implementation
+|   |   |
+|   |   └── ui/
 |   |       ├── __init__.py
-|   |       └── rabbitmq.py
-|   |
-|   ├── persistence/
-|   |   ├── __init__.py
-|   |   └── mysql/                                         One package per persistence technology
-|   |       ├── __init__.py
-|   |       └── aggregate/                                 One package per aggregate
+|   |       └── api/                                         One package per persistence technology
 |   |           ├── __init__.py
-|   |           ├── model_root_entity.py
-|   |           ├── model_other_entity.py
-|   |           └── repository_impl.py                     Repository implementation
+|   |           ├── router
+|   |           |    ├── __init__.py
+|   |           |    └── aggregate.py                                 One router per aggregate
+|   |           ├── exception.py
+|   |           └── main.py
 |   │
-|   └── presentation/
+|   └── interface/
 |       ├── __init__.py
 |       └── aggregate/                                     One package per aggregate
 |           ├── __init__.py

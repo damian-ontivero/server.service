@@ -3,7 +3,7 @@
 from st_server.server.application.application.command.add_application_command import (
     AddApplicationCommand,
 )
-from st_server.server.application.bus.message_bus import MessageBus
+from st_server.server.application.command_bus.message_bus import MessageBus
 from st_server.server.domain.application.application import Application
 from st_server.server.domain.application.application_factory import (
     ApplicationFactory,

@@ -5,7 +5,7 @@ import pytest
 
 @pytest.fixture(scope="function", autouse=True)
 def mock_message_bus():
-    from st_server.server.infrastructure.bus.rabbitmq_message_bus import (
+    from st_server.server.infrastructure.message_bus.rabbitmq_message_bus import (
         RabbitMQMessageBus,
     )
 

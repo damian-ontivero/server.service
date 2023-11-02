@@ -2,6 +2,8 @@
 
 from dataclasses import dataclass, field
 
+from st_server.shared.interface.dto import DTO
+
 
 @dataclass(frozen=True)
 class QueryResponse:
@@ -10,7 +12,7 @@ class QueryResponse:
     total: int
     limit: int
     offset: int
-    items: list = field(default_factory=list)
+    items: list[DTO] = field(default_factory=list)
 
     @property
     def prev_offset(self) -> int | None:
@@ -25,3 +27,14 @@ class QueryResponse:
             if self.offset + self.limit < self.total
             else None
         )
+
+    def to_dict(self) -> dict:
+        """Return the query response as a dict."""
+        return {
+            "total": self.total,
+            "limit": self.limit,
+            "offset": self.offset,
+            "prev_offset": self.prev_offset,
+            "next_offset": self.next_offset,
+            "items": [item.to_dict() for item in self.items],
+        }

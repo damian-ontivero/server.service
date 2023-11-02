@@ -1,17 +1,17 @@
 import configparser
 
-from st_server.server.application.application.command.update_application_command import (
-    UpdateApplicationCommand,
+from st_server.server.application.command_bus.command_bus import CommandBus
+from st_server.server.application.server.command.add_server_command import (
+    AddServerCommand,
 )
-from st_server.server.application.bus.command_bus import CommandBus
-from st_server.server.infrastructure.bus.rabbitmq_message_bus import (
+from st_server.server.infrastructure.message_bus.rabbitmq_message_bus import (
     RabbitMQMessageBus,
 )
 from st_server.server.infrastructure.persistence.mysql import session
-from st_server.server.infrastructure.persistence.mysql.application.application_repository import (
-    ApplicationRepositoryImpl,
+from st_server.server.infrastructure.persistence.mysql.server.server_repository import (
+    ServerRepositoryImpl,
 )
-from st_server.shared.presentation.controller import Controller
+from st_server.shared.interface.controller import Controller
 
 config = configparser.ConfigParser()
 config.read("st_server/config.ini")
@@ -22,8 +22,8 @@ rabbitmq_user = config.get("rabbitmq", "user")
 rabbitmq_pass = config.get("rabbitmq", "pass")
 
 
-class UpdateApplicationController(Controller):
-    """This is the entry point to update a server.
+class AddServerController(Controller):
+    """This is the entry point to add a Server.
 
     It will handle the command and dispatch it to the command bus
     to be handled by the command handler
@@ -32,9 +32,9 @@ class UpdateApplicationController(Controller):
     """
 
     @staticmethod
-    def handle(command: UpdateApplicationCommand):
+    def handle(command: AddServerCommand):
         """Handle the given command."""
-        repository = ApplicationRepositoryImpl(session.SessionLocal())
+        repository = ServerRepositoryImpl(session.SessionLocal())
         message_bus = RabbitMQMessageBus(
             host=rabbitmq_host,
             port=rabbitmq_port,

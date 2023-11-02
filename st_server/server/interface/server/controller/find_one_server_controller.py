@@ -10,8 +10,8 @@ from st_server.server.infrastructure.persistence.mysql import session
 from st_server.server.infrastructure.persistence.mysql.server.server_repository import (
     ServerRepositoryImpl,
 )
-from st_server.server.presentation.server.dto.server import ServerDto
-from st_server.shared.presentation.controller import Controller
+from st_server.server.interface.server.dto.server import ServerDto
+from st_server.shared.interface.controller import Controller
 
 config = configparser.ConfigParser()
 config.read("st_server/config.ini")

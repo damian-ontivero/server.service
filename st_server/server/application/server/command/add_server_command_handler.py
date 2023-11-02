@@ -1,6 +1,6 @@
 """Contains the command handler class."""
 
-from st_server.server.application.bus.message_bus import MessageBus
+from st_server.server.application.command_bus.message_bus import MessageBus
 from st_server.server.application.server.command.add_server_command import (
     AddServerCommand,
 )
