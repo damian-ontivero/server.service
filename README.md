@@ -1,23 +1,23 @@
 # Introduction 
 The goal of this project is to learn and practice software architecture.
-At the moment contains:
-- Stack:
-  - Python
-  - FastAPI
-  - SQLAlchemy
-  - Alembic
-  - MySQL
-  - RabbitMQ
 
-- Dessign patterns:
-  - Domain-Driven Design
-    - Aggregate
-    - Factory
-    - Repository
-    - Value Object
-  - Clean Architecture
-  - CQRS
-  - Domain Events
+### Stack:
+- Python
+- FastAPI
+- SQLAlchemy
+- Alembic
+- MySQL
+- RabbitMQ
+
+### Dessign patterns:
+- Domain-Driven Design
+  - Aggregate
+  - Factory
+  - Repository
+  - Value Object
+- Clean Architecture
+- CQRS
+- Domain Events
 
 # Project structure
 ```
