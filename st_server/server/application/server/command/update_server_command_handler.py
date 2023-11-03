@@ -28,7 +28,7 @@ class UpdateServerCommandHandler(CommandHandler):
                 "Server with id: {id!r} not found".format(id=command.id)
             )
         if not server.name == command.name:
-            self._check_exists(command.name)
+            self._check_if_exists(command.name)
         server.update(
             name=command.name,
             cpu=command.cpu,
@@ -45,8 +45,8 @@ class UpdateServerCommandHandler(CommandHandler):
         server.clear_domain_events()
         return server
 
-    def _check_exists(self, name: str) -> None:
-        """Returns True if a Server with the given name exists."""
+    def _check_if_exists(self, name: str) -> None:
+        """Check if a Server with the given name already exists."""
         servers = self._repository.find_many(filter={"name": {"eq": name}})
         if servers.total:
             raise AlreadyExists(

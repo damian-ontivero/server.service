@@ -28,14 +28,14 @@ class AddApplicationCommandHandler(CommandHandler):
     def handle(self, command: AddApplicationCommand) -> Application:
         """Handle a command."""
         application = ApplicationFactory.build(**command.to_dict())
-        self._check_exists(application.name)
+        self._check_if_exists(application.name)
         self._repository.save_one(application)
         self._message_bus.publish(application.domain_events)
         application.clear_domain_events()
         return application
 
-    def _check_exists(self, name: str) -> None:
-        """Returns True if an Application with the given name exists."""
+    def _check_if_exists(self, name: str) -> None:
+        """Check if an Application with the given name already exists"""
         applications = self._repository.find_many(
             filter={"name": {"eq": name}}
         )
