@@ -50,8 +50,8 @@ from st_server.server.infrastructure.persistence.mysql.session import (
     SessionLocal,
 )
 from st_server.server.infrastructure.ui.api.dependency import (
-    get_db_session,
-    get_message_bus,
+    get_mysql_session,
+    get_rabbitmq_message_bus,
 )
 from st_server.shared.application.query_response import QueryResponse
 
@@ -59,7 +59,7 @@ router = APIRouter(prefix="/server/applications", tags=["Application"])
 auth_scheme = HTTPBearer()
 
 
-def get_repository(session: SessionLocal = Depends(get_db_session)):
+def get_repository(session: SessionLocal = Depends(get_mysql_session)):
     """Yields a Server repository."""
     yield ApplicationRepositoryImpl(session)
 
@@ -115,7 +115,7 @@ def create(
     command: AddApplicationCommand,
     authorization: HTTPAuthorizationCredentials = Depends(auth_scheme),
     repository: ApplicationRepositoryImpl = Depends(get_repository),
-    message_bus: RabbitMQMessageBus = Depends(get_message_bus),
+    message_bus: RabbitMQMessageBus = Depends(get_rabbitmq_message_bus),
 ):
     """Route to create an Application."""
     handler = AddApplicationCommandHandler(
@@ -134,7 +134,7 @@ def update(
     command: UpdateApplicationCommand,
     authorization: HTTPAuthorizationCredentials = Depends(auth_scheme),
     repository: ApplicationRepositoryImpl = Depends(get_repository),
-    message_bus: RabbitMQMessageBus = Depends(get_message_bus),
+    message_bus: RabbitMQMessageBus = Depends(get_rabbitmq_message_bus),
 ):
     """Route to update an Application."""
     command.id = id
@@ -153,7 +153,7 @@ def delete(
     id: str,
     authorization: HTTPAuthorizationCredentials = Depends(auth_scheme),
     repository: ApplicationRepositoryImpl = Depends(get_repository),
-    message_bus: RabbitMQMessageBus = Depends(get_message_bus),
+    message_bus: RabbitMQMessageBus = Depends(get_rabbitmq_message_bus),
 ):
     """Route to delete an Application."""
     command = DeleteApplicationCommand(id=id)

@@ -1,12 +1,10 @@
+"""Dependencies."""
+
 import configparser
 
-from fastapi import Depends
-
+from st_server.server.application.command_bus.command_bus import CommandBus
 from st_server.server.infrastructure.message_bus.rabbitmq_message_bus import (
     RabbitMQMessageBus,
-)
-from st_server.server.infrastructure.persistence.mysql.server.server_repository import (
-    ServerRepositoryImpl,
 )
 from st_server.server.infrastructure.persistence.mysql.session import (
     SessionLocal,
@@ -21,8 +19,8 @@ rabbitmq_user = config.get("rabbitmq", "user")
 rabbitmq_pass = config.get("rabbitmq", "pass")
 
 
-def get_db_session():
-    """Yields a database session."""
+def get_mysql_session():
+    """Yields a mysql session."""
     session = SessionLocal()
     try:
         yield session
@@ -30,7 +28,12 @@ def get_db_session():
         session.close()
 
 
-def get_message_bus():
+def get_command_bus():
+    """Yields a command bus."""
+    yield CommandBus()
+
+
+def get_rabbitmq_message_bus():
     """Yields a message bus."""
     yield RabbitMQMessageBus(
         host=rabbitmq_host,
