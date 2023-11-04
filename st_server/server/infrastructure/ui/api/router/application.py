@@ -10,40 +10,58 @@ from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from st_server.server.application.application.command.add_application_command import (
     AddApplicationCommand,
 )
+from st_server.server.application.application.command.add_application_command_handler import (
+    AddApplicationCommandHandler,
+)
 from st_server.server.application.application.command.delete_application_command import (
     DeleteApplicationCommand,
+)
+from st_server.server.application.application.command.delete_application_command_handler import (
+    DeleteApplicationCommandHandler,
 )
 from st_server.server.application.application.command.update_application_command import (
     UpdateApplicationCommand,
 )
+from st_server.server.application.application.command.update_application_command_handler import (
+    UpdateApplicationCommandHandler,
+)
+from st_server.server.application.application.dto.application import (
+    ApplicationDto,
+)
 from st_server.server.application.application.query.find_many_application_query import (
     FindManyApplicationQuery,
+)
+from st_server.server.application.application.query.find_many_application_query_handler import (
+    FindManyApplicationQueryHandler,
 )
 from st_server.server.application.application.query.find_one_application_query import (
     FindOneApplicationQuery,
 )
-from st_server.server.interface.application.controller.add_application_controller import (
-    AddApplicationController,
+from st_server.server.application.application.query.find_one_application_query_handler import (
+    FindOneApplicationQueryHandler,
 )
-from st_server.server.interface.application.controller.delete_application_controller import (
-    DeleteApplicationController,
+from st_server.server.infrastructure.message_bus.rabbitmq_message_bus import (
+    RabbitMQMessageBus,
 )
-from st_server.server.interface.application.controller.find_many_application_controller import (
-    FindManyApplicationController,
+from st_server.server.infrastructure.persistence.mysql.application.application_repository import (
+    ApplicationRepositoryImpl,
 )
-from st_server.server.interface.application.controller.find_one_application_controller import (
-    FindOneApplicationController,
+from st_server.server.infrastructure.persistence.mysql.session import (
+    SessionLocal,
 )
-from st_server.server.interface.application.controller.update_application_controller import (
-    UpdateApplicationController,
-)
-from st_server.server.interface.application.dto.application import (
-    ApplicationDto,
+from st_server.server.infrastructure.ui.api.dependency import (
+    get_db_session,
+    get_message_bus,
 )
 from st_server.shared.application.query_response import QueryResponse
 
 router = APIRouter(prefix="/server/applications", tags=["Application"])
 auth_scheme = HTTPBearer()
+
+
+def get_repository(session: SessionLocal = Depends(get_db_session)):
+    """Yields a Server repository."""
+    yield ApplicationRepositoryImpl(session)
 
 
 @router.get("", response_model=QueryResponse)
@@ -55,6 +73,7 @@ def get_all(
     or_filter: str = Query(default="[]"),
     sort: str = Query(default="[]"),
     authorization: HTTPAuthorizationCredentials = Depends(auth_scheme),
+    repository: ApplicationRepositoryImpl = Depends(get_repository),
 ):
     """Route to get all applications."""
     query = FindManyApplicationQuery(
@@ -65,7 +84,8 @@ def get_all(
         or_filter=json.loads(or_filter),
         sort=json.loads(sort),
     )
-    applications = FindManyApplicationController.handle(query)
+    handler = FindManyApplicationQueryHandler(repository)
+    applications = handler.handle(query)
     if applications.total == 0:
         return JSONResponse(content=[], status_code=status.HTTP_204_NO_CONTENT)
     return JSONResponse(
@@ -78,10 +98,12 @@ def get_all(
 def get(
     id: str,
     authorization: HTTPAuthorizationCredentials = Depends(auth_scheme),
+    repository: ApplicationRepositoryImpl = Depends(get_repository),
 ):
     """Route to get an Application by id."""
     query = FindOneApplicationQuery(id=id)
-    application = FindOneApplicationController.handle(query)
+    handler = FindOneApplicationQueryHandler(repository)
+    application = handler.handle(query)
     return JSONResponse(
         content=jsonable_encoder(obj=application),
         status_code=status.HTTP_200_OK,
@@ -92,9 +114,14 @@ def get(
 def create(
     command: AddApplicationCommand,
     authorization: HTTPAuthorizationCredentials = Depends(auth_scheme),
+    repository: ApplicationRepositoryImpl = Depends(get_repository),
+    message_bus: RabbitMQMessageBus = Depends(get_message_bus),
 ):
     """Route to create an Application."""
-    AddApplicationController.handle(command)
+    handler = AddApplicationCommandHandler(
+        repository=repository, message_bus=message_bus
+    )
+    handler.handle(command)
     return JSONResponse(
         content=jsonable_encoder(obj=command),
         status_code=status.HTTP_201_CREATED,
@@ -106,10 +133,15 @@ def update(
     id: str,
     command: UpdateApplicationCommand,
     authorization: HTTPAuthorizationCredentials = Depends(auth_scheme),
+    repository: ApplicationRepositoryImpl = Depends(get_repository),
+    message_bus: RabbitMQMessageBus = Depends(get_message_bus),
 ):
     """Route to update an Application."""
     command.id = id
-    UpdateApplicationController.handle(command)
+    handler = UpdateApplicationCommandHandler(
+        repository=repository, message_bus=message_bus
+    )
+    handler.handle(command)
     return JSONResponse(
         content=jsonable_encoder(obj=command),
         status_code=status.HTTP_200_OK,
@@ -120,10 +152,15 @@ def update(
 def delete(
     id: str,
     authorization: HTTPAuthorizationCredentials = Depends(auth_scheme),
+    repository: ApplicationRepositoryImpl = Depends(get_repository),
+    message_bus: RabbitMQMessageBus = Depends(get_message_bus),
 ):
     """Route to delete an Application."""
     command = DeleteApplicationCommand(id=id)
-    DeleteApplicationController.handle(command)
+    handler = DeleteApplicationCommandHandler(
+        repository=repository, message_bus=message_bus
+    )
+    handler.handle(command)
     return JSONResponse(
         content=jsonable_encoder(
             obj={"message": "The Application has been deleted"}

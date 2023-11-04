@@ -2,7 +2,7 @@
 
 from dataclasses import dataclass, field
 
-from st_server.shared.interface.dto import DTO
+from st_server.shared.application.dto import DTO
 
 
 @dataclass(frozen=True)

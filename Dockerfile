@@ -12,4 +12,4 @@ COPY ./st_server /app
 RUN python -m pip install --upgrade pip
 RUN pip install -r requirements.txt
 
-CMD ["uvicorn", "st_server.server.interface.api.main:app", "--host", "0.0.0.0", "--port", "4003"]
+CMD ["uvicorn", "st_server.server.infrastructure.ui.api.main:app", "--host", "0.0.0.0", "--port", "4003"]

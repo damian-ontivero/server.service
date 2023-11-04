@@ -1,5 +1,8 @@
 """Query handler for finding one Application."""
 
+from st_server.server.application.application.dto.application import (
+    ApplicationDto,
+)
 from st_server.server.application.application.query.find_one_application_query import (
     FindOneApplicationQuery,
 )
@@ -24,4 +27,4 @@ class FindOneApplicationQueryHandler:
             raise NotFound(
                 "Application with id: {id!r} not found".format(id=query.id)
             )
-        return application
+        return ApplicationDto.from_entity(application)

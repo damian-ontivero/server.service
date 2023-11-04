@@ -1,5 +1,6 @@
 """Query handler for finding one Server."""
 
+from st_server.server.application.server.dto.server import ServerDto
 from st_server.server.application.server.query.find_one_server_query import (
     FindOneServerQuery,
 )
@@ -22,4 +23,4 @@ class FindOneServerQueryHandler:
             raise NotFound(
                 "Server with id: {id!r} not found".format(id=query.id)
             )
-        return server
+        return ServerDto.from_entity(server)
