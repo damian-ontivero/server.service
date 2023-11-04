@@ -30,14 +30,18 @@ def get_mysql_session():
 
 def get_command_bus():
     """Yields a command bus."""
-    yield CommandBus()
+    return CommandBus()
 
 
 def get_rabbitmq_message_bus():
     """Yields a message bus."""
-    yield RabbitMQMessageBus(
+    rabbit = RabbitMQMessageBus(
         host=rabbitmq_host,
         port=rabbitmq_port,
-        username=rabbitmq_user,
+        user=rabbitmq_user,
         password=rabbitmq_pass,
     )
+    try:
+        yield rabbit
+    finally:
+        rabbit.disconnect()

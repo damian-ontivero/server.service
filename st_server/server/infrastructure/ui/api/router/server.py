@@ -48,8 +48,8 @@ from st_server.server.infrastructure.persistence.mysql.session import (
     SessionLocal,
 )
 from st_server.server.infrastructure.ui.api.dependency import (
-    get_db_session,
-    get_message_bus,
+    get_mysql_session,
+    get_rabbitmq_message_bus,
 )
 from st_server.shared.application.query_response import QueryResponse
 
@@ -57,9 +57,9 @@ router = APIRouter(prefix="/server/servers", tags=["Server"])
 auth_scheme = HTTPBearer()
 
 
-def get_repository(session: SessionLocal = Depends(get_db_session)):
+def get_repository(session: SessionLocal = Depends(get_mysql_session)):
     """Yields a Server repository."""
-    yield ServerRepositoryImpl(session)
+    return ServerRepositoryImpl(session)
 
 
 @router.get("", response_model=QueryResponse)
@@ -112,7 +112,7 @@ def create(
     command: AddServerCommand,
     authorization: HTTPAuthorizationCredentials = Depends(auth_scheme),
     repository: ServerRepositoryImpl = Depends(get_repository),
-    message_bus: RabbitMQMessageBus = Depends(get_message_bus),
+    message_bus: RabbitMQMessageBus = Depends(get_rabbitmq_message_bus),
 ):
     """Route to create a Server."""
     handler = AddServerCommandHandler(
@@ -131,7 +131,7 @@ def update(
     command: UpdateServerCommand,
     authorization: HTTPAuthorizationCredentials = Depends(auth_scheme),
     repository: ServerRepositoryImpl = Depends(get_repository),
-    message_bus: RabbitMQMessageBus = Depends(get_message_bus),
+    message_bus: RabbitMQMessageBus = Depends(get_rabbitmq_message_bus),
 ):
     """Route to update a Server."""
     command.id = id
@@ -150,7 +150,7 @@ def delete(
     id: str,
     authorization: HTTPAuthorizationCredentials = Depends(auth_scheme),
     repository: ServerRepositoryImpl = Depends(get_repository),
-    message_bus: RabbitMQMessageBus = Depends(get_message_bus),
+    message_bus: RabbitMQMessageBus = Depends(get_rabbitmq_message_bus),
 ):
     """Route to discard a Server."""
     command = DeleteServerCommand(id=id)

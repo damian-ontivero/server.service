@@ -61,7 +61,7 @@ auth_scheme = HTTPBearer()
 
 def get_repository(session: SessionLocal = Depends(get_mysql_session)):
     """Yields a Server repository."""
-    yield ApplicationRepositoryImpl(session)
+    return ApplicationRepositoryImpl(session)
 
 
 @router.get("", response_model=QueryResponse)

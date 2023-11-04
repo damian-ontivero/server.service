@@ -14,8 +14,10 @@ SessionLocal = sessionmaker(bind=engine, autocommit=False, autoflush=False)
 @pytest.fixture(scope="session", autouse=True)
 def mock_session():
     session = SessionLocal()
-    yield session
-    session.close()
+    try:
+        yield session
+    finally:
+        session.close()
 
 
 @pytest.fixture(scope="session", autouse=True)
