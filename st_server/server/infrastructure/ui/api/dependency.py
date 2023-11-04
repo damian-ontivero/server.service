@@ -35,13 +35,9 @@ def get_command_bus():
 
 def get_rabbitmq_message_bus():
     """Yields a message bus."""
-    rabbit = RabbitMQMessageBus(
+    return RabbitMQMessageBus(
         host=rabbitmq_host,
         port=rabbitmq_port,
-        user=rabbitmq_user,
+        username=rabbitmq_user,
         password=rabbitmq_pass,
     )
-    try:
-        yield rabbit
-    finally:
-        rabbit.disconnect()
