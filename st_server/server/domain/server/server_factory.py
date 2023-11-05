@@ -26,11 +26,11 @@ class ServerFactory(Factory):
         credentials: list[dict] | None = None,
         applications: list[dict] | None = None,
     ) -> "Server":
-        """Static method to create a new Server.
+        """Builds a new Server.
 
         Important:
-            This method is only used to create a new Server.
-            When creating a new Server, the id is automatically generated
+            This method is only used to build a new Server.
+            When building a new Server, the id is automatically generated
             and a domain event is registered.
         """
         server = Server(
@@ -92,7 +92,7 @@ class ServerFactory(Factory):
         status: str | None = None,
         discarded: bool | None = None,
     ) -> "Server":
-        """Static method to rebuild a Server.
+        """Rebuilds an existing Server.
 
         Important:
             This method is only used to rebuild a Server.

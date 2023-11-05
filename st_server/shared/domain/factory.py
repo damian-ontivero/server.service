@@ -14,11 +14,11 @@ class Factory(metaclass=ABCMeta):
     @staticmethod
     @abstractmethod
     def build(*args, **kwargs) -> AggregateRoot:
-        """Abstract method to build a new aggregate root."""
+        """Builds a new aggregate root."""
         raise NotImplementedError
 
     @staticmethod
     @abstractmethod
     def rebuild(*args, **kwargs) -> AggregateRoot:
-        """Abstract method to rebuild an existing aggregate root."""
+        """Rebuilds an existing aggregate root."""
         raise NotImplementedError
