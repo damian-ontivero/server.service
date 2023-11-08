@@ -3,7 +3,6 @@
 from st_server.server.application.application.command.add_application_command import (
     AddApplicationCommand,
 )
-from st_server.server.application.command_bus.message_bus import MessageBus
 from st_server.server.domain.application.application import Application
 from st_server.server.domain.application.application_factory import (
     ApplicationFactory,
@@ -13,6 +12,7 @@ from st_server.server.domain.application.application_repository import (
 )
 from st_server.shared.application.command_handler import CommandHandler
 from st_server.shared.application.exception import AlreadyExists
+from st_server.shared.infrastructure.message_bus import MessageBus
 
 
 class AddApplicationCommandHandler(CommandHandler):

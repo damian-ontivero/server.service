@@ -40,6 +40,7 @@ from st_server.server.application.application.query.find_one_application_query i
 from st_server.server.application.application.query.find_one_application_query_handler import (
     FindOneApplicationQueryHandler,
 )
+from st_server.server.application.command_bus.command_bus import CommandBus
 from st_server.server.infrastructure.message_bus.rabbitmq_message_bus import (
     RabbitMQMessageBus,
 )
@@ -50,6 +51,7 @@ from st_server.server.infrastructure.persistence.mysql.session import (
     SessionLocal,
 )
 from st_server.server.infrastructure.ui.api.dependency import (
+    get_command_bus,
     get_mysql_session,
     get_rabbitmq_message_bus,
 )
@@ -114,14 +116,18 @@ def get(
 def create(
     command: AddApplicationCommand,
     authorization: HTTPAuthorizationCredentials = Depends(auth_scheme),
+    command_bus: CommandBus = Depends(get_command_bus),
     repository: ApplicationRepositoryImpl = Depends(get_repository),
     message_bus: RabbitMQMessageBus = Depends(get_rabbitmq_message_bus),
 ):
     """Route to create an Application."""
-    handler = AddApplicationCommandHandler(
-        repository=repository, message_bus=message_bus
+    command_bus.register(
+        command=AddApplicationCommand,
+        handler=AddApplicationCommandHandler(
+            repository=repository, message_bus=message_bus
+        ),
     )
-    handler.handle(command)
+    command_bus.dispatch(command)
     return JSONResponse(
         content=jsonable_encoder(obj=command),
         status_code=status.HTTP_201_CREATED,
@@ -133,15 +139,19 @@ def update(
     id: str,
     command: UpdateApplicationCommand,
     authorization: HTTPAuthorizationCredentials = Depends(auth_scheme),
+    command_bus: CommandBus = Depends(get_command_bus),
     repository: ApplicationRepositoryImpl = Depends(get_repository),
     message_bus: RabbitMQMessageBus = Depends(get_rabbitmq_message_bus),
 ):
     """Route to update an Application."""
     command.id = id
-    handler = UpdateApplicationCommandHandler(
-        repository=repository, message_bus=message_bus
+    command_bus.register(
+        command=UpdateApplicationCommand,
+        handler=UpdateApplicationCommandHandler(
+            repository=repository, message_bus=message_bus
+        ),
     )
-    handler.handle(command)
+    command_bus.dispatch(command)
     return JSONResponse(
         content=jsonable_encoder(obj=command),
         status_code=status.HTTP_200_OK,
@@ -152,15 +162,19 @@ def update(
 def delete(
     id: str,
     authorization: HTTPAuthorizationCredentials = Depends(auth_scheme),
+    command_bus: CommandBus = Depends(get_command_bus),
     repository: ApplicationRepositoryImpl = Depends(get_repository),
     message_bus: RabbitMQMessageBus = Depends(get_rabbitmq_message_bus),
 ):
     """Route to delete an Application."""
     command = DeleteApplicationCommand(id=id)
-    handler = DeleteApplicationCommandHandler(
-        repository=repository, message_bus=message_bus
+    command_bus.register(
+        command=DeleteApplicationCommand,
+        handler=DeleteApplicationCommandHandler(
+            repository=repository, message_bus=message_bus
+        ),
     )
-    handler.handle(command)
+    command_bus.dispatch(command)
     return JSONResponse(
         content=jsonable_encoder(
             obj={"message": "The Application has been deleted"}

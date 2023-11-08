@@ -7,6 +7,7 @@ from fastapi.encoders import jsonable_encoder
 from fastapi.responses import JSONResponse
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 
+from st_server.server.application.command_bus.command_bus import CommandBus
 from st_server.server.application.server.command.add_server_command import (
     AddServerCommand,
 )
@@ -48,6 +49,7 @@ from st_server.server.infrastructure.persistence.mysql.session import (
     SessionLocal,
 )
 from st_server.server.infrastructure.ui.api.dependency import (
+    get_command_bus,
     get_mysql_session,
     get_rabbitmq_message_bus,
 )
@@ -57,7 +59,7 @@ router = APIRouter(prefix="/server/servers", tags=["Server"])
 auth_scheme = HTTPBearer()
 
 
-def get_repository(session: SessionLocal = Depends(get_mysql_session)):
+def get_mysql_repository(session: SessionLocal = Depends(get_mysql_session)):
     """Yields a Server repository."""
     return ServerRepositoryImpl(session)
 
@@ -71,7 +73,7 @@ def get_all(
     or_filter: str = Query(default="[]"),
     sort: str = Query(default="[]"),
     authorization: HTTPAuthorizationCredentials = Depends(auth_scheme),
-    repository: ServerRepositoryImpl = Depends(get_repository),
+    repository: ServerRepositoryImpl = Depends(get_mysql_repository),
 ):
     """Route to get all servers."""
     query = FindManyServerQuery(
@@ -96,7 +98,7 @@ def get_all(
 def get(
     id: str,
     authorization: HTTPAuthorizationCredentials = Depends(auth_scheme),
-    repository: ServerRepositoryImpl = Depends(get_repository),
+    repository: ServerRepositoryImpl = Depends(get_mysql_repository),
 ):
     """Route to get a Server by id."""
     query = FindOneServerQuery(id=id)
@@ -111,14 +113,18 @@ def get(
 def create(
     command: AddServerCommand,
     authorization: HTTPAuthorizationCredentials = Depends(auth_scheme),
-    repository: ServerRepositoryImpl = Depends(get_repository),
+    command_bus: CommandBus = Depends(get_command_bus),
+    repository: ServerRepositoryImpl = Depends(get_mysql_repository),
     message_bus: RabbitMQMessageBus = Depends(get_rabbitmq_message_bus),
 ):
     """Route to create a Server."""
-    handler = AddServerCommandHandler(
-        repository=repository, message_bus=message_bus
+    command_bus.register(
+        command=AddServerCommand,
+        handler=AddServerCommandHandler(
+            repository=repository, message_bus=message_bus
+        ),
     )
-    handler.handle(command)
+    command_bus.dispatch(command)
     return JSONResponse(
         content=jsonable_encoder(obj=command),
         status_code=status.HTTP_201_CREATED,
@@ -130,15 +136,19 @@ def update(
     id: str,
     command: UpdateServerCommand,
     authorization: HTTPAuthorizationCredentials = Depends(auth_scheme),
-    repository: ServerRepositoryImpl = Depends(get_repository),
+    command_bus: CommandBus = Depends(get_command_bus),
+    repository: ServerRepositoryImpl = Depends(get_mysql_repository),
     message_bus: RabbitMQMessageBus = Depends(get_rabbitmq_message_bus),
 ):
     """Route to update a Server."""
     command.id = id
-    handler = UpdateServerCommandHandler(
-        repository=repository, message_bus=message_bus
+    command_bus.register(
+        command=command,
+        handler=UpdateServerCommandHandler(
+            repository=repository, message_bus=message_bus
+        ),
     )
-    handler.handle(command)
+    command_bus.dispatch(command)
     return JSONResponse(
         content=jsonable_encoder(obj=command),
         status_code=status.HTTP_200_OK,
@@ -149,15 +159,19 @@ def update(
 def delete(
     id: str,
     authorization: HTTPAuthorizationCredentials = Depends(auth_scheme),
-    repository: ServerRepositoryImpl = Depends(get_repository),
+    command_bus: CommandBus = Depends(get_command_bus),
+    repository: ServerRepositoryImpl = Depends(get_mysql_repository),
     message_bus: RabbitMQMessageBus = Depends(get_rabbitmq_message_bus),
 ):
     """Route to discard a Server."""
     command = DeleteServerCommand(id=id)
-    handler = DeleteServerCommandHandler(
-        repository=repository, message_bus=message_bus
+    command_bus.register(
+        command=DeleteServerCommand,
+        handler=DeleteServerCommandHandler(
+            repository=repository, message_bus=message_bus
+        ),
     )
-    handler.handle(command)
+    command_bus.dispatch(command)
     return JSONResponse(
         content=jsonable_encoder(
             obj={"message": "The Server has been deleted"}
