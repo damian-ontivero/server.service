@@ -1,5 +1,8 @@
 import pytest
 
+from st_server.server.application.application.dto.application import (
+    ApplicationDto,
+)
 from st_server.server.application.application.query.find_many_application_query import (
     FindManyApplicationQuery,
 )
@@ -12,7 +15,6 @@ from st_server.server.application.application.query.find_one_application_query i
 from st_server.server.application.application.query.find_one_application_query_handler import (
     FindOneApplicationQueryHandler,
 )
-from st_server.server.domain.application.application import Application
 from st_server.shared.application.exception import NotFound
 from tests.util.application.factory.application_factory import (
     ApplicationFactory,
@@ -36,7 +38,7 @@ def test_find_many_ok(mock_application_repository):
     ).handle(query)
 
     assert applications_found.total == 5
-    assert isinstance(applications_found.items[0], Application)
+    assert isinstance(applications_found.items[0], ApplicationDto)
 
 
 def test_find_one_ok(mock_application_repository):
@@ -47,8 +49,8 @@ def test_find_one_ok(mock_application_repository):
         mock_application_repository
     ).handle(query)
 
-    assert isinstance(application_found, Application)
-    assert application.id.value == application_found.id.value
+    assert isinstance(application_found, ApplicationDto)
+    assert application.id.value == application_found.id
 
 
 def test_find_one_not_found(mock_application_repository):

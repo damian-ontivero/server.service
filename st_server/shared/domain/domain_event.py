@@ -1,17 +1,17 @@
-"""Base class for Domain Event."""
+"""Base class for domain event."""
 
 from datetime import datetime
 
 
 class DomainEvent:
-    """Base class for Domain Event.
+    """Base class for domain event.
 
-    Domain Events are value objects that represent something that happened in
+    Domain events are value objects that represent something that happened in
     the domain. They are used to notify other parts of the application about
     something that happened in the domain.
 
     Attributes are specified as keyword arguments and can be added
-    but not modified. This is to ensure that the Domain Event are immutable.
+    but not modified. This is to ensure that the domain event are immutable.
     """
 
     def __init__(self, **kwargs) -> None:
@@ -30,13 +30,13 @@ class DomainEvent:
         raise AttributeError("Attributes can be added but not deleted")
 
     def __eq__(self, other: object) -> bool:
-        """Compares if two Domain Event are equal."""
+        """Compares if two domain event are equal."""
         if isinstance(other, DomainEvent):
             return self.__dict__ == other.__dict__
         return NotImplemented
 
     def __ne__(self, other: object) -> bool:
-        """Compares if two Domain Event are not equal."""
+        """Compares if two domain event are not equal."""
         return not self.__eq__(other)
 
     def __hash__(self) -> int:

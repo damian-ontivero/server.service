@@ -1,5 +1,6 @@
 import pytest
 
+from st_server.server.application.server.dto.server import ServerDto
 from st_server.server.application.server.query.find_many_server_query import (
     FindManyServerQuery,
 )
@@ -12,7 +13,6 @@ from st_server.server.application.server.query.find_one_server_query import (
 from st_server.server.application.server.query.find_one_server_query_handler import (
     FindOneServerQueryHandler,
 )
-from st_server.server.domain.server.server import Server
 from st_server.shared.application.exception import NotFound
 from tests.util.server.factory.server_factory import ServerFactory
 
@@ -30,7 +30,7 @@ def test_find_many_ok(mock_server_repository):
     )
 
     assert servers_found.total == 5
-    assert isinstance(servers_found.items[0], Server)
+    assert isinstance(servers_found.items[0], ServerDto)
 
 
 def test_find_one_ok(mock_server_repository):
@@ -41,8 +41,8 @@ def test_find_one_ok(mock_server_repository):
         query
     )
 
-    assert isinstance(server_found, Server)
-    assert server.id.value == server_found.id.value
+    assert isinstance(server_found, ServerDto)
+    assert server.id.value == server_found.id
 
 
 def test_find_one_not_found(mock_server_repository):
