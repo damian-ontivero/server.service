@@ -3,7 +3,9 @@
 from st_server.server.application.application.command.add_application_command import (
     AddApplicationCommand,
 )
-from st_server.server.domain.application.application import Application
+from st_server.server.application.application.dto.application import (
+    ApplicationDto,
+)
 from st_server.server.domain.application.application_factory import (
     ApplicationFactory,
 )
@@ -25,14 +27,14 @@ class AddApplicationCommandHandler(CommandHandler):
         self._repository = repository
         self._message_bus = message_bus
 
-    def handle(self, command: AddApplicationCommand) -> Application:
+    def handle(self, command: AddApplicationCommand) -> ApplicationDto:
         """Handle a command."""
         application = ApplicationFactory.build(**command.to_dict())
         self._check_if_exists(application.name)
         self._repository.save_one(application)
         self._message_bus.publish(application.domain_events)
         application.clear_domain_events()
-        return application
+        return ApplicationDto.from_entity(application)
 
     def _check_if_exists(self, name: str) -> None:
         """Check if an Application with the given name already exists"""

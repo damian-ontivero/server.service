@@ -3,7 +3,9 @@
 from st_server.server.application.application.command.update_application_command import (
     UpdateApplicationCommand,
 )
-from st_server.server.domain.application.application import Application
+from st_server.server.application.application.dto.application import (
+    ApplicationDto,
+)
 from st_server.server.domain.application.application_repository import (
     ApplicationRepository,
 )
@@ -22,7 +24,7 @@ class UpdateApplicationCommandHandler(CommandHandler):
         self._repository = repository
         self._message_bus = message_bus
 
-    def handle(self, command: UpdateApplicationCommand) -> Application:
+    def handle(self, command: UpdateApplicationCommand) -> ApplicationDto:
         """Handle a command."""
         application = self._repository.find_one(command.id)
         if application is None:
@@ -39,7 +41,7 @@ class UpdateApplicationCommandHandler(CommandHandler):
         self._repository.save_one(application)
         self._message_bus.publish(application.domain_events)
         application.clear_domain_events()
-        return application
+        return ApplicationDto.from_entity(application)
 
     def _check_if_exists(self, name: str) -> None:
         """Check if an Application with the given name already exists."""

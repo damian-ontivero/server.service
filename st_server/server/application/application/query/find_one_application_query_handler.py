@@ -6,7 +6,6 @@ from st_server.server.application.application.dto.application import (
 from st_server.server.application.application.query.find_one_application_query import (
     FindOneApplicationQuery,
 )
-from st_server.server.domain.application.application import Application
 from st_server.server.domain.application.application_repository import (
     ApplicationRepository,
 )
@@ -20,7 +19,7 @@ class FindOneApplicationQueryHandler:
         """Initialize the handler."""
         self._repository = repository
 
-    def handle(self, query: FindOneApplicationQuery) -> Application:
+    def handle(self, query: FindOneApplicationQuery) -> ApplicationDto:
         """Handles a query."""
         application = self._repository.find_one(**query.to_dict())
         if application is None:
