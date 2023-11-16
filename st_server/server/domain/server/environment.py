@@ -6,6 +6,11 @@ class Environment:
 
     __slots__ = ("_value",)
 
+    @classmethod
+    def from_text(cls, text: str) -> "Environment":
+        """Named constructor to create an Environment from a string."""
+        return cls(text)
+
     def __new__(cls, value: str) -> "Environment":
         """Creates a new instance of Environment."""
         if not isinstance(value, str):
@@ -15,16 +20,6 @@ class Environment:
         self = object.__new__(cls)
         self._value = value
         return self
-
-    @property
-    def value(self) -> str:
-        """Returns the value of the Environment."""
-        return self._value
-
-    @classmethod
-    def from_text(cls, text: str) -> "Environment":
-        """Named constructor to create an Environment from a string."""
-        return cls(text)
 
     def __eq__(self, other: object) -> bool:
         """Compares if two Environment are equal."""
@@ -45,3 +40,8 @@ class Environment:
         return "{c}(value={value!r})".format(
             c=self.__class__.__name__, value=self._value
         )
+
+    @property
+    def value(self) -> str:
+        """Returns the value of the Environment."""
+        return self._value

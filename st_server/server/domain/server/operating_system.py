@@ -6,6 +6,15 @@ class OperatingSystem:
 
     __slots__ = ("_name", "_version", "_architecture")
 
+    @classmethod
+    def from_data(cls, data: dict) -> "OperatingSystem":
+        """Named constructor to create an Operating System from a dictionary."""
+        return cls(
+            name=data.get("name"),
+            version=data.get("version"),
+            architecture=data.get("architecture"),
+        )
+
     def __new__(
         cls, name: str, version: str, architecture: str
     ) -> "OperatingSystem":
@@ -28,6 +37,36 @@ class OperatingSystem:
         self._architecture = architecture
         return self
 
+    def __eq__(self, other: object) -> bool:
+        """Compares if two Operating System are equal."""
+        if isinstance(other, OperatingSystem):
+            return (
+                self.name == other._name
+                and self.version == other._version
+                and self.architecture == other._architecture
+            )
+        return NotImplemented
+
+    def __ne__(self, other: object) -> bool:
+        """Compares if two Operating System are not equal."""
+        return not self.__eq__(other)
+
+    def __hash__(self) -> int:
+        """Returns the hash of the Operating System."""
+        return hash((self._name, self._version, self._architecture))
+
+    def __repr__(self) -> str:
+        """Returns the representation of the Operating System."""
+        return (
+            "{c}(name={name!r}, version={version!r}, "
+            "architecture={architecture!r})"
+        ).format(
+            c=self.__class__.__name__,
+            name=self._name,
+            version=self._version,
+            architecture=self._architecture,
+        )
+
     @property
     def name(self) -> str:
         """Returns the name of the Operating System."""
@@ -47,46 +86,7 @@ class OperatingSystem:
     def __dict__(self) -> dict:
         """Returns the Operating System as a dictionary."""
         return {
-            "name": self.name,
-            "version": self.version,
-            "architecture": self.architecture,
+            "name": self._name,
+            "version": self._version,
+            "architecture": self._architecture,
         }
-
-    @classmethod
-    def from_data(cls, data: dict) -> "OperatingSystem":
-        """Named constructor to create an Operating System from a dictionary."""
-        return cls(
-            name=data.get("name"),
-            version=data.get("version"),
-            architecture=data.get("architecture"),
-        )
-
-    def __eq__(self, other: object) -> bool:
-        """Compares if two Operating System are equal."""
-        if isinstance(other, OperatingSystem):
-            return (
-                self.name == other.name
-                and self.version == other.version
-                and self.architecture == other.architecture
-            )
-        return NotImplemented
-
-    def __ne__(self, other: object) -> bool:
-        """Compares if two Operating System are not equal."""
-        return not self.__eq__(other)
-
-    def __hash__(self) -> int:
-        """Returns the hash of the Operating System."""
-        return hash((self._name, self._version, self._architecture))
-
-    def __repr__(self) -> str:
-        """Returns the representation of the Operating System."""
-        return (
-            "{c}(name={name!r}, version={version!r}, "
-            "architecture={architecture!r})"
-        ).format(
-            c=self.__class__.__name__,
-            name=self.name,
-            version=self.version,
-            architecture=self.architecture,
-        )

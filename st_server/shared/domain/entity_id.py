@@ -8,21 +8,6 @@ class EntityId:
 
     __slots__ = ("_value",)
 
-    def __new__(cls, value: str) -> "EntityId":
-        """Creates a new instance of the entity id."""
-        if not isinstance(value, str):
-            raise TypeError("EntityId must be a string")
-        if not len(value) > 0:
-            raise ValueError("EntityId must not be empty")
-        self = object.__new__(cls)
-        self._value = value
-        return self
-
-    @property
-    def value(self) -> str:
-        """Returns the value of the entity id."""
-        return self._value
-
     @classmethod
     def generate(cls) -> "EntityId":
         """Named constructor to create an entity id."""
@@ -32,6 +17,16 @@ class EntityId:
     def from_text(cls, text: str) -> "EntityId":
         """Named constructor to create an entity id from a string."""
         return cls(text)
+
+    def __new__(cls, value: str) -> "EntityId":
+        """Creates a new instance of the entity id."""
+        if not isinstance(value, str):
+            raise TypeError("EntityId must be a string")
+        if not len(value) > 0:
+            raise ValueError("EntityId must not be empty")
+        self = object.__new__(cls)
+        self._value = value
+        return self
 
     def __eq__(self, other: object) -> bool:
         """Compares if two entity id are equal."""
@@ -52,3 +47,8 @@ class EntityId:
         return "{c}(value={value!r})".format(
             c=self.__class__.__name__, value=self._value
         )
+
+    @property
+    def value(self) -> str:
+        """Returns the value of the entity id."""
+        return self._value
