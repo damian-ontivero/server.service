@@ -3,10 +3,10 @@
 import sqlalchemy as sa
 
 from st_server.server.domain.server.credential import Credential
-from st_server.server.infrastructure.persistence.mysql import session
+from st_server.server.infrastructure.persistence.mysql import db
 
 
-class CredentialDbModel(session.Base):
+class CredentialDbModel(db.Base):
     """Credential database model."""
 
     __tablename__ = "credential"

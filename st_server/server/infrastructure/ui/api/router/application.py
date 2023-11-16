@@ -47,9 +47,7 @@ from st_server.server.infrastructure.message_bus.rabbitmq_message_bus import (
 from st_server.server.infrastructure.persistence.mysql.application.application_repository import (
     ApplicationRepositoryImpl,
 )
-from st_server.server.infrastructure.persistence.mysql.session import (
-    SessionLocal,
-)
+from st_server.server.infrastructure.persistence.mysql.db import SessionLocal
 from st_server.server.infrastructure.ui.api.dependency import (
     get_command_bus,
     get_mysql_session,

@@ -4,7 +4,7 @@ import sqlalchemy as sa
 from sqlalchemy.orm import relationship
 
 from st_server.server.domain.server.server import Server
-from st_server.server.infrastructure.persistence.mysql import session
+from st_server.server.infrastructure.persistence.mysql import db
 from st_server.server.infrastructure.persistence.mysql.server.credential import (
     CredentialDbModel,
 )
@@ -13,7 +13,7 @@ from st_server.server.infrastructure.persistence.mysql.server.server_application
 )
 
 
-class ServerDbModel(session.Base):
+class ServerDbModel(db.Base):
     """Server database model."""
 
     __tablename__ = "server"

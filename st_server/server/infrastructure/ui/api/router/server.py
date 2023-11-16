@@ -42,11 +42,9 @@ from st_server.server.application.server.query.find_one_server_query_handler imp
 from st_server.server.infrastructure.message_bus.rabbitmq_message_bus import (
     RabbitMQMessageBus,
 )
+from st_server.server.infrastructure.persistence.mysql.db import SessionLocal
 from st_server.server.infrastructure.persistence.mysql.server.server_repository import (
     ServerRepositoryImpl,
-)
-from st_server.server.infrastructure.persistence.mysql.session import (
-    SessionLocal,
 )
 from st_server.server.infrastructure.ui.api.dependency import (
     get_command_bus,

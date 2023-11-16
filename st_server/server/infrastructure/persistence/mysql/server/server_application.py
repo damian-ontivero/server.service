@@ -3,10 +3,10 @@
 import sqlalchemy as sa
 from sqlalchemy.orm import relationship
 
-from st_server.server.infrastructure.persistence.mysql import session
+from st_server.server.infrastructure.persistence.mysql import db
 
 
-class ServerApplicationDbModel(session.Base):
+class ServerApplicationDbModel(db.Base):
     """ServerApplication database model."""
 
     __tablename__ = "server_application"

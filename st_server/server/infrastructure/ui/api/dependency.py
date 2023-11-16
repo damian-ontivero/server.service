@@ -6,9 +6,7 @@ from st_server.server.application.command_bus.command_bus import CommandBus
 from st_server.server.infrastructure.message_bus.rabbitmq_message_bus import (
     RabbitMQMessageBus,
 )
-from st_server.server.infrastructure.persistence.mysql.session import (
-    SessionLocal,
-)
+from st_server.server.infrastructure.persistence.mysql.db import SessionLocal
 
 config = configparser.ConfigParser()
 config.read("st_server/config.ini")
