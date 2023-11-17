@@ -58,7 +58,7 @@ def run_migrations_online() -> None:
     and associate a connection with the context.
 
     """
-    with session.SessionLocal().bind.connect() as connection:
+    with db.SessionLocal().bind.connect() as connection:
         context.configure(
             connection=connection,
             target_metadata=target_metadata,
