@@ -23,11 +23,12 @@ casbin = "^1.22.0"
 casbin-sqlalchemy-adapter = "^0.5.2"
 
 [tool.poetry.group.dev.dependencies]
+black = "^23.11.0"
 flake8 = "^6.1.0"
-black = "^23.7.0"
 ipdb = "^0.13.13"
-pytest = "^7.4.0"
-pytest-factoryboy = "^2.5.1"
+pytest = "^7.4.3"
+pytest-factoryboy = "^2.6.0"
+twine = "^4.0.2"
 
 [tool.black]
 line-length = 79
