@@ -1615,12 +1615,12 @@ sqlcipher = ["sqlcipher3-binary"]
 
 [[package]]
 name = "st-core"
-version = "0.2.0"
+version = "0.3.0rc1"
 description = ""
 optional = false
 python-versions = ">=3.11,<4.0"
 files = [
-    {file = "st_core-0.2.0-py3-none-any.whl", hash = "sha256:1680c41b34dfe37c559ebdf6d1d648a03028e2c27c8b6a868f1b9795be1f641e"},
+    {file = "st_core-0.3.0rc1-py3-none-any.whl", hash = "sha256:6fea7b1b143b79ff6bc290e25d46f7a6ab768543419a78376cebe99e181a1ab3"},
 ]
 
 [package.source]
@@ -1792,4 +1792,4 @@ testing = ["big-O", "jaraco.functools", "jaraco.itertools", "more-itertools", "p
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.11"
-content-hash = "b55422d22a84ea524f93b3511147baac2b0488160597bf79cef85e9ecbb57d21"
+content-hash = "7dddc152baf983dc49e344afadf4bf1c5c2b3155260be9a0a6ff954200a2e8da"
