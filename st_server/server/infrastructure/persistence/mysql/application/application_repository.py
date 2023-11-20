@@ -2,6 +2,7 @@
 
 from sqlalchemy import and_, func, or_
 from sqlalchemy.orm import Session
+from st_core.domain.repository_response import RepositoryResponse
 
 from st_server.server.domain.application.application import Application
 from st_server.server.domain.application.application_factory import (
@@ -14,7 +15,6 @@ from st_server.server.domain.application.application_repository import (
 from st_server.server.infrastructure.persistence.mysql.application.application import (
     ApplicationDbModel,
 )
-from st_server.shared.domain.repository_response import RepositoryResponse
 
 
 def _build_filter(filter: dict):

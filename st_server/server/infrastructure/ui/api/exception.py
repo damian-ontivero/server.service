@@ -1,7 +1,6 @@
 from fastapi import status
 from jwt.exceptions import ExpiredSignatureError
-
-from st_server.shared.application.exception import (
+from st_core.application.exception import (
     AlreadyExists,
     AuthenticationError,
     FilterError,

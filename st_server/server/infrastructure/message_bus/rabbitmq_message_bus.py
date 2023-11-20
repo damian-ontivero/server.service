@@ -3,9 +3,8 @@
 import json
 
 import pika
-
-from st_server.shared.domain.domain_event import DomainEvent
-from st_server.shared.infrastructure.message_bus import MessageBus
+from st_core.domain.domain_event import DomainEvent
+from st_core.infrastructure.message_bus import MessageBus
 
 
 class RabbitMQMessageBus(MessageBus):

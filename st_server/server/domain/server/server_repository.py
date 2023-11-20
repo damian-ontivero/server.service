@@ -2,8 +2,9 @@
 
 from abc import ABCMeta, abstractmethod
 
+from st_core.domain.repository_response import RepositoryResponse
+
 from st_server.server.domain.server.server import Server
-from st_server.shared.domain.repository_response import RepositoryResponse
 
 FILTER_OPERATOR_MAPPER = {
     "eq": lambda m, k, v: getattr(m, k) == v,

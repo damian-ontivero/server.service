@@ -6,6 +6,7 @@ from fastapi import APIRouter, Depends, Query, status
 from fastapi.encoders import jsonable_encoder
 from fastapi.responses import JSONResponse
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
+from st_core.application.query_response import QueryResponse
 
 from st_server.server.application.application.command.add_application_command import (
     AddApplicationCommand,
@@ -53,7 +54,6 @@ from st_server.server.infrastructure.ui.api.dependency import (
     get_mysql_session,
     get_rabbitmq_message_bus,
 )
-from st_server.shared.application.query_response import QueryResponse
 
 router = APIRouter(prefix="/server/applications", tags=["Application"])
 auth_scheme = HTTPBearer()

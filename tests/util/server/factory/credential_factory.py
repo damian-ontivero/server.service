@@ -1,9 +1,9 @@
 import factory
 import factory.fuzzy
+from st_core.domain.entity_id import EntityId
 
 from st_server.server.domain.server.connection_type import ConnectionType
 from st_server.server.domain.server.credential import Credential
-from st_server.shared.domain.entity_id import EntityId
 
 
 class CredentialFactory(factory.Factory):

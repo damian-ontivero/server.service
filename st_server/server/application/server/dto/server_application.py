@@ -2,11 +2,12 @@
 
 from dataclasses import dataclass
 
+from st_core.application.dto import DTO
+
 from st_server.server.application.application.dto.application import (
     ApplicationDto,
 )
 from st_server.server.domain.server.server import ServerApplication
-from st_server.shared.application.dto import DTO
 
 
 @dataclass(frozen=True)

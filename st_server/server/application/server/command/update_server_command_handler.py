@@ -1,13 +1,14 @@
 """Contains the command handler class."""
 
+from st_core.application.command_handler import CommandHandler
+from st_core.application.exception import AlreadyExists, NotFound
+from st_core.infrastructure.message_bus import MessageBus
+
 from st_server.server.application.server.command.update_server_command import (
     UpdateServerCommand,
 )
 from st_server.server.application.server.dto.server import ServerDto
 from st_server.server.domain.server.server_repository import ServerRepository
-from st_server.shared.application.command_handler import CommandHandler
-from st_server.shared.application.exception import AlreadyExists, NotFound
-from st_server.shared.infrastructure.message_bus import MessageBus
 
 
 class UpdateServerCommandHandler(CommandHandler):

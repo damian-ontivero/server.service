@@ -1,6 +1,7 @@
+from st_core.domain.entity_id import EntityId
+from st_core.domain.factory import Factory
+
 from st_server.server.domain.application.application import Application
-from st_server.shared.domain.entity_id import EntityId
-from st_server.shared.domain.factory import Factory
 
 
 class ApplicationFactory(Factory):

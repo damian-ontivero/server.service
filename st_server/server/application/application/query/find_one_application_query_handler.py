@@ -1,5 +1,7 @@
 """Query handler for finding one Application."""
 
+from st_core.application.exception import NotFound
+
 from st_server.server.application.application.dto.application import (
     ApplicationDto,
 )
@@ -9,7 +11,6 @@ from st_server.server.application.application.query.find_one_application_query i
 from st_server.server.domain.application.application_repository import (
     ApplicationRepository,
 )
-from st_server.shared.application.exception import NotFound
 
 
 class FindOneApplicationQueryHandler:

@@ -1,8 +1,7 @@
 """EntityId tests."""
 
 import pytest
-
-from st_server.shared.domain.entity_id import EntityId
+from st_core.domain.entity_id import EntityId
 
 
 def test_generate():

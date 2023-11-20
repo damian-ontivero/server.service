@@ -3,15 +3,16 @@
 This is the aggregate root entity of the Server aggregate.
 """
 
+from st_core.domain.aggregate_root import AggregateRoot
+from st_core.domain.domain_event import DomainEvent
+from st_core.domain.entity_id import EntityId
+
 from st_server.server.domain.server.connection_type import ConnectionType
 from st_server.server.domain.server.credential import Credential
 from st_server.server.domain.server.environment import Environment
 from st_server.server.domain.server.operating_system import OperatingSystem
 from st_server.server.domain.server.server_application import ServerApplication
 from st_server.server.domain.server.server_status import ServerStatus
-from st_server.shared.domain.aggregate_root import AggregateRoot
-from st_server.shared.domain.domain_event import DomainEvent
-from st_server.shared.domain.entity_id import EntityId
 
 
 class Server(AggregateRoot):

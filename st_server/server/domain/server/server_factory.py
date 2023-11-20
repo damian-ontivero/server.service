@@ -1,3 +1,6 @@
+from st_core.domain.entity_id import EntityId
+from st_core.domain.factory import Factory
+
 from st_server.server.domain.server.connection_type import ConnectionType
 from st_server.server.domain.server.credential import Credential
 from st_server.server.domain.server.environment import Environment
@@ -5,8 +8,6 @@ from st_server.server.domain.server.operating_system import OperatingSystem
 from st_server.server.domain.server.server import Server
 from st_server.server.domain.server.server_application import ServerApplication
 from st_server.server.domain.server.server_status import ServerStatus
-from st_server.shared.domain.entity_id import EntityId
-from st_server.shared.domain.factory import Factory
 
 
 class ServerFactory(Factory):

@@ -1,5 +1,8 @@
 """Query handler for finding many Applications."""
 
+from st_core.application.query_response import QueryResponse
+from st_core.domain.repository_response import RepositoryResponse
+
 from st_server.server.application.application.dto.application import (
     ApplicationDto,
 )
@@ -9,8 +12,6 @@ from st_server.server.application.application.query.find_many_application_query 
 from st_server.server.domain.application.application_repository import (
     ApplicationRepository,
 )
-from st_server.shared.application.query_response import QueryResponse
-from st_server.shared.domain.repository_response import RepositoryResponse
 
 
 class FindManyApplicationQueryHandler:
