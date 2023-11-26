@@ -27,7 +27,8 @@ class AddServerCommandHandler(CommandHandler):
         self._check_if_exists(command.name)
         server = ServerFactory.build(**command.to_dict())
         self._repository.save_one(server)
-        self._message_bus.publish(server.domain_events)
+        for domain_event in server.domain_events:
+            self._message_bus.publish(domain_event)
         server.clear_domain_events()
         return ServerDto.from_entity(server)
 

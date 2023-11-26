@@ -30,5 +30,6 @@ class DeleteApplicationCommandHandler(CommandHandler):
                 "Application with id: {id!r} not found".format(id=command.id)
             )
         self._repository.delete_one(command.id)
-        self._message_bus.publish(application.domain_events)
+        for domain_event in application.domain_events:
+            self._message_bus.publish(domain_event)
         application.clear_domain_events()

@@ -26,7 +26,7 @@ class ServerFactory(Factory):
         operating_system: dict | None = None,
         credentials: list[dict] | None = None,
         applications: list[dict] | None = None,
-    ) -> "Server":
+    ) -> Server:
         """Builds a new Server.
 
         Important:
@@ -92,7 +92,7 @@ class ServerFactory(Factory):
         applications: list[dict] | None = None,
         status: str | None = None,
         discarded: bool | None = None,
-    ) -> "Server":
+    ) -> Server:
         """Rebuilds an existing Server.
 
         Important:

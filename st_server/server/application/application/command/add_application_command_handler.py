@@ -33,7 +33,8 @@ class AddApplicationCommandHandler(CommandHandler):
         application = ApplicationFactory.build(**command.to_dict())
         self._check_if_exists(application.name)
         self._repository.save_one(application)
-        self._message_bus.publish(application.domain_events)
+        for domain_event in application.domain_events:
+            self._message_bus.publish(domain_event)
         application.clear_domain_events()
         return ApplicationDto.from_entity(application)
 

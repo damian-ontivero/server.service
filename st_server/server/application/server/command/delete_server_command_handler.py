@@ -28,5 +28,6 @@ class DeleteServerCommandHandler(CommandHandler):
                 "Server with id: {id!r} not found".format(id=command.id)
             )
         self._repository.delete_one(command.id)
-        self._message_bus.publish(server.domain_events)
+        for domain_event in server.domain_events:
+            self._message_bus.publish(domain_event)
         server.clear_domain_events()

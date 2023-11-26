@@ -27,18 +27,17 @@ class RabbitMQMessageBus(MessageBus):
         )
         self._channel = self._connection.channel()
 
-    def publish(self, domain_events: list[DomainEvent]) -> None:
-        """Publishes a domain events."""
-        for domain_event in domain_events:
-            aggregate, event = domain_event.__class__.__qualname__.split(".")
-            routing_key = (
-                ".".join([event.lower()[:-7], event.lower()[-7:]])
-                if "Changed" in event
-                else event.lower()
-            )
-            self._channel.basic_publish(
-                exchange=aggregate.lower(),
-                routing_key=routing_key,
-                body=json.dumps(domain_event.__dict__, default=str),
-            )
+    def publish(self, domain_event: DomainEvent) -> None:
+        """Publishes a domain event."""
+        aggregate, event = domain_event.__class__.__qualname__.split(".")
+        routing_key = (
+            ".".join([event.lower()[:-7], event.lower()[-7:]])
+            if "Changed" in event
+            else event.lower()
+        )
+        self._channel.basic_publish(
+            exchange=aggregate.lower(),
+            routing_key=routing_key,
+            body=json.dumps(domain_event.__dict__, default=str),
+        )
         self._connection.close()
