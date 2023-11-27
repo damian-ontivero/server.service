@@ -11,6 +11,11 @@ from st_core.domain.entity_id import EntityId
 class Application(AggregateRoot):
     """Application entity."""
 
+    class Created(DomainEvent):
+        """Domain event that represents the creation of an Application."""
+
+        pass
+
     class NameChanged(DomainEvent):
         """Domain event that represents the change of the name of an Application."""
 

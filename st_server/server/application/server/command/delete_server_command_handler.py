@@ -2,7 +2,7 @@
 
 from st_core.application.command_handler import CommandHandler
 from st_core.application.exception import NotFound
-from st_core.infrastructure.message_bus import MessageBus
+from st_core.application.message_bus import MessageBus
 
 from st_server.server.application.server.command.delete_server_command import (
     DeleteServerCommand,

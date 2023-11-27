@@ -18,6 +18,11 @@ from st_server.server.domain.server.server_status import ServerStatus
 class Server(AggregateRoot):
     """Server entity."""
 
+    class Created(DomainEvent):
+        """Domain event that represents the creation of a Server."""
+
+        pass
+
     class NameChanged(DomainEvent):
         """Domain event that represents the change of the name of a Server."""
 
