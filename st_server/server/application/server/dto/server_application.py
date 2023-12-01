@@ -2,8 +2,6 @@
 
 from dataclasses import dataclass
 
-from st_core.application.dto import DTO
-
 from st_server.server.application.application.dto.application import (
     ApplicationDto,
 )
@@ -11,7 +9,7 @@ from st_server.server.domain.server.server import ServerApplication
 
 
 @dataclass(frozen=True)
-class ServerApplicationDto(DTO):
+class ServerApplicationDto:
     """Data Transfer Object for reading an ServerApplication."""
 
     application_id: str | None = None

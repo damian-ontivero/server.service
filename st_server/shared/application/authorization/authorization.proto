@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+package authorization;
+
+service AuthorizationService {
+  rpc CheckPermission (CheckRequest) returns (CheckResponse) {}
+}
+
+message CheckRequest {
+  string subject = 1;
+  string action = 2;
+  string object = 3;
+}
+
+message CheckResponse {
+  bool allowed = 1;
+}

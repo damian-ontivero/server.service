@@ -1,9 +1,5 @@
 """Contains the command handler class."""
 
-from st_core.application.command_handler import CommandHandler
-from st_core.application.exception import AlreadyExists
-from st_core.application.message_bus import MessageBus
-
 from st_server.server.application.application.command.add_application_command import (
     AddApplicationCommand,
 )
@@ -16,6 +12,9 @@ from st_server.server.domain.application.application_factory import (
 from st_server.server.domain.application.application_repository import (
     ApplicationRepository,
 )
+from st_server.shared.application.bus.message_bus import MessageBus
+from st_server.shared.application.command_handler import CommandHandler
+from st_server.shared.application.exception import AlreadyExists
 
 
 class AddApplicationCommandHandler(CommandHandler):

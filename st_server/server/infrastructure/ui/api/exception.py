@@ -1,13 +1,16 @@
 from fastapi import status
 from jwt.exceptions import ExpiredSignatureError
-from st_core.application.exception import (
+
+from st_server.shared.application.exception import (
     AlreadyExists,
     AuthenticationError,
-    FilterError,
     NotFound,
-    PaginationError,
-    SortError,
 )
+from st_server.shared.application.validator.validate_filter import FilterError
+from st_server.shared.application.validator.validate_pagination import (
+    PaginationError,
+)
+from st_server.shared.application.validator.validate_sort import SortError
 
 EXCEPTION_TO_HTTP_STATUS_CODE = {
     Exception: status.HTTP_500_INTERNAL_SERVER_ERROR,

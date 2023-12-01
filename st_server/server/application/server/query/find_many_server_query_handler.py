@@ -1,6 +1,6 @@
 """Query handler for finding many Servers."""
 
-from st_core.application.query_response import QueryResponse
+from st_server.shared.application.query_response import QueryResponse
 
 from st_server.server.application.server.dto.server import ServerDto
 from st_server.server.application.server.query.find_many_server_query import (

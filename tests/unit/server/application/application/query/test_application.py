@@ -1,5 +1,5 @@
 import pytest
-from st_core.application.exception import NotFound
+from st_server.shared.application.exception import NotFound
 
 from st_server.server.application.application.dto.application import (
     ApplicationDto,

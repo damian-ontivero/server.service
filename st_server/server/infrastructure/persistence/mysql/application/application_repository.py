@@ -2,7 +2,7 @@
 
 from sqlalchemy import and_, func, or_
 from sqlalchemy.orm import Session
-from st_core.domain.repository_response import RepositoryResponse
+from st_server.shared.domain.repository_response import RepositoryResponse
 
 from st_server.server.domain.application.application import Application
 from st_server.server.domain.application.application_factory import (

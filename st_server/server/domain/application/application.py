@@ -3,9 +3,9 @@
 This is the aggregate root entity of the Application aggregate.
 """
 
-from st_core.domain.aggregate_root import AggregateRoot
-from st_core.domain.domain_event import DomainEvent
-from st_core.domain.entity_id import EntityId
+from st_server.shared.domain.aggregate_root import AggregateRoot
+from st_server.shared.domain.domain_event import DomainEvent
+from st_server.shared.domain.entity_id import EntityId
 
 
 class Application(AggregateRoot):

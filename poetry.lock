@@ -1602,21 +1602,6 @@ pymysql = ["pymysql"]
 sqlcipher = ["sqlcipher3-binary"]
 
 [[package]]
-name = "st-core"
-version = "0.3.0rc6"
-description = ""
-optional = false
-python-versions = ">=3.11,<4.0"
-files = [
-    {file = "st_core-0.3.0rc6-py3-none-any.whl", hash = "sha256:5c31babe5eb9e4c4748f4d929fb896a8e962017e7d8438ee6bb1ecf5d33de0ab"},
-]
-
-[package.source]
-type = "legacy"
-url = "https://pkgs.dev.azure.com/damian-ontivero/ServerTree/_packaging/ServerTreeFeed/pypi/simple"
-reference = "ServerTree"
-
-[[package]]
 name = "stack-data"
 version = "0.6.3"
 description = "Extract data from python stack frames and tracebacks for informative displays"
@@ -1780,4 +1765,4 @@ testing = ["big-O", "jaraco.functools", "jaraco.itertools", "more-itertools", "p
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.11"
-content-hash = "ea4f456d46048a988f71d2854c799b04049bf60eac8426f0d101751e955e51d9"
+content-hash = "4dab8791f621cccd7f0c8a80d592eb0d97a3c4546becff9ee6e8a458657581b1"

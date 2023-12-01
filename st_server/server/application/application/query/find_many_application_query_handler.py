@@ -1,7 +1,7 @@
 """Query handler for finding many Applications."""
 
-from st_core.application.query_response import QueryResponse
-from st_core.domain.repository_response import RepositoryResponse
+from st_server.shared.application.query_response import QueryResponse
+from st_server.shared.domain.repository_response import RepositoryResponse
 
 from st_server.server.application.application.dto.application import (
     ApplicationDto,

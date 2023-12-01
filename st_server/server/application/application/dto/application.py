@@ -2,13 +2,11 @@
 
 from dataclasses import dataclass
 
-from st_core.application.dto import DTO
-
 from st_server.server.domain.application.application import Application
 
 
 @dataclass(frozen=True)
-class ApplicationDto(DTO):
+class ApplicationDto:
     """Data Transfer Object for reading an Application."""
 
     id: str | None = None

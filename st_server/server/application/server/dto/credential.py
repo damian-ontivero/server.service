@@ -2,13 +2,11 @@
 
 from dataclasses import dataclass
 
-from st_core.application.dto import DTO
-
 from st_server.server.domain.server.credential import Credential
 
 
 @dataclass(frozen=True)
-class CredentialDto(DTO):
+class CredentialDto:
     """Data Transfer Object for reading an Credential."""
 
     id: str | None = None

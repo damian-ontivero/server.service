@@ -2,7 +2,7 @@
 
 from abc import ABCMeta, abstractmethod
 
-from st_core.domain.repository_response import RepositoryResponse
+from st_server.shared.domain.repository_response import RepositoryResponse
 
 from st_server.server.domain.application.application import Application
 

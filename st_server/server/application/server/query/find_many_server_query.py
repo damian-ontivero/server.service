@@ -2,7 +2,7 @@
 
 from dataclasses import dataclass, field
 
-from st_core.application.query import Query
+from st_server.shared.application.query import Query
 
 
 @dataclass(frozen=True)
