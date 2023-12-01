@@ -4,16 +4,12 @@ import pytest
 
 
 @pytest.fixture(scope="function", autouse=True)
-def mock_message_bus():
-    from st_server.shared.infrastructure.message_bus.rabbitmq_message_bus import (
-        RabbitMQMessageBus,
+def mock_rabbitmq_message_bus():
+    from tests.util.shared.infrastructure.message_bus.rabbitmq_fake import (
+        RabbitMQFake,
     )
 
-    message_bus = RabbitMQMessageBus(
-        host="localhost", port=5672, username="admin", password="admin"
-    )
-
-    yield message_bus
+    yield RabbitMQFake()
 
 
 @pytest.fixture(scope="function")
