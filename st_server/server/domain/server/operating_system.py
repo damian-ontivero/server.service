@@ -1,6 +1,3 @@
-"""Value object that represents the Operating System of the Server."""
-
-
 class OperatingSystem:
     """Value object that represents the Operating System of the Server."""
 
@@ -8,7 +5,7 @@ class OperatingSystem:
 
     @classmethod
     def from_data(cls, data: dict) -> "OperatingSystem":
-        """Named constructor to create an Operating System from a dictionary."""
+        """Named constructor to create the value object from a dictionary."""
         return cls(
             name=data.get("name"),
             version=data.get("version"),
@@ -18,7 +15,7 @@ class OperatingSystem:
     def __new__(
         cls, name: str, version: str, architecture: str
     ) -> "OperatingSystem":
-        """Creates a new instance of Operating System."""
+        """Creates a new instance of the value object."""
         if not isinstance(name, str):
             raise TypeError("Operating system name must be a string")
         if not len(name) > 0:
@@ -38,53 +35,48 @@ class OperatingSystem:
         return self
 
     def __eq__(self, other: object) -> bool:
-        """Compares if two Operating System are equal."""
+        """Checks if two value objects are equal."""
         if isinstance(other, OperatingSystem):
             return (
-                self.name == other._name
-                and self.version == other._version
-                and self.architecture == other._architecture
+                self.name == other.name
+                and self.version == other.version
+                and self.architecture == other.architecture
             )
         return NotImplemented
 
     def __ne__(self, other: object) -> bool:
-        """Compares if two Operating System are not equal."""
+        """Checks if two value objects are not equal."""
         return not self.__eq__(other)
 
     def __hash__(self) -> int:
-        """Returns the hash of the Operating System."""
-        return hash((self._name, self._version, self._architecture))
+        """Returns the hash of the value object."""
+        return hash((self.name, self.version, self.architecture))
 
     def __repr__(self) -> str:
-        """Returns the representation of the Operating System."""
+        """Returns the string representation of the value object."""
         return (
-            "{c}(name={name!r}, version={version!r}, "
-            "architecture={architecture!r})"
-        ).format(
-            c=self.__class__.__name__,
-            name=self._name,
-            version=self._version,
-            architecture=self._architecture,
+            f"{self.__class__.__name__}(name={self._name!r}, "
+            f"version={self._version!r}, architecture={self._architecture!r})"
         )
 
     @property
     def name(self) -> str:
-        """Returns the name of the Operating System."""
+        """Returns the name."""
         return self._name
 
     @property
     def version(self) -> str:
-        """Returns the version of the Operating System."""
+        """Returns the version."""
         return self._version
 
     @property
     def architecture(self) -> str:
-        """Returns the architecture of the Operating System."""
+        """Returns the architecture."""
         return self._architecture
 
     @property
     def __dict__(self) -> dict:
-        """Returns the Operating System as a dictionary."""
+        """Returns the dictionary representation of the value object."""
         return {
             "name": self._name,
             "version": self._version,

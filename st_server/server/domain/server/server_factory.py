@@ -1,6 +1,3 @@
-from st_server.shared.domain.entity_id import EntityId
-from st_server.shared.domain.factory import Factory
-
 from st_server.server.domain.server.connection_type import ConnectionType
 from st_server.server.domain.server.credential import Credential
 from st_server.server.domain.server.environment import Environment
@@ -8,6 +5,8 @@ from st_server.server.domain.server.operating_system import OperatingSystem
 from st_server.server.domain.server.server import Server
 from st_server.server.domain.server.server_application import ServerApplication
 from st_server.server.domain.server.server_status import ServerStatus
+from st_server.shared.domain.entity_id import EntityId
+from st_server.shared.domain.factory import Factory
 
 
 class ServerFactory(Factory):
@@ -129,13 +128,7 @@ class ServerFactory(Factory):
                 for credential in credentials or []
             ],
             applications=[
-                ServerApplication(
-                    application_id=EntityId.from_text(
-                        application["application_id"]
-                    ),
-                    install_dir=application["install_dir"],
-                    log_dir=application["log_dir"],
-                )
+                ServerApplication.from_data(application)
                 for application in applications or []
             ],
             status=ServerStatus.from_text(status) if status else None,

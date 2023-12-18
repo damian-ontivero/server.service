@@ -6,9 +6,7 @@ from st_server.server.application.application.command.add_application_command im
 from st_server.server.application.application.dto.application import (
     ApplicationDto,
 )
-from st_server.server.domain.application.application_factory import (
-    ApplicationFactory,
-)
+from st_server.server.domain.application.application import Application
 from st_server.server.domain.application.application_repository import (
     ApplicationRepository,
 )
@@ -29,9 +27,9 @@ class AddApplicationCommandHandler(CommandHandler):
 
     def handle(self, command: AddApplicationCommand) -> ApplicationDto:
         """Handle a command."""
-        application = ApplicationFactory.build(**command.to_dict())
+        application = Application.create(**command.to_dict())
         self._check_if_exists(application.name)
-        self._repository.save_one(application)
+        self._repository.add(application)
         for domain_event in application.domain_events:
             self._message_bus.publish(domain_event)
         application.clear_domain_events()

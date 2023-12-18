@@ -30,7 +30,7 @@ class ServerFactory(factory.Factory):
     @classmethod
     def _create(cls, model_class, *args, **kwargs):
         server = model_class.build(*args, **kwargs)
-        ServerRepositoryImpl(SessionLocal()).save_one(server)
+        ServerRepositoryImpl(SessionLocal()).add(server)
         return server
 
     @classmethod

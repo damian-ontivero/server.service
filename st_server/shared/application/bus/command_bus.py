@@ -11,18 +11,28 @@ class CommandBus:
     def register(self, command: Command, handler: CommandHandler) -> None:
         """Registers a command and its handler."""
         if not isinstance(command, Command):
-            raise TypeError(f"{type(command)} is not a valid command")
+            raise TypeError(
+                f"Invalid command type: {type(command)}. Expected type: Command"
+            )
         if not isinstance(handler, CommandHandler):
-            raise TypeError(f"{type(handler)} is not a valid handler")
+            raise TypeError(
+                f"Invalid handler type: {type(handler)}. Expected type: CommandHandler"
+            )
         if type(command) in self._handlers:
-            raise NotImplementedError(f"{type(command)} is already registered")
+            raise NotImplementedError(
+                f"Command {type(command)} is already registered"
+            )
         self._handlers[type(command)] = handler
 
     def dispatch(self, command: Command) -> None:
         """Dispatches a command to its handler."""
         if not isinstance(command, Command):
-            raise TypeError(f"{type(command)} is not a valid command")
-        if not type(command) in self._handlers:
-            raise NotImplementedError(f"{type(command)} is not registered")
+            raise TypeError(
+                f"Invalid command type: {type(command)}. Expected type: Command"
+            )
+        if type(command) not in self._handlers:
+            raise NotImplementedError(
+                f"No registered handler found for command: {type(command)}"
+            )
         handler = self._handlers[type(command)]
         handler.handle(command)

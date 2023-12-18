@@ -1,7 +1,4 @@
-"""RabbitMQ message bus implementation."""
-
 import json
-import logging
 import re
 
 import pika
@@ -19,7 +16,6 @@ class RabbitMQMessageBus(MessageBus):
     def __init__(
         self, host: str, port: int, username: str, password: str
     ) -> None:
-        """Initializes the message bus."""
         self._connection = pika.BlockingConnection(
             pika.ConnectionParameters(
                 host=host,

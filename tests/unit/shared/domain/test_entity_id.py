@@ -1,19 +1,20 @@
 """EntityId tests."""
 
 import pytest
+
 from st_server.shared.domain.entity_id import EntityId
 
 
 def test_generate():
     """Test."""
-    entity_id = EntityId.generate()
+    id = EntityId.generate()
 
     assert entity_id.value is not None
 
 
 def test_from_text():
     """Test."""
-    entity_id = EntityId.from_text("1234")
+    id = EntityId.from_text("1234")
 
     assert entity_id.value is not None
     assert entity_id.value == "1234"
@@ -21,7 +22,7 @@ def test_from_text():
 
 def test_immutable_generate():
     """Test."""
-    entity_id = EntityId.generate()
+    id = EntityId.generate()
 
     assert entity_id.value is not None
 
@@ -31,7 +32,7 @@ def test_immutable_generate():
 
 def test_immutable_from_text():
     """Test."""
-    entity_id = EntityId.from_text("1234")
+    id = EntityId.from_text("1234")
 
     assert entity_id.value is not None
     assert entity_id.value == "1234"

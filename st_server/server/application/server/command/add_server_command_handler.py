@@ -25,7 +25,7 @@ class AddServerCommandHandler(CommandHandler):
         """Handle a command."""
         self._check_if_exists(command.name)
         server = ServerFactory.build(**command.to_dict())
-        self._repository.save_one(server)
+        self._repository.add(server)
         for domain_event in server.domain_events:
             self._message_bus.publish(domain_event)
         server.clear_domain_events()

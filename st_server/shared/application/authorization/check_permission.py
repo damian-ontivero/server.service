@@ -9,32 +9,26 @@ config = configparser.ConfigParser()
 config.read("st_server/config.ini")
 
 HOST = config.get("grpc_auth", "host")
-PORT = config.get("grpc_auth", "port")
+PORT = config.getint("grpc_auth", "port")
 
 
-def check_permission(func):
-    """Decorator to check permission for a user
-    to perform an action on a resource.
-    """
+def check_permission(subject, obj, action):
+    """Decorator to check permission for a user to perform an action on a resource."""
 
-    @wraps(func)
-    def wrapped(*args, **kwargs):
-        # module = function.__module__
-        # domain = os.path.splitext(module)[0]
-        # resource = f"{domain}.{function.__qualname__.split('.')[0]}"
-        # action = function.__name__
+    def decorator(func):
+        @wraps(func)
+        def wrapped(*args, **kwargs):
+            client = AuthorizationClient(host=HOST, port=PORT)
+            allowed = client.check_permission(subject, obj, action)
+            if not allowed:
+                raise AuthorizationError(
+                    f"Permission denied for {action} on {obj}"
+                )
+            return func(*args, **kwargs)
 
-        client = AuthorizationClient(host=HOST, port=PORT)
-        allowed = client.check_permission(
-            subject="user",
-            object="resource",
-            action="read",
-        )
-        if not allowed:
-            raise AuthorizationError("Permission denied")
-        return func(*args, **kwargs)
+        return wrapped
 
-    return wrapped
+    return decorator
 
 
 class AuthorizationError(Exception):

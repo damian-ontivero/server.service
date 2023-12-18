@@ -1,9 +1,7 @@
 import factory
 import factory.fuzzy
 
-from st_server.server.domain.application.application_factory import (
-    ApplicationFactory as BaseApplicationFactory,
-)
+from st_server.server.domain.application.application import Application
 from st_server.server.infrastructure.persistence.mysql.application.application_repository import (
     ApplicationRepositoryImpl,
 )
@@ -14,7 +12,7 @@ class ApplicationFactory(factory.Factory):
     """Application factory."""
 
     class Meta:
-        model = BaseApplicationFactory
+        model = Application
 
     name = factory.Faker("name")
     version = factory.Faker("name")
@@ -22,11 +20,11 @@ class ApplicationFactory(factory.Factory):
 
     @classmethod
     def _create(cls, model_class, *args, **kwargs):
-        server = model_class.build(*args, **kwargs)
-        ApplicationRepositoryImpl(SessionLocal()).save_one(server)
-        return server
+        application = model_class.create(*args, **kwargs)
+        ApplicationRepositoryImpl(SessionLocal()).add(application)
+        return application
 
     @classmethod
     def _build(cls, model_class, *args, **kwargs):
-        server = model_class.build(*args, **kwargs)
-        return server
+        application = model_class.create(*args, **kwargs)
+        return application

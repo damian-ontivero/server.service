@@ -3,11 +3,10 @@
 This is the aggregate root entity of the Credential aggregate.
 """
 
+from st_server.server.domain.server.connection_type import ConnectionType
 from st_server.shared.domain.domain_event import DomainEvent
 from st_server.shared.domain.entity import Entity
 from st_server.shared.domain.entity_id import EntityId
-
-from st_server.server.domain.server.connection_type import ConnectionType
 
 
 class Credential(Entity):

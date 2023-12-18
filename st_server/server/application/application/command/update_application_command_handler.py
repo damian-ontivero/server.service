@@ -38,7 +38,7 @@ class UpdateApplicationCommandHandler(CommandHandler):
             version=command.version,
             architect=command.architect,
         )
-        self._repository.save_one(application)
+        self._repository.add(application)
         for domain_event in application.domain_events:
             self._message_bus.publish(domain_event)
         application.clear_domain_events()

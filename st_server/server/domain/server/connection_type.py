@@ -1,6 +1,3 @@
-"""Value object that represents the Connection Type of the Credential."""
-
-
 class ConnectionType:
     """Value object that represents the Connection Type of the Credential."""
 
@@ -8,11 +5,11 @@ class ConnectionType:
 
     @classmethod
     def from_text(cls, text: str) -> "ConnectionType":
-        """Named constructor to create a Connection Type from a string."""
+        """Named constructor to create the value object from a text."""
         return cls(text)
 
     def __new__(cls, value: str) -> "ConnectionType":
-        """Creates a new instance of Connection Type."""
+        """Creates a new instance of the value object."""
         if not isinstance(value, str):
             raise TypeError("Connection type must be a string")
         if not len(value) > 0:
@@ -22,26 +19,24 @@ class ConnectionType:
         return self
 
     def __eq__(self, other: object) -> bool:
-        """Compares if two Connection Type are equal."""
+        """Checks if two value objects are equal."""
         if isinstance(other, ConnectionType):
             return self._value == other._value
         return NotImplemented
 
     def __ne__(self, other: object) -> bool:
-        """Compares if two Connection Type are not equal."""
+        """Checks if two value objects are not equal."""
         return not self.__eq__(other)
 
     def __hash__(self) -> int:
-        """Returns the hash of the Connection Type."""
+        """Returns the hash of the value object."""
         return hash(self._value)
 
     def __repr__(self) -> str:
-        """Returns the representation of the Connection Type."""
-        return "{c}(value={value!r})".format(
-            c=self.__class__.__name__, value=self._value
-        )
+        """Returns the string representation of the value object."""
+        return f"{self.__class__.__name__}(value={self._value!r})"
 
     @property
     def value(self) -> str:
-        """Returns the value of the Connection Type."""
+        """Returns the value."""
         return self._value

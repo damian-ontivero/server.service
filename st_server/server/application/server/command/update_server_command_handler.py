@@ -40,7 +40,7 @@ class UpdateServerCommandHandler(CommandHandler):
             applications=command.applications,
             status=command.status,
         )
-        self._repository.save_one(server)
+        self._repository.add(server)
         for domain_event in server.domain_events:
             self._message_bus.publish(domain_event)
         server.clear_domain_events()

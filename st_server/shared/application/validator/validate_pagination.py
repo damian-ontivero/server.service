@@ -1,36 +1,22 @@
-"""Validates pagination attributes."""
-
 from functools import wraps
 
 
 def validate_pagination(func):
-    """Decorator to validate pagination attributes."""
+    """Validates the provided pagination attributes."""
+
+    def validate_attribute(attr_name, attr_value, lower_bound):
+        try:
+            attr_int = int(attr_value)
+            assert attr_int >= lower_bound
+        except (ValueError, AssertionError):
+            raise PaginationError(
+                f"The {attr_name} number must be a non-negative integer value"
+            )
 
     @wraps(func)
     def wrapped(*args, **kwargs):
-        limit = kwargs.get("limit", None)
-        offset = kwargs.get("offset", None)
-
-        if limit is not None:
-            try:
-                assert int(limit) >= 0
-            except ValueError:
-                raise PaginationError(
-                    "The limit number must be an integer value"
-                )
-            except AssertionError:
-                raise PaginationError("The limit number cannot be less than 1")
-        if offset is not None:
-            try:
-                assert int(offset) >= 0
-            except ValueError:
-                raise PaginationError(
-                    "The offset number must be an integer value"
-                )
-            except AssertionError:
-                raise PaginationError(
-                    "The offset number cannot be less than 0"
-                )
+        validate_attribute("limit", kwargs.get("limit", None), 0)
+        validate_attribute("offset", kwargs.get("offset", None), 0)
         return func(*args, **kwargs)
 
     return wrapped

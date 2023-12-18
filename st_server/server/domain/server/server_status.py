@@ -13,11 +13,11 @@ class ServerStatus:
 
     @classmethod
     def from_text(cls, text: str) -> "ServerStatus":
-        """Named constructor to create a Server status from a string."""
+        """Named constructor to create the value object from a text."""
         return cls(text)
 
     def __new__(cls, value):
-        """Creates a new instance of Server status."""
+        """Creates a new instance of the value object."""
         if not isinstance(value, str):
             raise TypeError("Server status must be a string")
         if not len(value) > 0:
@@ -29,26 +29,26 @@ class ServerStatus:
         return self
 
     def __eq__(self, other):
-        """Compares if two Server status are equal."""
+        """Checks if two value objects are equal."""
         if isinstance(other, ServerStatus):
             return self._value == other._value
         return NotImplemented
 
     def __ne__(self, other):
-        """Compares if two Server status are not equal."""
+        """Checks if two value objects are not equal."""
         return not self.__eq__(other)
 
     def __hash__(self):
-        """Returns the hash of the Server status."""
+        """Returns the hash of the value object."""
         return hash(self._value)
 
     def __repr__(self):
-        """Returns the representation of the Server status."""
+        """Returns the string representation of the value object."""
         return "{c}(value={value!r})".format(
             c=self.__class__.__name__, value=self._value
         )
 
     @property
     def value(self):
-        """Returns the value of the Server status."""
+        """Returns the value."""
         return self._value

@@ -1,8 +1,5 @@
 """Query handler for finding many Applications."""
 
-from st_server.shared.application.query_response import QueryResponse
-from st_server.shared.domain.repository_response import RepositoryResponse
-
 from st_server.server.application.application.dto.application import (
     ApplicationDto,
 )
@@ -12,6 +9,7 @@ from st_server.server.application.application.query.find_many_application_query 
 from st_server.server.domain.application.application_repository import (
     ApplicationRepository,
 )
+from st_server.shared.application.query_response import QueryResponse
 
 
 class FindManyApplicationQueryHandler:
@@ -21,7 +19,7 @@ class FindManyApplicationQueryHandler:
         """Initialize the handler."""
         self._repository = repository
 
-    def handle(self, query: FindManyApplicationQuery) -> RepositoryResponse:
+    def handle(self, query: FindManyApplicationQuery) -> QueryResponse:
         """Handles a query."""
         result = self._repository.find_many(**query.to_dict())
         return QueryResponse(

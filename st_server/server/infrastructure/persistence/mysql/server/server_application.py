@@ -1,30 +1,36 @@
 """ServerApplication database model."""
 
 import sqlalchemy as sa
-from sqlalchemy.orm import relationship
+from sqlalchemy.orm import registry
 
+from st_server.server.domain.server.server_application import ServerApplication
 from st_server.server.infrastructure.persistence.mysql import db
+from st_server.shared.infrastructure.persistence.mysql.entity_id import (
+    EntityIdDbType,
+)
+
+mapper_registry = registry()
 
 
 class ServerApplicationDbModel(db.Base):
     """ServerApplication database model."""
 
     __tablename__ = "server_application"
+    __table_args__ = (sa.PrimaryKeyConstraint("server_id", "application_id"),)
 
-    server_id = sa.Column(sa.ForeignKey("server.id"), primary_key=True)
-    application_id = sa.Column(
-        sa.ForeignKey("application.id"), primary_key=True
-    )
+    server_id = sa.Column(EntityIdDbType, sa.ForeignKey("server.id"))
+    application_id = sa.Column(EntityIdDbType, sa.ForeignKey("application.id"))
     install_dir = sa.Column(sa.String(255), nullable=True)
     log_dir = sa.Column(sa.String(255), nullable=True)
 
-    application = relationship("ApplicationDbModel", lazy="subquery")
 
-    def to_dict(self) -> dict:
-        """Returns a dictiionary representation of the model."""
-        return {
-            "server_id": self.server_id,
-            "application_id": self.application_id,
-            "install_dir": self.install_dir,
-            "log_dir": self.log_dir,
-        }
+mapper_registry.map_imperatively(
+    ServerApplication,
+    ServerApplicationDbModel.__table__,
+    properties={
+        "_server_id": ServerApplicationDbModel.server_id,
+        "_application_id": ServerApplicationDbModel.application_id,
+        "_install_dir": ServerApplicationDbModel.install_dir,
+        "_log_dir": ServerApplicationDbModel.log_dir,
+    },
+)

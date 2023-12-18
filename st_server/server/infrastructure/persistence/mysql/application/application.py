@@ -1,46 +1,36 @@
-"""Application database model."""
-
 import sqlalchemy as sa
+from sqlalchemy.orm import registry
 
 from st_server.server.domain.application.application import Application
 from st_server.server.infrastructure.persistence.mysql import db
+from st_server.shared.infrastructure.persistence.mysql.entity_id import (
+    EntityIdDbType,
+)
+
+mapper_registry = registry(metadata=sa.MetaData())
 
 
 class ApplicationDbModel(db.Base):
     """Application database model."""
 
     __tablename__ = "application"
+    __table_args__ = (sa.PrimaryKeyConstraint("id"),)
 
-    id = sa.Column(sa.String(32), primary_key=True)
+    id = sa.Column(EntityIdDbType)
     name = sa.Column(sa.String(255), nullable=False)
     version = sa.Column(sa.String(255), nullable=False)
     architect = sa.Column(sa.String(255), nullable=False)
     discarded = sa.Column(sa.Boolean, nullable=False)
 
-    @classmethod
-    def from_entity(cls, entity: Application) -> "ApplicationDbModel":
-        """Named constructor to create a model from an entity."""
-        return cls(
-            id=entity.id.value,
-            name=entity.name,
-            version=entity.version,
-            architect=entity.architect,
-            discarded=entity.discarded,
-        )
 
-    def to_dict(self) -> dict:
-        """Returns a dictiionary representation of the model."""
-        return {
-            "id": self.id,
-            "name": self.name,
-            "version": self.version,
-            "architect": self.architect,
-            "discarded": self.discarded,
-        }
-
-    def update(self, entity: Application) -> None:
-        """Updates the model from an entity."""
-        self.name = entity.name
-        self.version = entity.version
-        self.architect = entity.architect
-        self.discarded = entity.discarded
+mapper_registry.map_imperatively(
+    Application,
+    ApplicationDbModel.__table__,
+    properties={
+        "_id": ApplicationDbModel.id,
+        "_name": ApplicationDbModel.name,
+        "_version": ApplicationDbModel.version,
+        "_architect": ApplicationDbModel.architect,
+        "_discarded": ApplicationDbModel.discarded,
+    },
+)

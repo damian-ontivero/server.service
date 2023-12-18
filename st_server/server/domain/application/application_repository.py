@@ -1,10 +1,8 @@
-"""Application Repository interface."""
-
 from abc import ABCMeta, abstractmethod
-
-from st_server.shared.domain.repository_response import RepositoryResponse
+from typing import Dict, List, Optional
 
 from st_server.server.domain.application.application import Application
+from st_server.shared.domain.repository_response import RepositoryResponse
 
 FILTER_OPERATOR_MAPPER = {
     "eq": lambda m, k, v: getattr(m, k) == v,
@@ -19,67 +17,16 @@ FILTER_OPERATOR_MAPPER = {
 
 
 class ApplicationRepository(metaclass=ABCMeta):
-    """Application Repository interface.
+    """
+    Repository interface for managing Application entities.
+    Repositories handle the retrieval and storage of aggregates.
 
-    Repositories are responsible for retrieving and storing aggregates.
-
-    In the `find_many` method, the `filter` parameter is a dictionary that
-    contains the filter criteria. The `and_filter` and `or_filter` parameters
-    are lists of dictionaries that contain the filter criteria. The `sort`
-    parameter is a list of dictionaries that contain the sort criteria.
-
-    The `filter`, `and_filter` and `or_filter` parameters are
-    dictionaries with the following structure:
-
-    {
-        "attribute": {
-            "operator": "value"
-        }
-    }
-
-    The `attribute` is the name of the attribute to filter by. The `operator`
-    is the operator to filter by. The `value` is the value to filter by. The
-    following operators are supported:
-
-    - `eq`: equal to
-    - `gt`: greater than
-    - `ge`: greater than or equal to
-    - `lt`: less than
-    - `le`: less than or equal to
-    - `in`: in
-    - `btw`: between
-    - `lk`: ilike
-
-    The `in` operator expects a comma-separated list of values. The `btw`
-    operator expects a comma-separated list of two values.
-
-    The `sort` parameter is a list of dictionaries with the following
-    structure:
-
-    {
-        "attribute": "order"
-    }
-
-    The `attribute` is the name of the attribute to sort by. The `order` is the
-    order to sort by. The following orders are supported:
-
-    - `asc`: ascending
-    - `desc`: descending
-
-    The `limit` parameter is the maximum number of records to return. The
-    `offset` parameter is the number of records to skip.
-
-    The `find_one` method returns a single aggregate. The `id` parameter is the
-    ID of the aggregate to return.
-
-    The `save_one` method adds a single aggregate. The `aggregate` parameter is
-    the aggregate to add.
-
-    The `save_one` method updates a single aggregate. The `aggregate`
-    parameter is the aggregate to update.
-
-    The `delete_one` method deletes a single aggregate. The `id` parameter is
-    the ID of the aggregate to delete.
+    Methods:
+        - find_many: Retrieves a list of Applications based on filtering, sorting, and pagination.
+        - find_by_id: Fetches a single Application by its ID.
+        - add: Adds a new Application entity to the repository.
+        - update: Updates an existing Application entity in the repository.
+        - delete_by_id: Deletes an Application entity by its ID.
     """
 
     @abstractmethod
@@ -87,25 +34,81 @@ class ApplicationRepository(metaclass=ABCMeta):
         self,
         limit: int,
         offset: int,
-        filter: dict,
-        and_filter: list[dict],
-        or_filter: list[dict],
-        sort: list[dict],
+        filters: Dict[str, Dict[str, str]],
+        and_filters: List[Dict[str, Dict[str, str]]],
+        or_filters: List[Dict[str, Dict[str, str]]],
+        sort: List[Dict[str, str]],
     ) -> RepositoryResponse:
-        """Returns a list of Applications."""
+        """
+        Retrieves a list of Applications based on provided filters, sorting, and pagination.
+
+        Args:
+            limit (int): Maximum number of records to return.
+            offset (int): Number of records to skip.
+            filters (Dict[str, Dict[str, str]]): Filter criteria as a dictionary of attribute: operator: value.
+            and_filters (List[Dict[str, Dict[str, str]]]): List of 'AND' filter criteria.
+            or_filters (List[Dict[str, Dict[str, str]]]): List of 'OR' filter criteria.
+            sort (List[Dict[str, str]]): List of sorting criteria.
+
+        Returns:
+            RepositoryResponse: Response object containing a list of Application entities.
+
+        Raises:
+            NotImplementedError: If the method is not implemented in the concrete class.
+        """
         raise NotImplementedError
 
     @abstractmethod
-    def find_one(self, id: int) -> Application | None:
-        """Returns an Application."""
+    def find_by_id(self, id: int) -> Optional[Application]:
+        """
+        Retrieves an Application by its ID.
+
+        Args:
+            id (int): ID of the Application to retrieve.
+
+        Returns:
+            Optional[Application]: The retrieved Application or None if not found.
+
+        Raises:
+            NotImplementedError: If the method is not implemented in the concrete class.
+        """
         raise NotImplementedError
 
     @abstractmethod
-    def save_one(self, aggregate: Application) -> None:
-        """Saves an Application."""
+    def add(self, application: Application) -> None:
+        """
+        Adds an Application.
+
+        Args:
+            application (Application): The Application entity to add.
+
+        Raises:
+            NotImplementedError: If the method is not implemented in the concrete class.
+        """
         raise NotImplementedError
 
     @abstractmethod
-    def delete_one(self, id: int) -> None:
-        """Deletes an Application."""
+    def update(self, application: Application) -> None:
+        """
+        Updates an Application.
+
+        Args:
+            application (Application): The Application entity to update.
+
+        Raises:
+            NotImplementedError: If the method is not implemented in the concrete class.
+        """
+        raise NotImplementedError
+
+    @abstractmethod
+    def delete_by_id(self, id: int) -> None:
+        """
+        Deletes an Application by its ID.
+
+        Args:
+            id (int): ID of the Application to delete.
+
+        Raises:
+            NotImplementedError: If the method is not implemented in the concrete class.
+        """
         raise NotImplementedError
