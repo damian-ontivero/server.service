@@ -18,15 +18,10 @@ FILTER_OPERATOR_MAPPER = {
 
 class ServerRepository(metaclass=ABCMeta):
     """
-    Repository interface for managing Server entities.
-    Repositories handle the retrieval and storage of aggregates.
-
-    Methods:
-        - find_many: Retrieves a list of Servers based on filtering, sorting, and pagination.
-        - find_by_id: Fetches a single Server by its ID.
-        - add: Adds a new Server entity to the repository.
-        - update: Updates an existing Server entity in the repository.
-        - delete_by_id: Deletes an Server entity by its ID.
+    Interface for Server repositories.
+    This interface should be implemented by any repository
+    that is going to be used to retrieve and persist Server
+    instances.
     """
 
     @abstractmethod
@@ -39,76 +34,25 @@ class ServerRepository(metaclass=ABCMeta):
         or_filters: List[Dict[str, Dict[str, str]]],
         sort: List[Dict[str, str]],
     ) -> RepositoryResponse:
-        """
-        Retrieves a list of Servers based on provided filters, sorting, and pagination.
-
-        Args:
-            limit (int): Maximum number of records to return.
-            offset (int): Number of records to skip.
-            filters (Dict[str, Dict[str, str]]): Filter criteria as a dictionary of attribute: operator: value.
-            and_filters (List[Dict[str, Dict[str, str]]]): List of 'AND' filter criteria.
-            or_filters (List[Dict[str, Dict[str, str]]]): List of 'OR' filter criteria.
-            sort (List[Dict[str, str]]): List of sorting criteria.
-
-        Returns:
-            RepositoryResponse: Response object containing a list of Server entities.
-
-        Raises:
-            NotImplementedError: If the method is not implemented in the concrete class.
-        """
+        """Retrieves Servers based on provided filters, sorting, and pagination."""
         raise NotImplementedError
 
     @abstractmethod
     def find_by_id(self, id: int) -> Optional[Server]:
-        """
-        Retrieves a Server by its ID.
-
-        Args:
-            id (int): ID of the Server to retrieve.
-
-        Returns:
-            Optional[Server]: The retrieved Server or None if not found.
-
-        Raises:
-            NotImplementedError: If the method is not implemented in the concrete class.
-        """
+        """Retrieves a Server by its ID."""
         raise NotImplementedError
 
     @abstractmethod
     def add(self, server: Server) -> None:
-        """
-        Adds a Server.
-
-        Args:
-            server (Server): The Server entity to add.
-
-        Raises:
-            NotImplementedError: If the method is not implemented in the concrete class.
-        """
+        """Adds a Server."""
         raise NotImplementedError
 
     @abstractmethod
     def update(self, server: Server) -> None:
-        """
-        Updates a Server.
-
-        Args:
-            server (Server): The Server entity to update.
-
-        Raises:
-            NotImplementedError: If the method is not implemented in the concrete class.
-        """
+        """Updates a Server."""
         raise NotImplementedError
 
     @abstractmethod
     def delete_by_id(self, id: int) -> None:
-        """
-        Deletes a Server by its ID.
-
-        Args:
-            id (int): ID of the Server to delete.
-
-        Raises:
-            NotImplementedError: If the method is not implemented in the concrete class.
-        """
+        """Deletes a Server by its ID."""
         raise NotImplementedError

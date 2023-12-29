@@ -18,15 +18,10 @@ FILTER_OPERATOR_MAPPER = {
 
 class ApplicationRepository(metaclass=ABCMeta):
     """
-    Repository interface for managing Application entities.
-    Repositories handle the retrieval and storage of aggregates.
-
-    Methods:
-        - find_many: Retrieves a list of Applications based on filtering, sorting, and pagination.
-        - find_by_id: Fetches a single Application by its ID.
-        - add: Adds a new Application entity to the repository.
-        - update: Updates an existing Application entity in the repository.
-        - delete_by_id: Deletes an Application entity by its ID.
+    Interface for Application repositories.
+    This interface should be implemented by any repository
+    that is going to be used to retrieve and persist Application
+    instances.
     """
 
     @abstractmethod
@@ -39,76 +34,25 @@ class ApplicationRepository(metaclass=ABCMeta):
         or_filters: List[Dict[str, Dict[str, str]]],
         sort: List[Dict[str, str]],
     ) -> RepositoryResponse:
-        """
-        Retrieves a list of Applications based on provided filters, sorting, and pagination.
-
-        Args:
-            limit (int): Maximum number of records to return.
-            offset (int): Number of records to skip.
-            filters (Dict[str, Dict[str, str]]): Filter criteria as a dictionary of attribute: operator: value.
-            and_filters (List[Dict[str, Dict[str, str]]]): List of 'AND' filter criteria.
-            or_filters (List[Dict[str, Dict[str, str]]]): List of 'OR' filter criteria.
-            sort (List[Dict[str, str]]): List of sorting criteria.
-
-        Returns:
-            RepositoryResponse: Response object containing a list of Application entities.
-
-        Raises:
-            NotImplementedError: If the method is not implemented in the concrete class.
-        """
+        """Retrieves Applications based on provided filters, sorting, and pagination."""
         raise NotImplementedError
 
     @abstractmethod
     def find_by_id(self, id: int) -> Optional[Application]:
-        """
-        Retrieves an Application by its ID.
-
-        Args:
-            id (int): ID of the Application to retrieve.
-
-        Returns:
-            Optional[Application]: The retrieved Application or None if not found.
-
-        Raises:
-            NotImplementedError: If the method is not implemented in the concrete class.
-        """
+        """Retrieves an Application by its ID."""
         raise NotImplementedError
 
     @abstractmethod
     def add(self, application: Application) -> None:
-        """
-        Adds an Application.
-
-        Args:
-            application (Application): The Application entity to add.
-
-        Raises:
-            NotImplementedError: If the method is not implemented in the concrete class.
-        """
+        """Adds an Application."""
         raise NotImplementedError
 
     @abstractmethod
     def update(self, application: Application) -> None:
-        """
-        Updates an Application.
-
-        Args:
-            application (Application): The Application entity to update.
-
-        Raises:
-            NotImplementedError: If the method is not implemented in the concrete class.
-        """
+        """Updates an Application."""
         raise NotImplementedError
 
     @abstractmethod
     def delete_by_id(self, id: int) -> None:
-        """
-        Deletes an Application by its ID.
-
-        Args:
-            id (int): ID of the Application to delete.
-
-        Raises:
-            NotImplementedError: If the method is not implemented in the concrete class.
-        """
+        """Deletes an Application by its ID."""
         raise NotImplementedError

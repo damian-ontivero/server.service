@@ -47,7 +47,6 @@ server.domain/
 |   |       ├── root_entity.py                        # The root entity of the aggregate
 |   |       ├── other_entity.py                       # Other entities of the aggregate
 |   |       ├── value_object.py                       # Value object of the aggregate
-|   |       ├── factory.py                            # Factory to build and rebuild the aggregate
 |   |       └── repository.py                         # Abstract repository for the aggregate
 |   │
 |   ├── infrastructure/

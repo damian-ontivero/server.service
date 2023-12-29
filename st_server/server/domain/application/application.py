@@ -43,13 +43,6 @@ class Application(AggregateRoot):
         Important:
             Do not use directly to create a new Application.
             Use the Application Factory instead.
-
-        Args:
-            id (EntityId): The entity id of the Application.
-            name (str): The name of the Application.
-            version (str): The version of the Application.
-            architect (str): The architect of the Application.
-            discarded (bool): Whether the Application is discarded.
         """
         super().__init__(id=id, discarded=discarded)
         self._name = name
@@ -79,29 +72,13 @@ class Application(AggregateRoot):
 
     @property
     def name(self) -> str:
-        """
-        Returns the name of the Application.
-
-        Returns:
-            str: The name of the Application.
-
-        Raises:
-            DiscardedEntityError: If the Application is discarded.
-        """
+        """Returns the name."""
         self._check_not_discarded()
         return self._name
 
     @name.setter
     def name(self, name: str) -> None:
-        """
-        Sets the name of the Application.
-
-        Args:
-            name (str): The name of the Application.
-
-        Raises:
-            DiscardedEntityError: If the Application is discarded.
-        """
+        """Sets the name."""
         self._check_not_discarded()
         domain_event = Application.NameChanged(
             aggregate_id=self._id.value,
@@ -113,29 +90,13 @@ class Application(AggregateRoot):
 
     @property
     def version(self) -> str:
-        """
-        Returns the version of the Application.
-
-        Returns:
-            str: The version of the Application.
-
-        Raises:
-            DiscardedEntityError: If the Application is discarded.
-        """
+        """Returns the version."""
         self._check_not_discarded()
         return self._version
 
     @version.setter
     def version(self, version: str) -> None:
-        """
-        Sets the version of the Application.
-
-        Args:
-            version (str): The version of the Application.
-
-        Raises:
-            DiscardedEntityError: If the Application is discarded.
-        """
+        """Sets the version."""
         self._check_not_discarded()
         domain_event = Application.VersionChanged(
             aggregate_id=self._id.value,
@@ -147,29 +108,13 @@ class Application(AggregateRoot):
 
     @property
     def architect(self) -> str:
-        """
-        Returns the architect of the Application.
-
-        Returns:
-            str: The architect of the Application.
-
-        Raises:
-            DiscardedEntityError: If the Application is discarded.
-        """
+        """Returns the architect."""
         self._check_not_discarded()
         return self._architect
 
     @architect.setter
     def architect(self, architect: str) -> None:
-        """
-        Sets the architect of the Application.
-
-        Args:
-            architect (str): The architect of the Application.
-
-        Raises:
-            DiscardedEntityError: If the Application is discarded.
-        """
+        """Sets the architect."""
         self._check_not_discarded()
         domain_event = Application.ArchitectChanged(
             aggregate_id=self._id.value,
@@ -181,22 +126,7 @@ class Application(AggregateRoot):
 
     @staticmethod
     def create(name: str, version: str, architect: str) -> "Application":
-        """
-        Creates a new Application.
-
-        Args:
-            name (str): The name of the Application.
-            version (str): The version of the Application.
-            architect (str): The architect of the Application.
-
-        Returns:
-            Application: The new Application.
-
-        Raises:
-            ValueError: If the name is empty.
-            ValueError: If the version is empty.
-            ValueError: If the architect is empty.
-        """
+        """Creates a new Application."""
         application = Application(
             id=EntityId.generate(),
             name=name,
