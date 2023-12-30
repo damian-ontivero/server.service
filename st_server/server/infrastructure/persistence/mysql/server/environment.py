@@ -1,9 +1,9 @@
-import sqlalchemy as sa
+from sqlalchemy.types import String, TypeDecorator
 
 from st_server.server.domain.server.environment import Environment
 
 
-class EnvironmentDbType(sa.types.TypeDecorator):
+class EnvironmentDbType(TypeDecorator):
     """
     Custom SQLAlchemy type for handling Environment instances.
 
@@ -11,25 +11,17 @@ class EnvironmentDbType(sa.types.TypeDecorator):
     and retrieves them as Environment instances.
     """
 
-    impl = sa.String(255)
+    impl = String(255)
     cache_ok = True
 
     def process_bind_param(self, value, dialect):
-        """Returns the Environment value to be stored."""
-        if value is None:
-            return None
-        if not isinstance(value, Environment):
-            raise TypeError(
-                f"Invalid value type: {type(value)}. Expected type: Environment"
-            )
-        return value.value
+        """Returns the value to be stored."""
+        if value is not None:
+            value = value.value
+        return value
 
     def process_result_value(self, value, dialect):
-        """Returns the stored value as an Environment instance."""
-        if value is None:
-            return None
-        if not isinstance(value, str):
-            raise TypeError(
-                f"Invalid value type: {type(value)}. Expected type: str"
-            )
-        return Environment.from_text(value)
+        """Returns a value object instance from the stored value."""
+        if value is not None:
+            value = Environment.from_text(value)
+        return value

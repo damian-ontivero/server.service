@@ -1,9 +1,9 @@
-import sqlalchemy as sa
+from sqlalchemy.types import JSON, TypeDecorator
 
 from st_server.server.domain.server.operating_system import OperatingSystem
 
 
-class OperatingSystemDbType(sa.types.TypeDecorator):
+class OperatingSystemDbType(TypeDecorator):
     """
     Custom SQLAlchemy type for handling OperatingSystem instances.
 
@@ -11,25 +11,17 @@ class OperatingSystemDbType(sa.types.TypeDecorator):
     and retrieves them as OperatingSystem instances.
     """
 
-    impl = sa.JSON
+    impl = JSON
     cache_ok = True
 
     def process_bind_param(self, value, dialect):
-        """Returns the OperatingSystem value to be stored."""
-        if value is None:
-            return None
-        if not isinstance(value, OperatingSystem):
-            raise TypeError(
-                f"Invalid value type: {type(value)}. Expected type: OperatingSystem"
-            )
-        return value.__dict__
+        """Returns the value to be stored."""
+        if value is not None:
+            value = value.__dict__
+        return value
 
     def process_result_value(self, value, dialect):
-        """Returns the stored value as an OperatingSystem instance."""
-        if value is None:
-            return None
-        if not isinstance(value, dict):
-            raise TypeError(
-                f"Invalid value type: {type(value)}. Expected type: dict"
-            )
-        return OperatingSystem.from_data(value)
+        """Returns a value object instance from the stored value."""
+        if value is not None:
+            value = OperatingSystem.from_data(value)
+        return value
