@@ -1,4 +1,3 @@
-from st_server.server.domain.server.connection_type import ConnectionType
 from st_server.server.domain.server.credential import Credential
 from st_server.server.domain.server.environment import Environment
 from st_server.server.domain.server.operating_system import OperatingSystem

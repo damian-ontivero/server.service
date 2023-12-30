@@ -6,6 +6,7 @@ from fastapi import APIRouter, Depends, Query, status
 from fastapi.encoders import jsonable_encoder
 from fastapi.responses import JSONResponse
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
+from sqlalchemy.orm import Session
 
 from st_server.server.application.application.command.add_application_command import (
     AddApplicationCommand,
@@ -40,13 +41,9 @@ from st_server.server.application.application.query.find_one_application_query i
 from st_server.server.application.application.query.find_one_application_query_handler import (
     FindOneApplicationQueryHandler,
 )
-from st_server.server.infrastructure.message_bus.rabbitmq_message_bus import (
-    RabbitMQMessageBus,
-)
 from st_server.server.infrastructure.persistence.mysql.application.application_repository import (
     ApplicationRepositoryImpl,
 )
-from st_server.server.infrastructure.persistence.mysql.db import SessionLocal
 from st_server.server.infrastructure.ui.api.dependency import (
     get_command_bus,
     get_mysql_session,
@@ -54,12 +51,15 @@ from st_server.server.infrastructure.ui.api.dependency import (
 )
 from st_server.shared.application.bus.command_bus import CommandBus
 from st_server.shared.application.query_response import QueryResponse
+from st_server.shared.infrastructure.message_bus.rabbitmq_message_bus import (
+    RabbitMQMessageBus,
+)
 
 router = APIRouter(prefix="/server/applications", tags=["Application"])
 auth_scheme = HTTPBearer()
 
 
-def get_repository(session: SessionLocal = Depends(get_mysql_session)):
+def get_repository(session: Session = Depends(get_mysql_session)):
     """Yields a Server repository."""
     return ApplicationRepositoryImpl(session)
 

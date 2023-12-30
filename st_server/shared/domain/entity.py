@@ -4,11 +4,11 @@ from st_server.shared.domain.entity_id import EntityId
 
 
 class Entity(metaclass=ABCMeta):
-    """
-    Abstract base class for entities.
+    """Abstract base class for entities.
 
-    Entities in the domain have unique identity and defined attributes. They undergo a life cycle of creation, update, and deletion.
-    They are mutable and can be compared by their identity.
+    Entities are domain objects with unique identity and defined by attributes.
+    They have a specific life cycle: creation, update, and deletion. They are
+    mutable and can be compared by their identity.
     """
 
     @abstractmethod

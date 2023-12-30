@@ -1,15 +1,12 @@
 """ServerApplication database model."""
 
 import sqlalchemy as sa
-from sqlalchemy.orm import registry
 
 from st_server.server.domain.server.server_application import ServerApplication
 from st_server.server.infrastructure.persistence.mysql import db
 from st_server.shared.infrastructure.persistence.mysql.entity_id import (
     EntityIdDbType,
 )
-
-mapper_registry = registry()
 
 
 class ServerApplicationDbModel(db.Base):
@@ -20,11 +17,11 @@ class ServerApplicationDbModel(db.Base):
 
     server_id = sa.Column(EntityIdDbType, sa.ForeignKey("server.id"))
     application_id = sa.Column(EntityIdDbType, sa.ForeignKey("application.id"))
-    install_dir = sa.Column(sa.String(255), nullable=True)
-    log_dir = sa.Column(sa.String(255), nullable=True)
+    install_dir = sa.Column(sa.String(255))
+    log_dir = sa.Column(sa.String(255))
 
 
-mapper_registry.map_imperatively(
+db.Base.registry.map_imperatively(
     ServerApplication,
     ServerApplicationDbModel.__table__,
     properties={

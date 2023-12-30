@@ -2,7 +2,7 @@
 
 import configparser
 
-from st_server.server.infrastructure.persistence.mysql.db import SessionLocal
+from st_server.server.infrastructure.persistence.mysql import db
 from st_server.shared.application.bus.command_bus import CommandBus
 from st_server.shared.infrastructure.message_bus.rabbitmq_message_bus import (
     RabbitMQMessageBus,
@@ -19,7 +19,7 @@ rabbitmq_pass = config.get("rabbitmq", "pass")
 
 def get_mysql_session():
     """Yields a mysql session."""
-    session = SessionLocal()
+    session = db.get_session()
     try:
         yield session
     finally:

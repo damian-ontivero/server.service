@@ -1,7 +1,6 @@
 """Credential database model."""
 
 import sqlalchemy as sa
-from sqlalchemy.orm import registry
 
 from st_server.server.domain.server.credential import Credential
 from st_server.server.infrastructure.persistence.mysql import db
@@ -12,8 +11,6 @@ from st_server.shared.infrastructure.persistence.mysql.entity_id import (
     EntityIdDbType,
 )
 
-mapper_registry = registry()
-
 
 class CredentialDbModel(db.Base):
     """Credential database model."""
@@ -22,20 +19,18 @@ class CredentialDbModel(db.Base):
     __table_args__ = (sa.PrimaryKeyConstraint("id"),)
 
     id = sa.Column(EntityIdDbType)
-    server_id = sa.Column(
-        EntityIdDbType, sa.ForeignKey("server.id"), nullable=False
-    )
-    connection_type = sa.Column(ConnectionTypeDbType, nullable=False)
-    local_ip = sa.Column(sa.String(255), nullable=True)
-    local_port = sa.Column(sa.String(255), nullable=True)
-    public_ip = sa.Column(sa.String(255), nullable=True)
-    public_port = sa.Column(sa.String(255), nullable=True)
-    username = sa.Column(sa.String(255), nullable=False)
-    password = sa.Column(sa.String(255), nullable=False)
-    discarded = sa.Column(sa.Boolean, nullable=False)
+    server_id = sa.Column(EntityIdDbType, sa.ForeignKey("server.id"))
+    connection_type = sa.Column(ConnectionTypeDbType)
+    local_ip = sa.Column(sa.String(255))
+    local_port = sa.Column(sa.String(255))
+    public_ip = sa.Column(sa.String(255))
+    public_port = sa.Column(sa.String(255))
+    username = sa.Column(sa.String(255))
+    password = sa.Column(sa.String(255))
+    discarded = sa.Column(sa.Boolean)
 
 
-mapper_registry.map_imperatively(
+db.Base.registry.map_imperatively(
     Credential,
     CredentialDbModel.__table__,
     properties={

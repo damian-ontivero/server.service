@@ -13,7 +13,7 @@ _sym_db = _symbol_database.Default()
 
 
 DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(
-    b'\n\x13\x61uthorization.proto\x12\rauthorization"?\n\x0c\x43heckRequest\x12\x0f\n\x07subject\x18\x01 \x01(\t\x12\x0e\n\x06\x61\x63tion\x18\x02 \x01(\t\x12\x0e\n\x06object\x18\x03 \x01(\t" \n\rCheckResponse\x12\x0f\n\x07\x61llowed\x18\x01 \x01(\x08\x32\x66\n\x14\x41uthorizationService\x12N\n\x0f\x43heckPermission\x12\x1b.authorization.CheckRequest\x1a\x1c.authorization.CheckResponse"\x00\x62\x06proto3'
+    b'\n\x13\x61uthorization.proto\x12\rauthorization"?\n\x0c\x43heckRequest\x12\x0f\n\x07subject\x18\x01 \x01(\t\x12\x0e\n\x06\x61\x63tion\x18\x02 \x01(\t\x12\x0e\n\x06object\x18\x03 \x01(\t" \n\rCheckResponse\x12\x0f\n\x07\x61llowed\x18\x01 \x01(\x08\x32\x66\n\x14\x41uthorizationService\x12N\n\x0f\x43heckPermission\x12\x1b.authorization.CheckRequest\x1a\x1c.authorization.CheckResponse"\x00\x62\x06proto3'  # noqa: E501
 )
 
 _globals = globals()
@@ -21,7 +21,7 @@ _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
 _builder.BuildTopDescriptorsAndMessages(
     DESCRIPTOR, "authorization_pb2", _globals
 )
-if _descriptor._USE_C_DESCRIPTORS == False:
+if _descriptor._USE_C_DESCRIPTORS is False:
     DESCRIPTOR._options = None
     _globals["_CHECKREQUEST"]._serialized_start = 38
     _globals["_CHECKREQUEST"]._serialized_end = 101

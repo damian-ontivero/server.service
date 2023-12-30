@@ -1,7 +1,7 @@
 """Server database model."""
 
 import sqlalchemy as sa
-from sqlalchemy.orm import registry, relationship
+from sqlalchemy.orm import relationship
 
 from st_server.server.domain.server.credential import Credential
 from st_server.server.domain.server.server import Server
@@ -19,8 +19,6 @@ from st_server.shared.infrastructure.persistence.mysql.entity_id import (
     EntityIdDbType,
 )
 
-mapper_registry = registry()
-
 
 class ServerDbModel(db.Base):
     """Server database model."""
@@ -29,17 +27,17 @@ class ServerDbModel(db.Base):
     __table_args__ = (sa.PrimaryKeyConstraint("id"),)
 
     id = sa.Column(EntityIdDbType)
-    name = sa.Column(sa.String(255), nullable=False)
-    cpu = sa.Column(sa.String(255), nullable=True)
-    ram = sa.Column(sa.String(255), nullable=True)
-    hdd = sa.Column(sa.String(255), nullable=True)
-    environment = sa.Column(EnvironmentDbType, nullable=False)
-    operating_system = sa.Column(OperatingSystemDbType, nullable=False)
-    status = sa.Column(ServerStatusDbType, nullable=True)
-    discarded = sa.Column(sa.Boolean, nullable=False)
+    name = sa.Column(sa.String(255))
+    cpu = sa.Column(sa.String(255))
+    ram = sa.Column(sa.String(255))
+    hdd = sa.Column(sa.String(255))
+    environment = sa.Column(EnvironmentDbType)
+    operating_system = sa.Column(OperatingSystemDbType)
+    status = sa.Column(ServerStatusDbType)
+    discarded = sa.Column(sa.Boolean)
 
 
-mapper_registry.map_imperatively(
+db.Base.registry.map_imperatively(
     Server,
     ServerDbModel.__table__,
     properties={

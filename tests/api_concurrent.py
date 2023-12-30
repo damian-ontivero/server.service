@@ -8,10 +8,10 @@ def make_api_request():
     url = "http://127.0.0.1:4003/server/applications"
     payload = {}
     headers = {
-        "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI4YTVmN2FhYmIwZTk0Nzg0OWEwZDE2YzgyNTYwYjUwZSIsImVtYWlsIjoiYWRtaW5AYWRtaW4uY29tIiwicm9sZXMiOlsic3VwcG9ydF9hZG1pbiJdLCJleHAiOjE2OTU1MjI3MDl9.wYpHLQdbzRoBM9q-5G9p1fYDsVBWzJKx453QIEAVxwQ"
+        "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI4YTVmN2FhYmIwZTk0Nzg0OWEwZDE2YzgyNTYwYjUwZSIsImVtYWlsIjoiYWRtaW5AYWRtaW4uY29tIiwicm9sZXMiOlsic3VwcG9ydF9hZG1pbiJdLCJleHAiOjE2OTU1MjI3MDl9.wYpHLQdbzRoBM9q-5G9p1fYDsVBWzJKx453QIEAVxwQ"  # noqa: E501
     }
     response = requests.get(
-        url=url, headers=headers
+        url=url, headers=headers, params=payload
     )  # Replace with your API endpoint
     return response.status_code
 
