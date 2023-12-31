@@ -24,9 +24,8 @@ class ServerDbModel(db.Base):
     """Server database model."""
 
     __tablename__ = "server"
-    __table_args__ = (sa.PrimaryKeyConstraint("id"),)
 
-    id = sa.Column(EntityIdDbType)
+    id = sa.Column(EntityIdDbType, primary_key=True)
     name = sa.Column(sa.String(255))
     cpu = sa.Column(sa.String(255))
     ram = sa.Column(sa.String(255))

@@ -13,10 +13,13 @@ class ServerApplicationDbModel(db.Base):
     """ServerApplication database model."""
 
     __tablename__ = "server_application"
-    __table_args__ = (sa.PrimaryKeyConstraint("server_id", "application_id"),)
 
-    server_id = sa.Column(EntityIdDbType, sa.ForeignKey("server.id"))
-    application_id = sa.Column(EntityIdDbType, sa.ForeignKey("application.id"))
+    server_id = sa.Column(
+        EntityIdDbType, sa.ForeignKey("server.id"), primary_key=True
+    )
+    application_id = sa.Column(
+        EntityIdDbType, sa.ForeignKey("application.id"), primary_key=True
+    )
     install_dir = sa.Column(sa.String(255))
     log_dir = sa.Column(sa.String(255))
 

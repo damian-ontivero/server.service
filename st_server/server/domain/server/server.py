@@ -95,7 +95,7 @@ class Server(AggregateRoot):
         self._status = status
 
     def __repr__(self) -> str:
-        """Returns the string representation of the Server."""
+        """Returns the string representation of the entity."""
         return (
             "{d}{c}(id={id!r}, name={name!r}, "
             "cpu={cpu!r}, ram={ram!r}, hdd={hdd!r}, "
@@ -123,12 +123,12 @@ class Server(AggregateRoot):
 
     @property
     def name(self) -> str:
-        """Returns the name of the Server."""
+        """Returns the name."""
         return self._name
 
     @name.setter
     def name(self, name: str) -> None:
-        """Sets the name of the Server."""
+        """Sets the name."""
         self._check_not_discarded()
         domain_event = Server.NameChanged(
             aggregate_id=self._id.value,
@@ -140,12 +140,12 @@ class Server(AggregateRoot):
 
     @property
     def cpu(self) -> str:
-        """Returns the cpu of the Server."""
+        """Returns the cpu."""
         return self._cpu
 
     @cpu.setter
     def cpu(self, cpu: str) -> None:
-        """Sets the cpu of the Server."""
+        """Sets the cpu."""
         self._check_not_discarded()
         domain_event = Server.CpuChanged(
             aggregate_id=self._id.value,
@@ -157,12 +157,12 @@ class Server(AggregateRoot):
 
     @property
     def ram(self) -> str:
-        """Returns the ram of the Server."""
+        """Returns the ram."""
         return self._ram
 
     @ram.setter
     def ram(self, ram: str) -> None:
-        """Sets the ram of the Server."""
+        """Sets the ram."""
         self._check_not_discarded()
         domain_event = Server.RamChanged(
             aggregate_id=self._id.value,
@@ -174,12 +174,12 @@ class Server(AggregateRoot):
 
     @property
     def hdd(self) -> str:
-        """Returns the hdd of the Server."""
+        """Returns the hdd."""
         return self._hdd
 
     @hdd.setter
     def hdd(self, hdd: str) -> None:
-        """Sets the hdd of the Server."""
+        """Sets the hdd."""
         self._check_not_discarded()
         domain_event = Server.HddChanged(
             aggregate_id=self._id.value,
@@ -191,12 +191,12 @@ class Server(AggregateRoot):
 
     @property
     def environment(self) -> Environment:
-        """Returns the environment of the Server."""
+        """Returns the environment."""
         return self._environment
 
     @environment.setter
     def environment(self, environment: Environment) -> None:
-        """Sets the environment of the Server."""
+        """Sets the environment."""
         self._check_not_discarded()
         domain_event = Server.EnvironmentChanged(
             aggregate_id=self._id.value,
@@ -208,12 +208,12 @@ class Server(AggregateRoot):
 
     @property
     def operating_system(self) -> OperatingSystem:
-        """Returns the operating system of the Server."""
+        """Returns the operating system."""
         return self._operating_system
 
     @operating_system.setter
     def operating_system(self, operating_system: OperatingSystem) -> None:
-        """Sets the operating system of the Server."""
+        """Sets the operating system."""
         self._check_not_discarded()
         domain_event = Server.OperatingSystemChanged(
             aggregate_id=self._id.value,
@@ -225,12 +225,12 @@ class Server(AggregateRoot):
 
     @property
     def credentials(self) -> list[Credential]:
-        """Returns the credentials of the Server."""
+        """Returns the credentials."""
         return self._credentials
 
     @credentials.setter
     def credentials(self, credentials: list[Credential]) -> None:
-        """Sets the credentials of the Server."""
+        """Sets the credentials."""
         self._check_not_discarded()
         domain_event = Server.CredentialChanged(
             aggregate_id=self._id.value,
@@ -242,12 +242,12 @@ class Server(AggregateRoot):
 
     @property
     def applications(self) -> list[ServerApplication]:
-        """Returns the applications of the Server."""
+        """Returns the applications."""
         return self._applications
 
     @applications.setter
     def applications(self, applications: list[ServerApplication]) -> None:
-        """Sets the applications of the Server."""
+        """Sets the applications."""
         self._check_not_discarded()
         domain_event = Server.ApplicationChanged(
             aggregate_id=self._id.value,
@@ -259,12 +259,12 @@ class Server(AggregateRoot):
 
     @property
     def status(self) -> ServerStatus:
-        """Returns the status of the Server."""
+        """Returns the status."""
         return self._status
 
     @status.setter
     def status(self, status: ServerStatus) -> None:
-        """Sets the status of the Server."""
+        """Sets the status."""
         self._check_not_discarded()
         domain_event = Server.StatusChanged(
             aggregate_id=self._id.value,

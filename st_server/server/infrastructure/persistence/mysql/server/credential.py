@@ -16,9 +16,8 @@ class CredentialDbModel(db.Base):
     """Credential database model."""
 
     __tablename__ = "credential"
-    __table_args__ = (sa.PrimaryKeyConstraint("id"),)
 
-    id = sa.Column(EntityIdDbType)
+    id = sa.Column(EntityIdDbType, primary_key=True)
     server_id = sa.Column(EntityIdDbType, sa.ForeignKey("server.id"))
     connection_type = sa.Column(ConnectionTypeDbType)
     local_ip = sa.Column(sa.String(255))

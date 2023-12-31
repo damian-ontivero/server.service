@@ -50,12 +50,7 @@ class Application(AggregateRoot):
         self._architect = architect
 
     def __repr__(self) -> str:
-        """
-        Returns the string representation of the Application.
-
-        Returns:
-            str: The string representation of the Application.
-        """
+        """Returns the string representation of the entity."""
         return (
             "{d}{c}(id={id!r}, name={name!r}, "
             "version={version!r}, architect={architect!r}, "
