@@ -16,8 +16,8 @@ class Entity(metaclass=ABCMeta):
         """Initializes the entity."""
         if id is None:
             raise ValueError("Entity ID must not be None")
-        self._id: EntityId = id
-        self._discarded: bool = discarded
+        self._id = id
+        self._discarded = discarded
 
     def __eq__(self, other: object) -> bool:
         """Checks if two entities are equal."""

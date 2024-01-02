@@ -17,7 +17,7 @@ class AggregateRoot(Entity):
     def __init__(self, id: EntityId, discarded: bool = False) -> None:
         """Initializes the aggregate root."""
         super().__init__(id, discarded)
-        self._domain_events: List[DomainEvent] = []
+        self._domain_events = []
 
     @property
     def domain_events(self) -> List[DomainEvent]:
