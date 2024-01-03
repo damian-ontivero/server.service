@@ -2,8 +2,8 @@
 
 from configparser import ConfigParser
 
-from sqlalchemy import MetaData, create_engine
-from sqlalchemy.orm import registry, sessionmaker
+from sqlalchemy import create_engine
+from sqlalchemy.orm import DeclarativeBase, sessionmaker
 
 
 def get_config():
@@ -45,5 +45,7 @@ def get_session():
 
 
 SessionLocal = get_session()
-metadata = MetaData()
-mapper_registry = registry(metadata=metadata)
+
+
+class Base(DeclarativeBase):
+    pass

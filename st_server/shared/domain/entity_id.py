@@ -16,7 +16,7 @@ class EntityId:
         """Named constructor to create the value object from a text."""
         return cls(text)
 
-    def __new__(cls, value: str) -> None:
+    def __new__(cls, value: str) -> "EntityId":
         """Creates a new instance of the value object."""
         if not isinstance(value, str):
             raise TypeError("Entity identifier must be a string")

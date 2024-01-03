@@ -6,25 +6,29 @@ from st_server.server.domain.application.application_repository import (
     FILTER_OPERATOR_MAPPER,
     ApplicationRepository,
 )
+from st_server.server.infrastructure.persistence.mysql.application.application import (
+    ApplicationDbModel,
+)
+from st_server.shared.domain.entity_id import EntityId
 from st_server.shared.domain.repository_response import RepositoryResponse
 
 
 def _build_filter(filter: dict):
     for attr, criteria in filter.items():
-        if hasattr(Application, attr):
+        if hasattr(ApplicationDbModel, attr):
             for op, val in criteria.items():
                 if isinstance(val, dict):
                     for k, v in val.items():
                         return (
                             func.json_extract(
-                                getattr(Application, attr),
+                                getattr(ApplicationDbModel, attr),
                                 f"$.{k}",
                             )
                             == v
                         )
                 else:
                     return FILTER_OPERATOR_MAPPER[op](
-                        Application,
+                        ApplicationDbModel,
                         attr,
                         val,
                     )
@@ -33,8 +37,8 @@ def _build_filter(filter: dict):
 def _build_sort(sort: list[dict]):
     for criteria in sort:
         for attr, order in criteria.items():
-            if hasattr(Application, attr):
-                return getattr(getattr(Application, attr), order)()
+            if hasattr(ApplicationDbModel, attr):
+                return getattr(getattr(ApplicationDbModel, attr), order)()
 
 
 class ApplicationRepositoryImpl(ApplicationRepository):
@@ -63,7 +67,7 @@ class ApplicationRepositoryImpl(ApplicationRepository):
         if sort is None:
             sort = []
         with self._session as session:
-            query = session.query(Application)
+            query = session.query(ApplicationDbModel)
             if filter:
                 query = query.filter(_build_filter(filter))
             if and_filter:
@@ -80,24 +84,67 @@ class ApplicationRepositoryImpl(ApplicationRepository):
             query = query.limit(limit or total)
             query = query.offset(offset)
             applications = query.all()
-            return RepositoryResponse(total=total, items=applications)
+            return RepositoryResponse(
+                total=total,
+                items=[
+                    Application(
+                        id=EntityId.from_text(application.id),
+                        name=application.name,
+                        version=application.version,
+                        architect=application.architect,
+                        discarded=application.discarded,
+                    )
+                    for application in applications
+                ],
+            )
 
     def find_by_id(self, id: int) -> Application | None:
         with self._session as session:
-            return session.get(Application, id)
+            application = (
+                session.query(ApplicationDbModel)
+                .filter(ApplicationDbModel.id == id)
+                .first()
+            )
+            if application is not None:
+                return Application(
+                    id=application.id,
+                    name=application.name,
+                    version=application.version,
+                    architect=application.architect,
+                    discarded=application.discarded,
+                )
+            return None
 
     def add(self, aggregate: Application) -> None:
         with self._session as session:
-            session.add(aggregate)
+            session.add(
+                ApplicationDbModel(
+                    id=aggregate.id.value,
+                    name=aggregate.name,
+                    version=aggregate.version,
+                    architect=aggregate.architect,
+                    discarded=aggregate.discarded,
+                )
+            )
             session.commit()
-            session.refresh(aggregate)
 
     def update(self, aggregate: Application) -> None:
         with self._session as session:
-            session.merge(aggregate)
+            session.query(ApplicationDbModel).filter(
+                ApplicationDbModel.id == aggregate.id
+            ).update(
+                {
+                    ApplicationDbModel.name: aggregate.name,
+                    ApplicationDbModel.version: aggregate.version,
+                    ApplicationDbModel.architect: aggregate.architect,
+                    ApplicationDbModel.discarded: aggregate.discarded,
+                }
+            )
             session.commit()
 
     def delete_by_id(self, id: int) -> None:
         with self._session as session:
-            session.query(Application).filter(Application.id == id).delete()
+            session.query(ApplicationDbModel).filter(
+                ApplicationDbModel.id == id
+            ).delete()
             session.commit()

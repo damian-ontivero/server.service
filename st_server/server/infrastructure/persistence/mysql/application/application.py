@@ -1,30 +1,15 @@
-from sqlalchemy import Boolean, Column, String, Table
+from sqlalchemy import Boolean, Column, String
 
-from st_server.server.domain.application.application import Application
 from st_server.server.infrastructure.persistence.mysql import db
-from st_server.shared.infrastructure.persistence.mysql.entity_id import (
-    EntityIdDbType,
-)
-
-application_table = Table(
-    "application",
-    db.metadata,
-    Column("id", EntityIdDbType, primary_key=True),
-    Column("name", String(255)),
-    Column("version", String(255)),
-    Column("architect", String(255)),
-    Column("discarded", Boolean),
-)
 
 
-db.mapper_registry.map_imperatively(
-    Application,
-    application_table,
-    properties={
-        "_id": application_table.c.id,
-        "_name": application_table.c.name,
-        "_version": application_table.c.version,
-        "_architect": application_table.c.architect,
-        "_discarded": application_table.c.discarded,
-    },
-)
+class ApplicationDbModel(db.Base):
+    """Application database model."""
+
+    __tablename__ = "application"
+
+    id = Column(String(32), primary_key=True)
+    name = Column(String(255))
+    version = Column(String(255))
+    architect = Column(String(255))
+    discarded = Column(Boolean)

@@ -3,30 +3,37 @@
 from sqlalchemy import and_, func, or_
 from sqlalchemy.orm import Session
 
+from st_server.server.domain.server.environment import Environment
+from st_server.server.domain.server.operating_system import OperatingSystem
 from st_server.server.domain.server.server import Server
 from st_server.server.domain.server.server_repository import (
     FILTER_OPERATOR_MAPPER,
     ServerRepository,
 )
+from st_server.server.domain.server.server_status import ServerStatus
+from st_server.server.infrastructure.persistence.mysql.server.server import (
+    ServerDbModel,
+)
+from st_server.shared.domain.entity_id import EntityId
 from st_server.shared.domain.repository_response import RepositoryResponse
 
 
 def _build_filter(filter: dict):
     for attr, criteria in filter.items():
-        if hasattr(Server, attr):
+        if hasattr(ServerDbModel, attr):
             for op, val in criteria.items():
                 if isinstance(val, dict):
                     for k, v in val.items():
                         return (
                             func.json_extract(
-                                getattr(Server, attr),
+                                getattr(ServerDbModel, attr),
                                 f"$.{k}",
                             )
                             == v
                         )
                 else:
                     return FILTER_OPERATOR_MAPPER[op](
-                        Server,
+                        ServerDbModel,
                         attr,
                         val,
                     )
@@ -35,8 +42,8 @@ def _build_filter(filter: dict):
 def _build_sort(sort: list[dict]):
     for criteria in sort:
         for attr, order in criteria.items():
-            if hasattr(Server, attr):
-                return getattr(getattr(Server, attr), order)()
+            if hasattr(ServerDbModel, attr):
+                return getattr(getattr(ServerDbModel, attr), order)()
 
 
 class ServerRepositoryImpl(ServerRepository):
@@ -82,25 +89,87 @@ class ServerRepositoryImpl(ServerRepository):
             query = query.limit(limit or total)
             query = query.offset(offset)
             servers = query.all()
-            return RepositoryResponse(total=total, items=servers)
+            return RepositoryResponse(
+                total=total,
+                items=[
+                    Server(
+                        id=EntityId.from_text(server.id),
+                        name=server.name,
+                        cpu=server.cpu,
+                        ram=server.ram,
+                        hdd=server.hdd,
+                        environment=Environment.from_text(server.environment),
+                        operating_system=OperatingSystem.from_dict(
+                            server.operating_system
+                        ),
+                        status=ServerStatus.from_text(server.status),
+                        discarded=server.discarded,
+                    )
+                    for server in servers
+                ],
+            )
 
     def find_by_id(self, id: int) -> Server | None:
         with self._session as session:
-            return session.get(Server, id)
+            server = (
+                session.query(ServerDbModel)
+                .filter(ServerDbModel.id == id)
+                .first()
+            )
+            if server is not None:
+                return Server(
+                    id=EntityId.from_text(server.id),
+                    name=server.name,
+                    cpu=server.cpu,
+                    ram=server.ram,
+                    hdd=server.hdd,
+                    environment=Environment.from_text(server.environment),
+                    operating_system=OperatingSystem.from_dict(
+                        server.operating_system
+                    ),
+                    status=ServerStatus.from_text(server.status),
+                    discarded=server.discarded,
+                )
+            return None
 
     def add(self, aggregate: Server) -> None:
         with self._session as session:
-            session.add(aggregate)
+            session.add(
+                ServerDbModel(
+                    id=aggregate.id.value,
+                    name=aggregate.name,
+                    cpu=aggregate.cpu,
+                    ram=aggregate.ram,
+                    hdd=aggregate.hdd,
+                    environment=aggregate.environment.value,
+                    operating_system=aggregate.operating_system.__dict__,
+                    status=aggregate.status.value,
+                    discarded=aggregate.discarded,
+                )
+            )
             session.commit()
 
     def update(self, aggregate: Server) -> None:
         with self._session as session:
-            session.merge(aggregate)
+            session.query(ServerDbModel).filter(
+                ServerDbModel.id == aggregate.id
+            ).update(
+                {
+                    ServerDbModel.name: aggregate.name,
+                    ServerDbModel.cpu: aggregate.cpu,
+                    ServerDbModel.ram: aggregate.ram,
+                    ServerDbModel.hdd: aggregate.hdd,
+                    ServerDbModel.environment: aggregate.environment.value,
+                    ServerDbModel.operating_system: aggregate.operating_system.__dict__,
+                    ServerDbModel.status: aggregate.status.value,
+                    ServerDbModel.discarded: aggregate.discarded,
+                }
+            )
             session.commit()
 
     def delete_by_id(self, id: int) -> None:
         with self._session as session:
-            server = session.get(Server, id)
-            if server is not None:
-                session.delete(server)
+            session.query(ServerDbModel).filter(
+                ServerDbModel.id == id
+            ).delete()
             session.commit()

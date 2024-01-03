@@ -24,6 +24,6 @@ def mock_session():
 def test_db(mock_session):
     from st_server.server.infrastructure.persistence.mysql import db
 
-    db.metadata.create_all(bind=mock_session.get_bind())
+    db.Base.metadata.create_all(bind=mock_session.get_bind())
     yield
-    db.metadata.drop_all(bind=mock_session.get_bind())
+    db.Base.metadata.drop_all(bind=mock_session.get_bind())
