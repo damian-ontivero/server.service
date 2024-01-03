@@ -1,11 +1,11 @@
-from .application.application import ApplicationDbModel
-from .server.credential import CredentialDbModel
-from .server.server import ServerDbModel
-from .server.server_application import ServerApplicationDbModel
+from .application.application import application_table
+from .server.credential import credential_table
+from .server.server import server_table
+from .server.server_application import server_application_table
 
 __all__ = [
-    "ApplicationDbModel",
-    "CredentialDbModel",
-    "ServerDbModel",
-    "ServerApplicationDbModel",
+    "application_table",
+    "credential_table",
+    "server_table",
+    "server_application_table",
 ]

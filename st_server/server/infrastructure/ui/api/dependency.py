@@ -19,7 +19,7 @@ rabbitmq_pass = config.get("rabbitmq", "pass")
 
 def get_mysql_session():
     """Yields a mysql session."""
-    session = db.get_session()
+    session = db.SessionLocal()
     try:
         yield session
     finally:

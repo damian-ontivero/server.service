@@ -2,11 +2,11 @@
 
 from configparser import ConfigParser
 
-from sqlalchemy import create_engine
-from sqlalchemy.orm import DeclarativeBase, Session, sessionmaker
+from sqlalchemy import MetaData, create_engine
+from sqlalchemy.orm import registry, sessionmaker
 
 
-def get_config() -> ConfigParser:
+def get_config():
     """Returns a config parser."""
 
     config = ConfigParser()
@@ -15,7 +15,7 @@ def get_config() -> ConfigParser:
     return config
 
 
-def get_session() -> Session:
+def get_session():
     """Returns a mysql session."""
 
     config = get_config()
@@ -44,5 +44,6 @@ def get_session() -> Session:
     return sessionmaker(bind=engine, autocommit=db_auto_commit)
 
 
-class Base(DeclarativeBase):
-    pass
+SessionLocal = get_session()
+metadata = MetaData()
+mapper_registry = registry(metadata=metadata)

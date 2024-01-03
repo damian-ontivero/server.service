@@ -22,8 +22,8 @@ def mock_session():
 
 @pytest.fixture(scope="session", autouse=True)
 def test_db(mock_session):
-    from st_server.server.infrastructure.persistence.mysql.db import Base
+    from st_server.server.infrastructure.persistence.mysql import db
 
-    Base.metadata.create_all(bind=mock_session.get_bind())
+    db.metadata.create_all(bind=mock_session.get_bind())
     yield
-    Base.metadata.drop_all(bind=mock_session.get_bind())
+    db.metadata.drop_all(bind=mock_session.get_bind())

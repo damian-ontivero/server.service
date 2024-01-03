@@ -1,6 +1,6 @@
 """Server database model."""
 
-import sqlalchemy as sa
+from sqlalchemy import Boolean, Column, String, Table
 from sqlalchemy.orm import relationship
 
 from st_server.server.domain.server.credential import Credential
@@ -19,36 +19,34 @@ from st_server.shared.infrastructure.persistence.mysql.entity_id import (
     EntityIdDbType,
 )
 
-
-class ServerDbModel(db.Base):
-    """Server database model."""
-
-    __tablename__ = "server"
-
-    id = sa.Column(EntityIdDbType, primary_key=True)
-    name = sa.Column(sa.String(255))
-    cpu = sa.Column(sa.String(255))
-    ram = sa.Column(sa.String(255))
-    hdd = sa.Column(sa.String(255))
-    environment = sa.Column(EnvironmentDbType)
-    operating_system = sa.Column(OperatingSystemDbType)
-    status = sa.Column(ServerStatusDbType)
-    discarded = sa.Column(sa.Boolean)
+server_table = Table(
+    "server",
+    db.metadata,
+    Column("id", EntityIdDbType, primary_key=True),
+    Column("name", String(255)),
+    Column("cpu", String(255)),
+    Column("ram", String(255)),
+    Column("hdd", String(255)),
+    Column("environment", EnvironmentDbType),
+    Column("operating_system", OperatingSystemDbType),
+    Column("status", ServerStatusDbType),
+    Column("discarded", Boolean),
+)
 
 
-db.Base.registry.map_imperatively(
+db.mapper_registry.map_imperatively(
     Server,
-    ServerDbModel.__table__,
+    server_table,
     properties={
-        "_id": ServerDbModel.id,
-        "_name": ServerDbModel.name,
-        "_cpu": ServerDbModel.cpu,
-        "_ram": ServerDbModel.ram,
-        "_hdd": ServerDbModel.hdd,
-        "_environment": ServerDbModel.environment,
-        "_operating_system": ServerDbModel.operating_system,
-        "_status": ServerDbModel.status,
-        "_discarded": ServerDbModel.discarded,
+        "_id": server_table.c.id,
+        "_name": server_table.c.name,
+        "_cpu": server_table.c.cpu,
+        "_ram": server_table.c.ram,
+        "_hdd": server_table.c.hdd,
+        "_environment": server_table.c.environment,
+        "_operating_system": server_table.c.operating_system,
+        "_status": server_table.c.status,
+        "_discarded": server_table.c.discarded,
         "_credentials": relationship(
             Credential, lazy="subquery", cascade="all, delete-orphan"
         ),
