@@ -1,5 +1,3 @@
-"""Test for update server command."""
-
 from st_server.server.application.server.command.update_server_command import (
     UpdateServerCommand,
 )

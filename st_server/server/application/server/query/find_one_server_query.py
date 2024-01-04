@@ -1,5 +1,3 @@
-"""Query to find one Server."""
-
 from dataclasses import dataclass
 
 from st_server.shared.application.query import Query

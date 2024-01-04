@@ -1,5 +1,3 @@
-"""Dependencies."""
-
 import configparser
 
 from st_server.server.infrastructure.persistence.mysql import db

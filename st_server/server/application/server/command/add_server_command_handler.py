@@ -1,11 +1,12 @@
-"""Contains the command handler class."""
-
 from st_server.server.application.server.command.add_server_command import (
     AddServerCommand,
 )
 from st_server.server.application.server.dto.server import ServerDto
-from st_server.server.domain.server.server_factory import ServerFactory
+from st_server.server.domain.server.environment import Environment
+from st_server.server.domain.server.operating_system import OperatingSystem
+from st_server.server.domain.server.server import Server
 from st_server.server.domain.server.server_repository import ServerRepository
+from st_server.server.domain.server.server_status import ServerStatus
 from st_server.shared.application.bus.message_bus import MessageBus
 from st_server.shared.application.command_handler import CommandHandler
 from st_server.shared.application.exception import AlreadyExists
@@ -24,7 +25,17 @@ class AddServerCommandHandler(CommandHandler):
     def handle(self, command: AddServerCommand) -> ServerDto:
         """Handle a command."""
         self._check_if_exists(command.name)
-        server = ServerFactory.build(**command.to_dict())
+        server = Server.register(
+            name=command.name,
+            cpu=command.cpu,
+            ram=command.ram,
+            hdd=command.hdd,
+            environment=Environment.from_text(command.environment),
+            operating_system=OperatingSystem.from_data(
+                command.operating_system
+            ),
+            credentials=command.credentials,
+        )
         self._repository.add(server)
         for domain_event in server.domain_events:
             self._message_bus.publish(domain_event)

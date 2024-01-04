@@ -1,5 +1,3 @@
-"""EntityId tests."""
-
 import pytest
 
 from st_server.shared.domain.entity_id import EntityId

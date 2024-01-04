@@ -20,11 +20,11 @@ class ApplicationFactory(factory.Factory):
 
     @classmethod
     def _create(cls, model_class, *args, **kwargs):
-        application = model_class.create(*args, **kwargs)
+        application = model_class.register(*args, **kwargs)
         ApplicationRepositoryImpl(SessionLocal()).add(application)
         return application
 
     @classmethod
     def _build(cls, model_class, *args, **kwargs):
-        application = model_class.create(*args, **kwargs)
+        application = model_class.register(*args, **kwargs)
         return application

@@ -1,5 +1,3 @@
-"""Test for find one application query."""
-
 import pytest
 
 from st_server.server.application.application.dto.application import (

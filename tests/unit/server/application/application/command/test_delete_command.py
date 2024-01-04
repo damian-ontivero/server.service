@@ -1,5 +1,3 @@
-"""Test for delete application command."""
-
 from st_server.server.application.application.command.delete_application_command import (
     DeleteApplicationCommand,
 )

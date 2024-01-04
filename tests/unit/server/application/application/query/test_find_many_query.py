@@ -1,5 +1,3 @@
-"""Test for find many application query."""
-
 from st_server.server.application.application.dto.application import (
     ApplicationDto,
 )

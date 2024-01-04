@@ -1,5 +1,3 @@
-"""Config file for pytest."""
-
 import pytest
 
 

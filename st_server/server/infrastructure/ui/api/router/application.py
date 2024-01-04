@@ -1,5 +1,3 @@
-"""Application router."""
-
 import json
 
 from fastapi import APIRouter, Depends, Query, status

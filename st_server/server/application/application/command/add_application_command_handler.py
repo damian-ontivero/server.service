@@ -1,5 +1,3 @@
-"""Contains the command handler class."""
-
 from st_server.server.application.application.command.add_application_command import (
     AddApplicationCommand,
 )
@@ -27,7 +25,7 @@ class AddApplicationCommandHandler(CommandHandler):
 
     def handle(self, command: AddApplicationCommand) -> ApplicationDto:
         """Handle a command."""
-        application = Application.create(**command.to_dict())
+        application = Application.register(**command.to_dict())
         self._check_if_exists(application.name)
         self._repository.add(application)
         for domain_event in application.domain_events:

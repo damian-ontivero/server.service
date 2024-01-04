@@ -1,5 +1,3 @@
-"""SQLAlchemy mysql session."""
-
 from configparser import ConfigParser
 
 from sqlalchemy import create_engine

@@ -1,8 +1,8 @@
-"""Server repository implementation."""
-
 from sqlalchemy import and_, func, or_
 from sqlalchemy.orm import Session
 
+from st_server.server.domain.server.connection_type import ConnectionType
+from st_server.server.domain.server.credential import Credential
 from st_server.server.domain.server.environment import Environment
 from st_server.server.domain.server.operating_system import OperatingSystem
 from st_server.server.domain.server.server import Server
@@ -72,7 +72,7 @@ class ServerRepositoryImpl(ServerRepository):
         if sort is None:
             sort = []
         with self._session as session:
-            query = session.query(Server)
+            query = session.query(ServerDbModel)
             if filter:
                 query = query.filter(_build_filter(filter))
             if and_filter:
@@ -99,9 +99,28 @@ class ServerRepositoryImpl(ServerRepository):
                         ram=server.ram,
                         hdd=server.hdd,
                         environment=Environment.from_text(server.environment),
-                        operating_system=OperatingSystem.from_dict(
+                        operating_system=OperatingSystem.from_data(
                             server.operating_system
                         ),
+                        credentials=[
+                            Credential(
+                                id=EntityId.from_text(credential.id),
+                                server_id=EntityId.from_text(
+                                    credential.server_id
+                                ),
+                                connection_type=ConnectionType.from_text(
+                                    credential.connection_type
+                                ),
+                                username=credential.username,
+                                password=credential.password,
+                                local_ip=credential.local_ip,
+                                local_port=credential.local_port,
+                                public_ip=credential.public_ip,
+                                public_port=credential.public_port,
+                                discarded=credential.discarded,
+                            )
+                            for credential in server.credentials
+                        ],
                         status=ServerStatus.from_text(server.status),
                         discarded=server.discarded,
                     )
@@ -124,9 +143,26 @@ class ServerRepositoryImpl(ServerRepository):
                     ram=server.ram,
                     hdd=server.hdd,
                     environment=Environment.from_text(server.environment),
-                    operating_system=OperatingSystem.from_dict(
+                    operating_system=OperatingSystem.from_data(
                         server.operating_system
                     ),
+                    credentials=[
+                        Credential(
+                            id=EntityId.from_text(credential.id),
+                            server_id=EntityId.from_text(credential.server_id),
+                            connection_type=ConnectionType.from_text(
+                                credential.connection_type
+                            ),
+                            username=credential.username,
+                            password=credential.password,
+                            local_ip=credential.local_ip,
+                            local_port=credential.local_port,
+                            public_ip=credential.public_ip,
+                            public_port=credential.public_port,
+                            discarded=credential.discarded,
+                        )
+                        for credential in server.credentials
+                    ],
                     status=ServerStatus.from_text(server.status),
                     discarded=server.discarded,
                 )
@@ -152,7 +188,7 @@ class ServerRepositoryImpl(ServerRepository):
     def update(self, aggregate: Server) -> None:
         with self._session as session:
             session.query(ServerDbModel).filter(
-                ServerDbModel.id == aggregate.id
+                ServerDbModel.id == aggregate.id.value
             ).update(
                 {
                     ServerDbModel.name: aggregate.name,

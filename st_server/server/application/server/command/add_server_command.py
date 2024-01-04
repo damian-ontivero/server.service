@@ -1,5 +1,3 @@
-"""Commands for the Server."""
-
 from dataclasses import dataclass, field
 
 from st_server.shared.application.command import Command

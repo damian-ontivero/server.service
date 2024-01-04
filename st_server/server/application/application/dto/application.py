@@ -1,5 +1,3 @@
-"""Data Transfer Objects for Application."""
-
 from dataclasses import dataclass
 
 from st_server.server.domain.application.application import Application

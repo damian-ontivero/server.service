@@ -1,6 +1,3 @@
-"""Exceptions raised by the application."""
-
-
 class NotFound(Exception):
     """Raised when a resource is not found."""
 

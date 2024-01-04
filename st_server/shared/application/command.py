@@ -1,5 +1,4 @@
 from dataclasses import asdict, dataclass
-from typing import Dict
 
 
 @dataclass
@@ -10,6 +9,6 @@ class Command:
     This class serves as the base for all command classes used within the application.
     """
 
-    def to_dict(self) -> Dict[str, any]:
+    def to_dict(self) -> dict[str, any]:
         """Returns the dictionary representation of the command."""
         return asdict(self)

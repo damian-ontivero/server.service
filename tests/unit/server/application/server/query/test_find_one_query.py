@@ -1,5 +1,3 @@
-"""Test for find many server query."""
-
 import pytest
 
 from st_server.server.application.server.dto.server import ServerDto

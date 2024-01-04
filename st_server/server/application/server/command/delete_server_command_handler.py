@@ -1,5 +1,3 @@
-"""Contains the command handler class."""
-
 from st_server.server.application.server.command.delete_server_command import (
     DeleteServerCommand,
 )
@@ -21,12 +19,12 @@ class DeleteServerCommandHandler(CommandHandler):
 
     def handle(self, command: DeleteServerCommand) -> None:
         """Handle a command."""
-        server = self._repository.find_one(command.id)
+        server = self._repository.find_by_id(command.id)
         if server is None:
             raise NotFound(
                 "Server with id: {id!r} not found".format(id=command.id)
             )
-        self._repository.delete_one(command.id)
+        self._repository.delete_by_id(command.id)
         for domain_event in server.domain_events:
             self._message_bus.publish(domain_event)
         server.clear_domain_events()

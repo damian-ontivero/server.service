@@ -1,5 +1,3 @@
-from typing import List
-
 from st_server.shared.domain.domain_event import DomainEvent
 from st_server.shared.domain.entity import Entity
 from st_server.shared.domain.entity_id import EntityId
@@ -20,7 +18,7 @@ class AggregateRoot(Entity):
         self._domain_events = []
 
     @property
-    def domain_events(self) -> List[DomainEvent]:
+    def domain_events(self) -> list[DomainEvent]:
         """Returns the domain events."""
         return self._domain_events
 

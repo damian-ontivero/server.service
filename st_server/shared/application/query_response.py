@@ -1,5 +1,4 @@
 from dataclasses import dataclass, field
-from typing import List, Union
 
 
 @dataclass(frozen=True)
@@ -9,15 +8,15 @@ class QueryResponse:
     total: int
     limit: int
     offset: int
-    items: List = field(default_factory=list)
+    items: list = field(default_factory=list)
 
     @property
-    def prev_offset(self) -> Union[int, None]:
+    def prev_offset(self) -> int | None:
         """Returns the previous offset if available."""
         return self.offset - self.limit if self.offset > 0 else None
 
     @property
-    def next_offset(self) -> Union[int, None]:
+    def next_offset(self) -> int | None:
         """Returns the next offset if available."""
         return (
             self.offset + self.limit

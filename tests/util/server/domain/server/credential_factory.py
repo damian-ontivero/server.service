@@ -12,7 +12,8 @@ class CredentialFactory(factory.Factory):
     class Meta:
         model = Credential
 
-    server_id = EntityId.from_text("1234")
+    id = EntityId.from_text("1234")
+    server_id = EntityId.from_text("123456")
     connection_type = factory.fuzzy.FuzzyChoice(
         choices=[
             ConnectionType.from_text("SSH"),
@@ -28,10 +29,10 @@ class CredentialFactory(factory.Factory):
 
     @classmethod
     def _create(cls, model_class, *args, **kwargs):
-        credential = model_class.create(*args, **kwargs)
+        credential = model_class(*args, **kwargs)
         return credential
 
     @classmethod
     def _build(cls, model_class, *args, **kwargs):
-        credential = model_class.create(*args, **kwargs)
+        credential = model_class(*args, **kwargs)
         return credential

@@ -107,7 +107,7 @@ class ApplicationRepositoryImpl(ApplicationRepository):
             )
             if application is not None:
                 return Application(
-                    id=application.id,
+                    id=EntityId.from_text(application.id),
                     name=application.name,
                     version=application.version,
                     architect=application.architect,
@@ -131,7 +131,7 @@ class ApplicationRepositoryImpl(ApplicationRepository):
     def update(self, aggregate: Application) -> None:
         with self._session as session:
             session.query(ApplicationDbModel).filter(
-                ApplicationDbModel.id == aggregate.id
+                ApplicationDbModel.id == aggregate.id.value
             ).update(
                 {
                     ApplicationDbModel.name: aggregate.name,

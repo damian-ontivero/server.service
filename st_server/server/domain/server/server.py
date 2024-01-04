@@ -273,3 +273,32 @@ class Server(AggregateRoot):
         )
         self._status = status
         self.register_domain_event(domain_event)
+
+    @classmethod
+    def register(
+        cls,
+        name: str,
+        cpu: str,
+        ram: str,
+        hdd: str,
+        environment: Environment,
+        operating_system: OperatingSystem,
+        credentials: list[Credential],
+    ):
+        """Registers a new Server."""
+        server = cls(
+            id=EntityId.generate(),
+            name=name,
+            cpu=cpu,
+            ram=ram,
+            hdd=hdd,
+            environment=environment,
+            operating_system=operating_system,
+            credentials=credentials,
+            status=ServerStatus.from_text("stopped"),
+            discarded=False,
+        )
+        server.register_domain_event(
+            Server.Created(aggregate_id=server.id.value)
+        )
+        return server

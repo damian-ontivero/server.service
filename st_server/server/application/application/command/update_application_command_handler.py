@@ -1,5 +1,3 @@
-"""Contains the command handler class."""
-
 from st_server.server.application.application.command.update_application_command import (
     UpdateApplicationCommand,
 )
@@ -26,19 +24,17 @@ class UpdateApplicationCommandHandler(CommandHandler):
 
     def handle(self, command: UpdateApplicationCommand) -> ApplicationDto:
         """Handle a command."""
-        application = self._repository.find_one(command.id)
+        application = self._repository.find_by_id(command.id)
         if application is None:
             raise NotFound(
                 "Application with id: {id!r} not found".format(id=command.id)
             )
         if not application.name == command.name:
             self._check_if_exists(command.name)
-        application.update(
-            name=command.name,
-            version=command.version,
-            architect=command.architect,
-        )
-        self._repository.add(application)
+        application.name = command.name
+        application.version = command.version
+        application.architect = command.architect
+        self._repository.update(application)
         for domain_event in application.domain_events:
             self._message_bus.publish(domain_event)
         application.clear_domain_events()

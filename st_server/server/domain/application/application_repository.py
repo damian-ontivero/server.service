@@ -1,5 +1,4 @@
 from abc import ABCMeta, abstractmethod
-from typing import Dict, List, Optional
 
 from st_server.server.domain.application.application import Application
 from st_server.shared.domain.repository_response import RepositoryResponse
@@ -29,16 +28,16 @@ class ApplicationRepository(metaclass=ABCMeta):
         self,
         limit: int,
         offset: int,
-        filters: Dict[str, Dict[str, str]],
-        and_filters: List[Dict[str, Dict[str, str]]],
-        or_filters: List[Dict[str, Dict[str, str]]],
-        sort: List[Dict[str, str]],
+        filters: dict[str, dict[str, str]],
+        and_filters: list[dict[str, dict[str, str]]],
+        or_filters: list[dict[str, dict[str, str]]],
+        sort: list[dict[str, str]],
     ) -> RepositoryResponse:
         """Retrieves Applications based on provided filters, sorting, and pagination."""
         raise NotImplementedError
 
     @abstractmethod
-    def find_by_id(self, id: int) -> Optional[Application]:
+    def find_by_id(self, id: int) -> Application | None:
         """Retrieves an Application by its ID."""
         raise NotImplementedError
 

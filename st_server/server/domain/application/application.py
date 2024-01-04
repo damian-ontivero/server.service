@@ -120,7 +120,7 @@ class Application(AggregateRoot):
         self.register_domain_event(domain_event)
 
     @staticmethod
-    def create(name: str, version: str, architect: str) -> "Application":
+    def register(name: str, version: str, architect: str) -> "Application":
         """Creates a new Application."""
         application = Application(
             id=EntityId.generate(),
@@ -129,6 +129,7 @@ class Application(AggregateRoot):
             architect=architect,
             discarded=False,
         )
-        event = Application.Created(aggregate_id=application.id.value)
-        application.register_domain_event(event)
+        application.register_domain_event(
+            Application.Created(aggregate_id=application.id.value)
+        )
         return application

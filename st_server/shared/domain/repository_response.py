@@ -1,5 +1,4 @@
 from dataclasses import dataclass, field
-from typing import List
 
 from st_server.shared.domain.aggregate_root import AggregateRoot
 
@@ -9,4 +8,4 @@ class RepositoryResponse:
     """Represents the response from the repository with pagination."""
 
     total: int
-    items: List[AggregateRoot] = field(default_factory=list)
+    items: list[AggregateRoot] = field(default_factory=list)

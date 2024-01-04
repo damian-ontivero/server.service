@@ -1,5 +1,3 @@
-"""Server Application schema."""
-
 from dataclasses import dataclass
 
 from st_server.server.application.application.dto.application import (

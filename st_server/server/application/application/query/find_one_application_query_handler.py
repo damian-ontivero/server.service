@@ -1,5 +1,3 @@
-"""Query handler for finding one Application."""
-
 from st_server.server.application.application.dto.application import (
     ApplicationDto,
 )

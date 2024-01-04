@@ -1,6 +1,3 @@
-"""Value object that represents the status of the Server."""
-
-
 class ServerStatus:
     """Value object that represents the status of the Server."""
 

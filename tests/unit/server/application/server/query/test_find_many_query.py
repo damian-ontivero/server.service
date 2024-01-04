@@ -1,5 +1,3 @@
-"""Test for find many server query."""
-
 from st_server.server.application.server.dto.server import ServerDto
 from st_server.server.application.server.query.find_many_server_query import (
     FindManyServerQuery,

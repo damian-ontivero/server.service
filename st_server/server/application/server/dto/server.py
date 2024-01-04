@@ -1,5 +1,3 @@
-"""Data Transfer Objects for Server."""
-
 from dataclasses import dataclass, field
 
 from st_server.server.application.server.dto.credential import CredentialDto

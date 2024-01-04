@@ -1,5 +1,3 @@
-"""Test for add application command."""
-
 from st_server.server.application.application.command.add_application_command import (
     AddApplicationCommand,
 )

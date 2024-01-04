@@ -1,5 +1,3 @@
-"""Data Transfer Objects for Credential."""
-
 from dataclasses import dataclass
 
 from st_server.server.domain.server.credential import Credential
