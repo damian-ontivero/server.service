@@ -1,9 +1,11 @@
 import factory
 import factory.fuzzy
 
-from st_server.server.domain.server.connection_type import ConnectionType
 from st_server.server.domain.server.credential import Credential
 from st_server.shared.domain.entity_id import EntityId
+from tests.util.server.domain.server.connection_type_factory import (
+    ConnectionTypeFactory,
+)
 
 
 class CredentialFactory(factory.Factory):
@@ -14,12 +16,7 @@ class CredentialFactory(factory.Factory):
 
     id = EntityId.from_text("1234")
     server_id = EntityId.from_text("123456")
-    connection_type = factory.fuzzy.FuzzyChoice(
-        choices=[
-            ConnectionType.from_text("SSH"),
-            ConnectionType.from_text("RDP"),
-        ]
-    )
+    connection_type = factory.SubFactory(ConnectionTypeFactory)
     username = factory.Faker("name")
     password = factory.Faker("name")
     local_ip = factory.Faker("ipv4")

@@ -9,8 +9,10 @@ from tests.conftest import SessionLocal
 from tests.util.server.domain.server.credential_factory import (
     CredentialFactory,
 )
-from tests.util.server.domain.server.environment import EnvironmentFactory
-from tests.util.server.domain.server.operating_system import (
+from tests.util.server.domain.server.environment_factory import (
+    EnvironmentFactory,
+)
+from tests.util.server.domain.server.operating_system_factory import (
     OperatingSystemFactory,
 )
 
@@ -27,7 +29,7 @@ class ServerFactory(factory.Factory):
     hdd = factory.Faker("pystr")
     environment = factory.SubFactory(EnvironmentFactory)
     operating_system = factory.SubFactory(OperatingSystemFactory)
-    credentials = [factory.SubFactory(CredentialFactory)]
+    credentials = factory.List([factory.SubFactory(CredentialFactory)])
 
     @classmethod
     def _create(cls, model_class, *args, **kwargs):
