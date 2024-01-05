@@ -10,18 +10,16 @@ class OperatingSystemFactory(factory.Factory):
     class Meta:
         model = OperatingSystem
 
-    data = {
-        "name": "Ubuntu",
-        "version": "20.04",
-        "architecture": "x86_64",
-    }
+    name = factory.Faker("name")
+    version = factory.Faker("pystr")
+    architecture = factory.Faker("pystr")
 
     @classmethod
     def _create(cls, model_class, *args, **kwargs):
-        operating_system = model_class.from_data(*args, **kwargs)
+        operating_system = model_class.from_data(*args, kwargs)
         return operating_system
 
     @classmethod
     def _build(cls, model_class, *args, **kwargs):
-        operating_system = model_class.from_data(*args, **kwargs)
+        operating_system = model_class.from_data(*args, kwargs)
         return operating_system

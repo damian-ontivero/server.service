@@ -24,7 +24,4 @@ class ServerApplicationDto:
             application_id=server_application.application_id.value,
             install_dir=server_application.install_dir,
             log_dir=server_application.log_dir,
-            application=ApplicationDto.from_entity(
-                server_application.application
-            ),
         )

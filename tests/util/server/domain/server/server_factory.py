@@ -15,6 +15,9 @@ from tests.util.server.domain.server.environment_factory import (
 from tests.util.server.domain.server.operating_system_factory import (
     OperatingSystemFactory,
 )
+from tests.util.server.domain.server.server_application_factory import (
+    ServerApplicationFactory,
+)
 
 
 class ServerFactory(factory.Factory):
@@ -30,6 +33,7 @@ class ServerFactory(factory.Factory):
     environment = factory.SubFactory(EnvironmentFactory)
     operating_system = factory.SubFactory(OperatingSystemFactory)
     credentials = factory.List([factory.SubFactory(CredentialFactory)])
+    applications = factory.List([factory.SubFactory(ServerApplicationFactory)])
 
     @classmethod
     def _create(cls, model_class, *args, **kwargs):

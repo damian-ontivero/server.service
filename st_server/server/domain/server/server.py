@@ -284,6 +284,7 @@ class Server(AggregateRoot):
         environment: Environment,
         operating_system: OperatingSystem,
         credentials: list[Credential],
+        applications: list[ServerApplication],
     ):
         """Registers a new Server."""
         server = cls(
@@ -295,6 +296,7 @@ class Server(AggregateRoot):
             environment=environment,
             operating_system=operating_system,
             credentials=credentials,
+            applications=applications,
             status=ServerStatus.from_text("stopped"),
             discarded=False,
         )

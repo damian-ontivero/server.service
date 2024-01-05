@@ -22,3 +22,6 @@ class ServerDbModel(db.Base):
     credentials = relationship(
         "CredentialDbModel", cascade="all, delete-orphan"
     )
+    applications = relationship(
+        "ServerApplicationDbModel", cascade="all, delete-orphan"
+    )

@@ -35,6 +35,7 @@ class AddServerCommandHandler(CommandHandler):
                 command.operating_system
             ),
             credentials=command.credentials,
+            applications=command.applications,
         )
         self._repository.add(server)
         for domain_event in server.domain_events:

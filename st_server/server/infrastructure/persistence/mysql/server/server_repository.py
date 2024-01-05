@@ -6,6 +6,7 @@ from st_server.server.domain.server.credential import Credential
 from st_server.server.domain.server.environment import Environment
 from st_server.server.domain.server.operating_system import OperatingSystem
 from st_server.server.domain.server.server import Server
+from st_server.server.domain.server.server_application import ServerApplication
 from st_server.server.domain.server.server_repository import (
     FILTER_OPERATOR_MAPPER,
     ServerRepository,
@@ -121,6 +122,18 @@ class ServerRepositoryImpl(ServerRepository):
                             )
                             for credential in server.credentials
                         ],
+                        applications=[
+                            ServerApplication(
+                                id=EntityId.from_text(application.id),
+                                server_id=EntityId.from_text(
+                                    application.server_id
+                                ),
+                                name=application.name,
+                                version=application.version,
+                                discarded=application.discarded,
+                            )
+                            for application in server.applications
+                        ],
                         status=ServerStatus.from_text(server.status),
                         discarded=server.discarded,
                     )
@@ -162,6 +175,18 @@ class ServerRepositoryImpl(ServerRepository):
                             discarded=credential.discarded,
                         )
                         for credential in server.credentials
+                    ],
+                    applications=[
+                        ServerApplication(
+                            id=EntityId.from_text(application.id),
+                            server_id=EntityId.from_text(
+                                application.server_id
+                            ),
+                            name=application.name,
+                            version=application.version,
+                            discarded=application.discarded,
+                        )
+                        for application in server.applications
                     ],
                     status=ServerStatus.from_text(server.status),
                     discarded=server.discarded,
