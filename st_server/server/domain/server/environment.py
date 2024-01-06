@@ -1,15 +1,11 @@
 class Environment:
-    """Value object that represents the Environment of the Server."""
-
     __slots__ = ("_value",)
 
     @classmethod
     def from_text(cls, text: str) -> "Environment":
-        """Named constructor to create the value object from a text."""
         return cls(text)
 
     def __new__(cls, value: str) -> "Environment":
-        """Creates a new instance of the value object."""
         if not isinstance(value, str):
             raise TypeError("Environment must be a string")
         if not len(value) > 0:

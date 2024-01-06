@@ -21,8 +21,6 @@ from tests.util.server.domain.server.server_application_factory import (
 
 
 class ServerFactory(factory.Factory):
-    """Server factory."""
-
     class Meta:
         model = Server
 

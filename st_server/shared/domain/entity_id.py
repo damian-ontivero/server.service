@@ -2,22 +2,17 @@ from uuid import uuid4
 
 
 class EntityId:
-    """Value object that represents an entity identifier."""
-
     __slots__ = ("_value",)
 
     @classmethod
     def generate(cls) -> "EntityId":
-        """Named constructor to generate a new value object."""
         return cls(uuid4().hex)
 
     @classmethod
     def from_text(cls, text: str) -> "EntityId":
-        """Named constructor to create the value object from a text."""
         return cls(text)
 
     def __new__(cls, value: str) -> "EntityId":
-        """Creates a new instance of the value object."""
         if not isinstance(value, str):
             raise TypeError("Entity identifier must be a string")
         if not value:

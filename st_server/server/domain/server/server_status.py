@@ -1,6 +1,4 @@
 class ServerStatus:
-    """Value object that represents the status of the Server."""
-
     RUNNING = "running"
     STOPPED = "stopped"
     ERROR = "error"
@@ -10,11 +8,9 @@ class ServerStatus:
 
     @classmethod
     def from_text(cls, text: str) -> "ServerStatus":
-        """Named constructor to create the value object from a text."""
         return cls(text)
 
     def __new__(cls, value: str) -> "ServerStatus":
-        """Creates a new instance of the value object."""
         if not isinstance(value, str):
             raise TypeError("Server status must be a string")
         if not len(value) > 0:

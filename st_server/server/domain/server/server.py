@@ -10,10 +10,6 @@ from st_server.shared.domain.entity_id import EntityId
 
 
 class Server(AggregateRoot):
-    """Server entity.
-
-    This is the aggregate root entity of the Server aggregate."""
-
     class Registered(DomainEvent):
         pass
 
@@ -31,8 +27,7 @@ class Server(AggregateRoot):
         status: ServerStatus,
         discarded: bool,
     ) -> None:
-        """Initializes the Server.
-
+        """
         Important:
             Do not use directly to create a new Server.
             Use the Server Factory instead.
@@ -221,7 +216,6 @@ class Server(AggregateRoot):
         credentials: list[dict],
         applications: list[dict],
     ):
-        """Named constructor to build a new entity."""
         server = cls(
             id=EntityId.generate(),
             name=name,
@@ -274,7 +268,6 @@ class Server(AggregateRoot):
         status: str,
         discarded: bool,
     ):
-        """Named constructor to restore the entity from its primitive values."""
         return cls(
             id=EntityId.from_text(id),
             name=name,
@@ -306,4 +299,11 @@ class Server(AggregateRoot):
             ],
             status=ServerStatus.from_text(status),
             discarded=discarded,
+        )
+
+    def discard(self) -> None:
+        self._check_not_discarded()
+        self._discarded = True
+        self.register_domain_event(
+            Server.Discarded(aggregate_id=self._id.value)
         )

@@ -2,7 +2,8 @@ from abc import ABCMeta, abstractmethod
 
 
 class FileManager(metaclass=ABCMeta):
-    """Abstract base class for file managers.
+    """
+    Abstract base class for file managers.
 
     This class represents a blueprint for managing files within the application.
     """

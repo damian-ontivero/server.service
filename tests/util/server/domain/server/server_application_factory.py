@@ -6,8 +6,6 @@ from st_server.shared.domain.entity_id import EntityId
 
 
 class ServerApplicationFactory(factory.Factory):
-    """Server Application value object factory."""
-
     class Meta:
         model = ServerApplication
 

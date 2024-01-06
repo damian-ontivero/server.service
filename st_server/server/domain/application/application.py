@@ -4,12 +4,6 @@ from st_server.shared.domain.entity_id import EntityId
 
 
 class Application(AggregateRoot):
-    """
-    Application entity.
-
-    This is the aggregate root entity of the Application aggregate.
-    """
-
     class Registered(DomainEvent):
         pass
 
@@ -21,8 +15,7 @@ class Application(AggregateRoot):
         architect: str,
         discarded: bool,
     ) -> None:
-        """Initializes the Application.
-
+        """
         Important:
             Do not use directly to create a new Application.
             Use the Application Factory instead.
@@ -121,4 +114,12 @@ class Application(AggregateRoot):
             version=version,
             architect=architect,
             discarded=discarded,
+        )
+
+    def discard(self) -> None:
+        """Discards the entity."""
+        self._check_not_discarded()
+        self._discarded = True
+        self.register_domain_event(
+            Application.Discarded(aggregate_id=self._id.value)
         )

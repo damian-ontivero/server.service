@@ -1,15 +1,11 @@
 class ConnectionType:
-    """Value object that represents the Connection Type of the Credential."""
-
     __slots__ = ("_value",)
 
     @classmethod
     def from_text(cls, text: str) -> "ConnectionType":
-        """Named constructor to create the value object from a text."""
         return cls(text)
 
     def __new__(cls, value: str) -> "ConnectionType":
-        """Creates a new instance of the value object."""
         if not isinstance(value, str):
             raise TypeError("Connection type must be a string")
         if not len(value) > 0:

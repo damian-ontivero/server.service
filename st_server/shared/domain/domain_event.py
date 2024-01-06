@@ -2,7 +2,8 @@ from datetime import datetime
 
 
 class DomainEvent:
-    """Base class for domain event.
+    """
+    Base class for domain event.
 
     Domain events are value objects that represent something that happened in
     the domain. They are used to notify other parts of the application about

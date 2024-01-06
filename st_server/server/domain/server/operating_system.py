@@ -1,11 +1,8 @@
 class OperatingSystem:
-    """Value object that represents the Operating System of the Server."""
-
     __slots__ = ("_name", "_version", "_architecture")
 
     @classmethod
     def from_data(cls, data: dict) -> "OperatingSystem":
-        """Named constructor to create the value object from a dictionary."""
         return cls(
             name=data.get("name"),
             version=data.get("version"),
@@ -15,7 +12,6 @@ class OperatingSystem:
     def __new__(
         cls, name: str, version: str, architecture: str
     ) -> "OperatingSystem":
-        """Creates a new instance of the value object."""
         if not isinstance(name, str):
             raise TypeError("Operating system name must be a string")
         if not len(name) > 0:

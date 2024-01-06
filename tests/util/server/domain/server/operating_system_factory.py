@@ -5,8 +5,6 @@ from st_server.server.domain.server.operating_system import OperatingSystem
 
 
 class OperatingSystemFactory(factory.Factory):
-    """Operating System value object factory."""
-
     class Meta:
         model = OperatingSystem
 

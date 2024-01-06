@@ -5,12 +5,16 @@ from st_server.shared.domain.entity_id import EntityId
 
 
 class Entity(metaclass=ABCMeta):
-    """Abstract base class for entities.
+    """
+    Abstract base class for entities.
 
     Entities are domain objects with unique identity and defined by attributes.
     They have a specific life cycle: creation, update, and deletion. They are
     mutable and can be compared by their identity.
     """
+
+    class Created(DomainEvent):
+        pass
 
     class Modified(DomainEvent):
         pass
@@ -43,12 +47,7 @@ class Entity(metaclass=ABCMeta):
 
     @property
     def discarded(self) -> bool:
-        """Returns True if the entity is discarded, False otherwise."""
         return self._discarded
-
-    def discard(self) -> None:
-        self._check_not_discarded()
-        self._discarded = True
 
     def _check_not_discarded(self) -> None:
         if self.discarded:

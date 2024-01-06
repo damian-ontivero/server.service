@@ -5,8 +5,6 @@ from st_server.server.domain.server.connection_type import ConnectionType
 
 
 class ConnectionTypeFactory(factory.Factory):
-    """Connection Type value object factory."""
-
     class Meta:
         model = ConnectionType
 

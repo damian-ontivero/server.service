@@ -9,8 +9,6 @@ from tests.conftest import SessionLocal
 
 
 class ApplicationFactory(factory.Factory):
-    """Application factory."""
-
     class Meta:
         model = Application
 

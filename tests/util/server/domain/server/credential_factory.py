@@ -9,8 +9,6 @@ from tests.util.server.domain.server.connection_type_factory import (
 
 
 class CredentialFactory(factory.Factory):
-    """Credential factory."""
-
     class Meta:
         model = Credential
 

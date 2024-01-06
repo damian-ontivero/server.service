@@ -2,13 +2,10 @@ from st_server.shared.domain.entity_id import EntityId
 
 
 class ServerApplication:
-    """Value object that represents the association between a Server and an Application."""
-
     __slots__ = ("_server_id", "_application_id", "_install_dir", "_log_dir")
 
     @classmethod
     def from_data(cls, data: dict) -> "ServerApplication":
-        """Named constructor to create the value object from a dictionary."""
         server_id = EntityId.from_text(data.get("server_id"))
         application_id = EntityId.from_text(data.get("application_id"))
         install_dir = data.get("install_dir")
@@ -22,7 +19,6 @@ class ServerApplication:
         install_dir: str,
         log_dir: str,
     ) -> "ServerApplication":
-        """Creates a new instance of the value object."""
         if not isinstance(server_id, EntityId):
             raise TypeError("Server id must be an EntityId")
         if not isinstance(application_id, EntityId):

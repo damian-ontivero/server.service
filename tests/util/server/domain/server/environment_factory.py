@@ -5,8 +5,6 @@ from st_server.server.domain.server.environment import Environment
 
 
 class EnvironmentFactory(factory.Factory):
-    """Environment value object factory."""
-
     class Meta:
         model = Environment
 
