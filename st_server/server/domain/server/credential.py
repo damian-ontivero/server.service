@@ -44,16 +44,16 @@ class Credential(Entity):
 
     def __init__(
         self,
-        id: EntityId | None = None,
-        server_id: EntityId | None = None,
-        connection_type: ConnectionType | None = None,
-        username: str | None = None,
-        password: str | None = None,
-        local_ip: str | None = None,
-        local_port: str | None = None,
-        public_ip: str | None = None,
-        public_port: str | None = None,
-        discarded: bool | None = None,
+        id: EntityId,
+        server_id: EntityId,
+        connection_type: ConnectionType,
+        username: str,
+        password: str,
+        local_ip: str,
+        local_port: str,
+        public_ip: str,
+        public_port: str,
+        discarded: bool,
     ) -> None:
         """Initializes the Credential.
 

@@ -1,3 +1,4 @@
+from st_server.server.domain.server.connection_type import ConnectionType
 from st_server.server.domain.server.credential import Credential
 from st_server.server.domain.server.environment import Environment
 from st_server.server.domain.server.operating_system import OperatingSystem
@@ -13,8 +14,8 @@ class Server(AggregateRoot):
 
     This is the aggregate root entity of the Server aggregate."""
 
-    class Created(DomainEvent):
-        """Domain event that represents the creation of a Server."""
+    class Registered(DomainEvent):
+        """Domain event that represents the registration of a Server."""
 
         pass
 
@@ -65,17 +66,17 @@ class Server(AggregateRoot):
 
     def __init__(
         self,
-        id: EntityId | None = None,
-        name: str | None = None,
-        cpu: str | None = None,
-        ram: str | None = None,
-        hdd: str | None = None,
-        environment: Environment | None = None,
-        operating_system: OperatingSystem | None = None,
-        credentials: list[Credential] | None = None,
-        applications: list[ServerApplication] | None = None,
-        status: ServerStatus | None = None,
-        discarded: bool | None = None,
+        id: EntityId,
+        name: str,
+        cpu: str,
+        ram: str,
+        hdd: str,
+        environment: Environment,
+        operating_system: OperatingSystem,
+        credentials: list[Credential],
+        applications: list[ServerApplication],
+        status: ServerStatus,
+        discarded: bool,
     ) -> None:
         """Initializes the Server.
 
@@ -281,26 +282,94 @@ class Server(AggregateRoot):
         cpu: str,
         ram: str,
         hdd: str,
-        environment: Environment,
-        operating_system: OperatingSystem,
-        credentials: list[Credential],
-        applications: list[ServerApplication],
+        environment: str,
+        operating_system: dict,
+        credentials: list[dict],
+        applications: list[dict],
     ):
-        """Registers a new Server."""
+        """Named constructor to build a new Server."""
         server = cls(
             id=EntityId.generate(),
             name=name,
             cpu=cpu,
             ram=ram,
             hdd=hdd,
-            environment=environment,
-            operating_system=operating_system,
-            credentials=credentials,
-            applications=applications,
+            environment=Environment.from_text(environment),
+            operating_system=OperatingSystem.from_data(operating_system),
+            credentials=[
+                Credential(
+                    id=EntityId.generate(),
+                    server_id=EntityId.generate(),
+                    connection_type=ConnectionType.from_text(
+                        credential["connection_type"]
+                    ),
+                    username=credential["username"],
+                    password=credential["password"],
+                    local_ip=credential["local_ip"],
+                    local_port=credential["local_port"],
+                    public_ip=credential["public_ip"],
+                    public_port=credential["public_port"],
+                    discarded=False,
+                )
+                for credential in credentials
+            ],
+            applications=[
+                ServerApplication.from_data(application)
+                for application in applications
+            ],
             status=ServerStatus.from_text("stopped"),
             discarded=False,
         )
         server.register_domain_event(
-            Server.Created(aggregate_id=server.id.value)
+            Server.Registered(aggregate_id=server.id.value)
         )
         return server
+
+    @classmethod
+    def from_primitive_values(
+        cls,
+        id: str,
+        name: str,
+        cpu: str,
+        ram: str,
+        hdd: str,
+        environment: str,
+        operating_system: dict,
+        credentials: list[dict],
+        applications: list[dict],
+        status: str,
+        discarded: bool,
+    ):
+        """Named constructor to build a Server from primitive values."""
+        return cls(
+            id=EntityId.from_text(id),
+            name=name,
+            cpu=cpu,
+            ram=ram,
+            hdd=hdd,
+            environment=Environment.from_text(environment),
+            operating_system=OperatingSystem.from_data(operating_system),
+            credentials=[
+                Credential(
+                    id=EntityId.from_text(credential["id"]),
+                    server_id=EntityId.from_text(credential["server_id"]),
+                    connection_type=ConnectionType.from_text(
+                        credential["connection_type"]
+                    ),
+                    username=credential["username"],
+                    password=credential["password"],
+                    local_ip=credential["local_ip"],
+                    local_port=credential["local_port"],
+                    public_ip=credential["public_ip"],
+                    public_port=credential["public_port"],
+                    discarded=credential["discarded"],
+                )
+                for credential in credentials
+            ],
+            applications=[
+                ServerApplication.from_data(application)
+                for application in applications
+            ],
+            status=ServerStatus.from_text(status),
+            discarded=discarded,
+        )

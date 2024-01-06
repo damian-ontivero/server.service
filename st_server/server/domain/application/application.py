@@ -32,11 +32,11 @@ class Application(AggregateRoot):
 
     def __init__(
         self,
-        id: EntityId | None = None,
-        name: str | None = None,
-        version: str | None = None,
-        architect: str | None = None,
-        discarded: bool | None = None,
+        id: EntityId,
+        name: str,
+        version: str,
+        architect: str,
+        discarded: bool,
     ) -> None:
         """Initializes the Application.
 

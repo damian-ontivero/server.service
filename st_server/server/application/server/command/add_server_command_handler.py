@@ -25,18 +25,7 @@ class AddServerCommandHandler(CommandHandler):
     def handle(self, command: AddServerCommand) -> ServerDto:
         """Handle a command."""
         self._check_if_exists(command.name)
-        server = Server.register(
-            name=command.name,
-            cpu=command.cpu,
-            ram=command.ram,
-            hdd=command.hdd,
-            environment=Environment.from_text(command.environment),
-            operating_system=OperatingSystem.from_data(
-                command.operating_system
-            ),
-            credentials=command.credentials,
-            applications=command.applications,
-        )
+        server = Server.register(**command.to_dict())
         self._repository.add(server)
         for domain_event in server.domain_events:
             self._message_bus.publish(domain_event)

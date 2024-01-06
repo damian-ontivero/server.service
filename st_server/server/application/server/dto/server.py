@@ -11,17 +11,17 @@ from st_server.server.domain.server.server import Server
 class ServerDto:
     """Data Transfer Object for reading an Server."""
 
-    id: str | None = None
-    name: str | None = None
-    cpu: str | None = None
-    ram: str | None = None
-    hdd: str | None = None
-    environment: str | None = None
-    operating_system: dict | None = None
+    id: str
+    name: str
+    cpu: str
+    ram: str
+    hdd: str
+    environment: str
+    operating_system: dict
+    status: str
+    discarded: bool
     credentials: list[CredentialDto] = field(default_factory=list)
     applications: list[ServerApplicationDto] = field(default_factory=list)
-    status: str | None = None
-    discarded: bool | None = None
 
     @classmethod
     def from_entity(cls, server: Server) -> "ServerDto":
@@ -39,7 +39,7 @@ class ServerDto:
                 for credential in server.credentials
             ],
             applications=[
-                ServerApplicationDto.from_entity(server_application)
+                ServerApplicationDto.from_value_object(server_application)
                 for server_application in server.applications
             ],
             status=server.status.value,

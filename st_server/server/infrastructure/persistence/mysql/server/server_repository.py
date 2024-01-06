@@ -2,18 +2,19 @@ from sqlalchemy import and_, func, or_
 from sqlalchemy.orm import Session
 
 from st_server.server.domain.server.connection_type import ConnectionType
-from st_server.server.domain.server.credential import Credential
-from st_server.server.domain.server.environment import Environment
-from st_server.server.domain.server.operating_system import OperatingSystem
 from st_server.server.domain.server.server import Server
-from st_server.server.domain.server.server_application import ServerApplication
 from st_server.server.domain.server.server_repository import (
     FILTER_OPERATOR_MAPPER,
     ServerRepository,
 )
-from st_server.server.domain.server.server_status import ServerStatus
+from st_server.server.infrastructure.persistence.mysql.server.credential import (
+    CredentialDbModel,
+)
 from st_server.server.infrastructure.persistence.mysql.server.server import (
     ServerDbModel,
+)
+from st_server.server.infrastructure.persistence.mysql.server.server_application import (
+    ServerApplicationDbModel,
 )
 from st_server.shared.domain.entity_id import EntityId
 from st_server.shared.domain.repository_response import RepositoryResponse
@@ -93,48 +94,23 @@ class ServerRepositoryImpl(ServerRepository):
             return RepositoryResponse(
                 total=total,
                 items=[
-                    Server(
-                        id=EntityId.from_text(server.id),
+                    Server.from_primitive_values(
+                        id=server.id,
                         name=server.name,
                         cpu=server.cpu,
                         ram=server.ram,
                         hdd=server.hdd,
-                        environment=Environment.from_text(server.environment),
-                        operating_system=OperatingSystem.from_data(
-                            server.operating_system
-                        ),
+                        environment=server.environment,
+                        operating_system=server.operating_system,
                         credentials=[
-                            Credential(
-                                id=EntityId.from_text(credential.id),
-                                server_id=EntityId.from_text(
-                                    credential.server_id
-                                ),
-                                connection_type=ConnectionType.from_text(
-                                    credential.connection_type
-                                ),
-                                username=credential.username,
-                                password=credential.password,
-                                local_ip=credential.local_ip,
-                                local_port=credential.local_port,
-                                public_ip=credential.public_ip,
-                                public_port=credential.public_port,
-                                discarded=credential.discarded,
-                            )
+                            credential.to_dict()
                             for credential in server.credentials
                         ],
                         applications=[
-                            ServerApplication(
-                                id=EntityId.from_text(application.id),
-                                server_id=EntityId.from_text(
-                                    application.server_id
-                                ),
-                                name=application.name,
-                                version=application.version,
-                                discarded=application.discarded,
-                            )
+                            application.to_dict()
                             for application in server.applications
                         ],
-                        status=ServerStatus.from_text(server.status),
+                        status=server.status,
                         discarded=server.discarded,
                     )
                     for server in servers
@@ -149,46 +125,23 @@ class ServerRepositoryImpl(ServerRepository):
                 .first()
             )
             if server is not None:
-                return Server(
-                    id=EntityId.from_text(server.id),
+                return Server.from_primitive_values(
+                    id=server.id,
                     name=server.name,
                     cpu=server.cpu,
                     ram=server.ram,
                     hdd=server.hdd,
-                    environment=Environment.from_text(server.environment),
-                    operating_system=OperatingSystem.from_data(
-                        server.operating_system
-                    ),
+                    environment=server.environment,
+                    operating_system=server.operating_system,
                     credentials=[
-                        Credential(
-                            id=EntityId.from_text(credential.id),
-                            server_id=EntityId.from_text(credential.server_id),
-                            connection_type=ConnectionType.from_text(
-                                credential.connection_type
-                            ),
-                            username=credential.username,
-                            password=credential.password,
-                            local_ip=credential.local_ip,
-                            local_port=credential.local_port,
-                            public_ip=credential.public_ip,
-                            public_port=credential.public_port,
-                            discarded=credential.discarded,
-                        )
+                        credential.to_dict()
                         for credential in server.credentials
                     ],
                     applications=[
-                        ServerApplication(
-                            id=EntityId.from_text(application.id),
-                            server_id=EntityId.from_text(
-                                application.server_id
-                            ),
-                            name=application.name,
-                            version=application.version,
-                            discarded=application.discarded,
-                        )
+                        application.to_dict()
                         for application in server.applications
                     ],
-                    status=ServerStatus.from_text(server.status),
+                    status=server.status,
                     discarded=server.discarded,
                 )
             return None
@@ -204,6 +157,30 @@ class ServerRepositoryImpl(ServerRepository):
                     hdd=aggregate.hdd,
                     environment=aggregate.environment.value,
                     operating_system=aggregate.operating_system.__dict__,
+                    credentials=[
+                        CredentialDbModel(
+                            id=credential.id.value,
+                            server_id=credential.server_id.value,
+                            connection_type=credential.connection_type.value,
+                            username=credential.username,
+                            password=credential.password,
+                            local_ip=credential.local_ip,
+                            local_port=credential.local_port,
+                            public_ip=credential.public_ip,
+                            public_port=credential.public_port,
+                            discarded=credential.discarded,
+                        )
+                        for credential in aggregate.credentials
+                    ],
+                    applications=[
+                        ServerApplicationDbModel(
+                            server_id=application.server_id.value,
+                            application_id=application.application_id.value,
+                            install_dir=application.install_dir,
+                            log_dir=application.log_dir,
+                        )
+                        for application in aggregate.applications
+                    ],
                     status=aggregate.status.value,
                     discarded=aggregate.discarded,
                 )

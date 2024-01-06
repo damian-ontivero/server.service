@@ -7,11 +7,11 @@ from st_server.server.domain.application.application import Application
 class ApplicationDto:
     """Data Transfer Object for reading an Application."""
 
-    id: str | None = None
-    name: str | None = None
-    version: str | None = None
-    architect: str | None = None
-    discarded: bool | None = None
+    id: str
+    name: str
+    version: str
+    architect: str
+    discarded: bool
 
     @classmethod
     def from_entity(cls, application: Application) -> "ApplicationDto":

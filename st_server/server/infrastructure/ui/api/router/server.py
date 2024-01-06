@@ -68,8 +68,8 @@ def get_all(
     and_filter: str = Query(default="[]"),
     or_filter: str = Query(default="[]"),
     sort: str = Query(default="[]"),
-    authorization: HTTPAuthorizationCredentials = Depends(auth_scheme),
     repository: ServerRepositoryImpl = Depends(get_mysql_repository),
+    authorization: HTTPAuthorizationCredentials = Depends(auth_scheme),
 ):
     """Route to get all servers."""
     query = FindManyServerQuery(
@@ -85,7 +85,7 @@ def get_all(
     if servers.total == 0:
         return JSONResponse(content=[], status_code=status.HTTP_204_NO_CONTENT)
     return JSONResponse(
-        content=jsonable_encoder(obj=servers.to_dict()),
+        content=jsonable_encoder(obj=servers),
         status_code=status.HTTP_200_OK,
     )
 
@@ -93,8 +93,8 @@ def get_all(
 @router.get("/{id}", response_model=ServerDto)
 def get(
     id: str,
-    authorization: HTTPAuthorizationCredentials = Depends(auth_scheme),
     repository: ServerRepositoryImpl = Depends(get_mysql_repository),
+    authorization: HTTPAuthorizationCredentials = Depends(auth_scheme),
 ):
     """Route to get a Server by id."""
     query = FindOneServerQuery(id=id)
@@ -108,14 +108,14 @@ def get(
 @router.post("", response_model=ServerDto)
 def create(
     command: AddServerCommand,
-    authorization: HTTPAuthorizationCredentials = Depends(auth_scheme),
     command_bus: CommandBus = Depends(get_command_bus),
     repository: ServerRepositoryImpl = Depends(get_mysql_repository),
     message_bus: RabbitMQMessageBus = Depends(get_rabbitmq_message_bus),
+    authorization: HTTPAuthorizationCredentials = Depends(auth_scheme),
 ):
     """Route to create a Server."""
     command_bus.register(
-        command=AddServerCommand,
+        command=command,
         handler=AddServerCommandHandler(
             repository=repository, message_bus=message_bus
         ),
@@ -131,10 +131,10 @@ def create(
 def update(
     id: str,
     command: UpdateServerCommand,
-    authorization: HTTPAuthorizationCredentials = Depends(auth_scheme),
     command_bus: CommandBus = Depends(get_command_bus),
     repository: ServerRepositoryImpl = Depends(get_mysql_repository),
     message_bus: RabbitMQMessageBus = Depends(get_rabbitmq_message_bus),
+    authorization: HTTPAuthorizationCredentials = Depends(auth_scheme),
 ):
     """Route to update a Server."""
     command.id = id
@@ -154,15 +154,15 @@ def update(
 @router.delete("/{id}")
 def delete(
     id: str,
-    authorization: HTTPAuthorizationCredentials = Depends(auth_scheme),
     command_bus: CommandBus = Depends(get_command_bus),
     repository: ServerRepositoryImpl = Depends(get_mysql_repository),
     message_bus: RabbitMQMessageBus = Depends(get_rabbitmq_message_bus),
+    authorization: HTTPAuthorizationCredentials = Depends(auth_scheme),
 ):
     """Route to discard a Server."""
     command = DeleteServerCommand(id=id)
     command_bus.register(
-        command=DeleteServerCommand,
+        command=command,
         handler=DeleteServerCommandHandler(
             repository=repository, message_bus=message_bus
         ),

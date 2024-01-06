@@ -7,22 +7,23 @@ from st_server.server.domain.server.credential import Credential
 class CredentialDto:
     """Data Transfer Object for reading an Credential."""
 
-    id: str | None = None
-    # server_id: str | None = None
-    connection_type: str | None = None
-    username: str | None = None
-    password: str | None = None
-    local_ip: str | None = None
-    local_port: str | None = None
-    public_ip: str | None = None
-    public_port: str | None = None
-    discarded: bool | None = None
+    id: str
+    server_id: str
+    connection_type: str
+    username: str
+    password: str
+    local_ip: str
+    local_port: str
+    public_ip: str
+    public_port: str
+    discarded: bool
 
     @classmethod
     def from_entity(cls, credential: Credential) -> "CredentialDto":
         """Named constructor to create a DTO from an Credential entity."""
         return cls(
             id=credential.id.value,
+            server_id=credential.server_id.value,
             connection_type=credential.connection_type.value,
             username=credential.username,
             password=credential.password,

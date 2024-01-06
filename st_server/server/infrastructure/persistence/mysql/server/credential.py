@@ -9,7 +9,7 @@ class CredentialDbModel(db.Base):
     __tablename__ = "credential"
 
     id = Column(String(32), primary_key=True)
-    server_id = Column(String(32), ForeignKey("server.id"))
+    server_id = Column(String(32), ForeignKey("server.id", ondelete="CASCADE"))
     connection_type = Column(String(255))
     local_ip = Column(String(255))
     local_port = Column(String(255))

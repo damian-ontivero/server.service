@@ -70,8 +70,8 @@ def get_all(
     and_filter: str = Query(default="[]"),
     or_filter: str = Query(default="[]"),
     sort: str = Query(default="[]"),
-    authorization: HTTPAuthorizationCredentials = Depends(auth_scheme),
     repository: ApplicationRepositoryImpl = Depends(get_repository),
+    authorization: HTTPAuthorizationCredentials = Depends(auth_scheme),
 ):
     """Route to get all applications."""
     query = FindManyApplicationQuery(
@@ -87,7 +87,7 @@ def get_all(
     if applications.total == 0:
         return JSONResponse(content=[], status_code=status.HTTP_204_NO_CONTENT)
     return JSONResponse(
-        content=jsonable_encoder(obj=applications.to_dict()),
+        content=jsonable_encoder(obj=applications),
         status_code=status.HTTP_200_OK,
     )
 
@@ -95,8 +95,8 @@ def get_all(
 @router.get("/{id}", response_model=ApplicationDto)
 def get(
     id: str,
-    authorization: HTTPAuthorizationCredentials = Depends(auth_scheme),
     repository: ApplicationRepositoryImpl = Depends(get_repository),
+    authorization: HTTPAuthorizationCredentials = Depends(auth_scheme),
 ):
     """Route to get an Application by id."""
     query = FindOneApplicationQuery(id=id)
@@ -111,14 +111,14 @@ def get(
 @router.post("", response_model=ApplicationDto)
 def create(
     command: AddApplicationCommand,
-    authorization: HTTPAuthorizationCredentials = Depends(auth_scheme),
     command_bus: CommandBus = Depends(get_command_bus),
     repository: ApplicationRepositoryImpl = Depends(get_repository),
     message_bus: RabbitMQMessageBus = Depends(get_rabbitmq_message_bus),
+    authorization: HTTPAuthorizationCredentials = Depends(auth_scheme),
 ):
     """Route to create an Application."""
     command_bus.register(
-        command=AddApplicationCommand,
+        command=command,
         handler=AddApplicationCommandHandler(
             repository=repository, message_bus=message_bus
         ),
@@ -134,15 +134,15 @@ def create(
 def update(
     id: str,
     command: UpdateApplicationCommand,
-    authorization: HTTPAuthorizationCredentials = Depends(auth_scheme),
     command_bus: CommandBus = Depends(get_command_bus),
     repository: ApplicationRepositoryImpl = Depends(get_repository),
     message_bus: RabbitMQMessageBus = Depends(get_rabbitmq_message_bus),
+    authorization: HTTPAuthorizationCredentials = Depends(auth_scheme),
 ):
     """Route to update an Application."""
     command.id = id
     command_bus.register(
-        command=UpdateApplicationCommand,
+        command=command,
         handler=UpdateApplicationCommandHandler(
             repository=repository, message_bus=message_bus
         ),
@@ -157,15 +157,15 @@ def update(
 @router.delete("/{id}")
 def delete(
     id: str,
-    authorization: HTTPAuthorizationCredentials = Depends(auth_scheme),
     command_bus: CommandBus = Depends(get_command_bus),
     repository: ApplicationRepositoryImpl = Depends(get_repository),
     message_bus: RabbitMQMessageBus = Depends(get_rabbitmq_message_bus),
+    authorization: HTTPAuthorizationCredentials = Depends(auth_scheme),
 ):
     """Route to delete an Application."""
     command = DeleteApplicationCommand(id=id)
     command_bus.register(
-        command=DeleteApplicationCommand,
+        command=command,
         handler=DeleteApplicationCommandHandler(
             repository=repository, message_bus=message_bus
         ),

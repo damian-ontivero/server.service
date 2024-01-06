@@ -6,7 +6,7 @@ class CommandBus:
     """Command bus dispatches commands to their handlers."""
 
     def __init__(self):
-        self._handlers: dict[type(Command), CommandHandler] = {}
+        self._handlers: dict[Command, CommandHandler] = {}
 
     def register(self, command: Command, handler: CommandHandler) -> None:
         """Registers a command and its handler."""
