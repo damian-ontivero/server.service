@@ -3,8 +3,6 @@ from dataclasses import dataclass, field
 
 @dataclass(frozen=True)
 class QueryResponse:
-    """Represents the paginated query response."""
-
     total: int
     limit: int
     offset: int
@@ -12,12 +10,10 @@ class QueryResponse:
 
     @property
     def prev_offset(self) -> int | None:
-        """Returns the previous offset if available."""
         return self.offset - self.limit if self.offset > 0 else None
 
     @property
     def next_offset(self) -> int | None:
-        """Returns the next offset if available."""
         return (
             self.offset + self.limit
             if self.offset + self.limit < self.total
@@ -25,7 +21,6 @@ class QueryResponse:
         )
 
     def to_dict(self) -> dict:
-        """Returns the dictionary representation of the query response."""
         return {
             "total": self.total,
             "limit": self.limit,

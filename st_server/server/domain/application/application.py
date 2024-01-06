@@ -11,18 +11,6 @@ class Application(AggregateRoot):
     """
 
     class Registered(DomainEvent):
-        """Domain event that represents the registration of an Application."""
-
-        pass
-
-    class Modified(DomainEvent):
-        """Domain event that represents the modification of an Application."""
-
-        pass
-
-    class Discarded(DomainEvent):
-        """Domain event that represents the discarding of an Application."""
-
         pass
 
     def __init__(
@@ -45,7 +33,6 @@ class Application(AggregateRoot):
         self._architect = architect
 
     def __repr__(self) -> str:
-        """Returns the string representation of the entity."""
         return (
             "{d}{c}(id={id!r}, name={name!r}, "
             "version={version!r}, architect={architect!r}, "
@@ -62,13 +49,11 @@ class Application(AggregateRoot):
 
     @property
     def name(self) -> str:
-        """Returns the name."""
         self._check_not_discarded()
         return self._name
 
     @name.setter
     def name(self, name: str) -> None:
-        """Sets the name."""
         self._check_not_discarded()
         domain_event = Application.Modified(
             aggregate_id=self._id.value,
@@ -80,13 +65,11 @@ class Application(AggregateRoot):
 
     @property
     def version(self) -> str:
-        """Returns the version."""
         self._check_not_discarded()
         return self._version
 
     @version.setter
     def version(self, version: str) -> None:
-        """Sets the version."""
         self._check_not_discarded()
         domain_event = Application.Modified(
             aggregate_id=self._id.value,
@@ -98,13 +81,11 @@ class Application(AggregateRoot):
 
     @property
     def architect(self) -> str:
-        """Returns the architect."""
         self._check_not_discarded()
         return self._architect
 
     @architect.setter
     def architect(self, architect: str) -> None:
-        """Sets the architect."""
         self._check_not_discarded()
         domain_event = Application.Modified(
             aggregate_id=self._id.value,
@@ -116,7 +97,7 @@ class Application(AggregateRoot):
 
     @staticmethod
     def register(name: str, version: str, architect: str) -> "Application":
-        """Named constructor to build a new entity."""
+        """Named constructor to register a new entity."""
         application = Application(
             id=EntityId.generate(),
             name=name,
@@ -140,12 +121,4 @@ class Application(AggregateRoot):
             version=version,
             architect=architect,
             discarded=discarded,
-        )
-
-    def discard(self) -> None:
-        """Discards the entity."""
-        self._check_not_discarded()
-        self._discarded = True
-        self.register_domain_event(
-            Application.Discarded(aggregate_id=self._id.value)
         )

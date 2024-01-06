@@ -58,7 +58,6 @@ auth_scheme = HTTPBearer()
 
 
 def get_repository(session: Session = Depends(get_mysql_session)):
-    """Yields a Server repository."""
     return ApplicationRepositoryImpl(session)
 
 
@@ -73,7 +72,6 @@ def get_all(
     repository: ApplicationRepositoryImpl = Depends(get_repository),
     authorization: HTTPAuthorizationCredentials = Depends(auth_scheme),
 ):
-    """Route to get all applications."""
     query = FindManyApplicationQuery(
         limit=limit,
         offset=offset,
@@ -98,7 +96,6 @@ def get(
     repository: ApplicationRepositoryImpl = Depends(get_repository),
     authorization: HTTPAuthorizationCredentials = Depends(auth_scheme),
 ):
-    """Route to get an Application by id."""
     query = FindOneApplicationQuery(id=id)
     handler = FindOneApplicationQueryHandler(repository)
     application = handler.handle(query)
@@ -116,7 +113,6 @@ def create(
     message_bus: RabbitMQMessageBus = Depends(get_rabbitmq_message_bus),
     authorization: HTTPAuthorizationCredentials = Depends(auth_scheme),
 ):
-    """Route to create an Application."""
     command_bus.register(
         command=command,
         handler=AddApplicationCommandHandler(
@@ -139,7 +135,6 @@ def update(
     message_bus: RabbitMQMessageBus = Depends(get_rabbitmq_message_bus),
     authorization: HTTPAuthorizationCredentials = Depends(auth_scheme),
 ):
-    """Route to update an Application."""
     command.id = id
     command_bus.register(
         command=command,
@@ -162,7 +157,6 @@ def delete(
     message_bus: RabbitMQMessageBus = Depends(get_rabbitmq_message_bus),
     authorization: HTTPAuthorizationCredentials = Depends(auth_scheme),
 ):
-    """Route to delete an Application."""
     command = DeleteApplicationCommand(id=id)
     command_bus.register(
         command=command,

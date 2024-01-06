@@ -11,14 +11,10 @@ from st_server.shared.application.query_response import QueryResponse
 
 
 class FindManyApplicationQueryHandler:
-    """Query handler for finding many Applications."""
-
     def __init__(self, repository: ApplicationRepository) -> None:
-        """Initialize the handler."""
         self._repository = repository
 
     def handle(self, query: FindManyApplicationQuery) -> QueryResponse:
-        """Handles a query."""
         result = self._repository.find_many(**query.to_dict())
         return QueryResponse(
             total=result.total,

@@ -5,8 +5,6 @@ from st_server.server.domain.application.application import Application
 
 @dataclass(frozen=True)
 class ApplicationDto:
-    """Data Transfer Object for reading an Application."""
-
     id: str
     name: str
     version: str

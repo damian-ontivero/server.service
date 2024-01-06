@@ -11,5 +11,4 @@ class QueryHandler(metaclass=ABCMeta):
 
     @abstractmethod
     def handle(self, query: Query) -> None:
-        """Handles a query."""
         raise NotImplementedError

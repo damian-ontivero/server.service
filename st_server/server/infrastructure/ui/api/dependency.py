@@ -16,7 +16,6 @@ rabbitmq_pass = config.get("rabbitmq", "pass")
 
 
 def get_mysql_session():
-    """Yields a mysql session."""
     session = db.SessionLocal()
     try:
         yield session
@@ -25,12 +24,10 @@ def get_mysql_session():
 
 
 def get_command_bus():
-    """Yields a command bus."""
     return CommandBus()
 
 
 def get_rabbitmq_message_bus():
-    """Yields a message bus."""
     return RabbitMQMessageBus(
         host=rabbitmq_host,
         port=rabbitmq_port,

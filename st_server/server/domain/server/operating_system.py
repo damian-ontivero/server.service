@@ -35,7 +35,6 @@ class OperatingSystem:
         return self
 
     def __eq__(self, other: object) -> bool:
-        """Checks if two value objects are equal."""
         if isinstance(other, OperatingSystem):
             return (
                 self.name == other.name
@@ -45,15 +44,12 @@ class OperatingSystem:
         return NotImplemented
 
     def __ne__(self, other: object) -> bool:
-        """Checks if two value objects are not equal."""
         return not self.__eq__(other)
 
     def __hash__(self) -> int:
-        """Returns the hash of the value object."""
         return hash((self.name, self.version, self.architecture))
 
     def __repr__(self) -> str:
-        """Returns the string representation of the value object."""
         return (
             f"{self.__class__.__name__}(name={self._name!r}, "
             f"version={self._version!r}, architecture={self._architecture!r})"
@@ -61,22 +57,18 @@ class OperatingSystem:
 
     @property
     def name(self) -> str:
-        """Returns the name."""
         return self._name
 
     @property
     def version(self) -> str:
-        """Returns the version."""
         return self._version
 
     @property
     def architecture(self) -> str:
-        """Returns the architecture."""
         return self._architecture
 
     @property
     def __dict__(self) -> dict:
-        """Returns the dictionary representation of the value object."""
         return {
             "name": self._name,
             "version": self._version,

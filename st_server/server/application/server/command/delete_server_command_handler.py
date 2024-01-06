@@ -8,17 +8,13 @@ from st_server.shared.application.exception import NotFound
 
 
 class DeleteServerCommandHandler(CommandHandler):
-    """Command handler for deleting a Server."""
-
     def __init__(
         self, repository: ServerRepository, message_bus: MessageBus
     ) -> None:
-        """Initialize the handler."""
         self._repository = repository
         self._message_bus = message_bus
 
     def handle(self, command: DeleteServerCommand) -> None:
-        """Handle a command."""
         server = self._repository.find_by_id(command.id)
         if server is None:
             raise NotFound(

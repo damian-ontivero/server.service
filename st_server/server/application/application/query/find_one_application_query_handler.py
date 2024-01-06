@@ -11,14 +11,10 @@ from st_server.shared.application.exception import NotFound
 
 
 class FindOneApplicationQueryHandler:
-    """Query handler for finding one Application."""
-
     def __init__(self, repository: ApplicationRepository) -> None:
-        """Initialize the handler."""
         self._repository = repository
 
     def handle(self, query: FindOneApplicationQuery) -> ApplicationDto:
-        """Handles a query."""
         application = self._repository.find_by_id(**query.to_dict())
         if application is None:
             raise NotFound(

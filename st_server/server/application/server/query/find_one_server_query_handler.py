@@ -7,14 +7,10 @@ from st_server.shared.application.exception import NotFound
 
 
 class FindOneServerQueryHandler:
-    """Query handler for finding one Server."""
-
     def __init__(self, repository: ServerRepository) -> None:
-        """Initialize the handler."""
         self._repository = repository
 
     def handle(self, query: FindOneServerQuery) -> ServerDto:
-        """Handles a query."""
         server = self._repository.find_by_id(**query.to_dict())
         if server is None:
             raise NotFound(

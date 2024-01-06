@@ -5,8 +5,6 @@ from st_server.shared.application.command import Command
 
 @dataclass
 class UpdateApplicationCommand(Command):
-    """Command to update an Application."""
-
     id: str | None = None
     name: str | None = None
     version: str | None = None

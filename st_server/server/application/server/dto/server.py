@@ -9,8 +9,6 @@ from st_server.server.domain.server.server import Server
 
 @dataclass(frozen=True)
 class ServerDto:
-    """Data Transfer Object for reading an Server."""
-
     id: str
     name: str
     cpu: str

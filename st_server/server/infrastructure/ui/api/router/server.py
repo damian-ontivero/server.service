@@ -56,7 +56,6 @@ auth_scheme = HTTPBearer()
 
 
 def get_mysql_repository(session: Session = Depends(get_mysql_session)):
-    """Yields a Server repository."""
     return ServerRepositoryImpl(session)
 
 
@@ -71,7 +70,6 @@ def get_all(
     repository: ServerRepositoryImpl = Depends(get_mysql_repository),
     authorization: HTTPAuthorizationCredentials = Depends(auth_scheme),
 ):
-    """Route to get all servers."""
     query = FindManyServerQuery(
         limit=limit,
         offset=offset,
@@ -96,7 +94,6 @@ def get(
     repository: ServerRepositoryImpl = Depends(get_mysql_repository),
     authorization: HTTPAuthorizationCredentials = Depends(auth_scheme),
 ):
-    """Route to get a Server by id."""
     query = FindOneServerQuery(id=id)
     handler = FindOneServerQueryHandler(repository=repository)
     server = handler.handle(query)
@@ -113,7 +110,6 @@ def create(
     message_bus: RabbitMQMessageBus = Depends(get_rabbitmq_message_bus),
     authorization: HTTPAuthorizationCredentials = Depends(auth_scheme),
 ):
-    """Route to create a Server."""
     command_bus.register(
         command=command,
         handler=AddServerCommandHandler(
@@ -136,7 +132,6 @@ def update(
     message_bus: RabbitMQMessageBus = Depends(get_rabbitmq_message_bus),
     authorization: HTTPAuthorizationCredentials = Depends(auth_scheme),
 ):
-    """Route to update a Server."""
     command.id = id
     command_bus.register(
         command=command,
@@ -159,7 +154,6 @@ def delete(
     message_bus: RabbitMQMessageBus = Depends(get_rabbitmq_message_bus),
     authorization: HTTPAuthorizationCredentials = Depends(auth_scheme),
 ):
-    """Route to discard a Server."""
     command = DeleteServerCommand(id=id)
     command_bus.register(
         command=command,

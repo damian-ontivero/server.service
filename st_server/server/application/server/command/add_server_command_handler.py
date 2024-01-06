@@ -13,17 +13,13 @@ from st_server.shared.application.exception import AlreadyExists
 
 
 class AddServerCommandHandler(CommandHandler):
-    """Command handler for adding a Server."""
-
     def __init__(
         self, repository: ServerRepository, message_bus: MessageBus
     ) -> None:
-        """Initialize the handler."""
         self._repository = repository
         self._message_bus = message_bus
 
     def handle(self, command: AddServerCommand) -> ServerDto:
-        """Handle a command."""
         self._check_if_exists(command.name)
         server = Server.register(**command.to_dict())
         self._repository.add(server)
@@ -33,7 +29,6 @@ class AddServerCommandHandler(CommandHandler):
         return ServerDto.from_entity(server)
 
     def _check_if_exists(self, name: str) -> None:
-        """Check if a Server with the given name already exists."""
         servers = self._repository.find_many(filter={"name": {"eq": name}})
         if servers.total:
             raise AlreadyExists(

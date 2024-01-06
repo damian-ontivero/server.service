@@ -11,5 +11,4 @@ class CommandHandler(metaclass=ABCMeta):
 
     @abstractmethod
     def handle(self, command: Command) -> None:
-        """Handles a command."""
         raise NotImplementedError

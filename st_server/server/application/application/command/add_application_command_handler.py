@@ -14,17 +14,13 @@ from st_server.shared.application.exception import AlreadyExists
 
 
 class AddApplicationCommandHandler(CommandHandler):
-    """Command handler for adding an Application."""
-
     def __init__(
         self, repository: ApplicationRepository, message_bus: MessageBus
     ) -> None:
-        """Initialize the handler."""
         self._repository = repository
         self._message_bus = message_bus
 
     def handle(self, command: AddApplicationCommand) -> ApplicationDto:
-        """Handle a command."""
         application = Application.register(**command.to_dict())
         self._check_if_exists(application.name)
         self._repository.add(application)
@@ -34,7 +30,6 @@ class AddApplicationCommandHandler(CommandHandler):
         return ApplicationDto.from_entity(application)
 
     def _check_if_exists(self, name: str) -> None:
-        """Check if an Application with the given name already exists"""
         applications = self._repository.find_many(
             filter={"name": {"eq": name}}
         )

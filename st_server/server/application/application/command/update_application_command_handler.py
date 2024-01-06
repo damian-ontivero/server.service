@@ -13,17 +13,13 @@ from st_server.shared.application.exception import AlreadyExists, NotFound
 
 
 class UpdateApplicationCommandHandler(CommandHandler):
-    """Command handler for updating an Application."""
-
     def __init__(
         self, repository: ApplicationRepository, message_bus: MessageBus
     ) -> None:
-        """Initialize the handler."""
         self._repository = repository
         self._message_bus = message_bus
 
     def handle(self, command: UpdateApplicationCommand) -> ApplicationDto:
-        """Handle a command."""
         application = self._repository.find_by_id(command.id)
         if application is None:
             raise NotFound(
@@ -41,7 +37,6 @@ class UpdateApplicationCommandHandler(CommandHandler):
         return ApplicationDto.from_entity(application)
 
     def _check_if_exists(self, name: str) -> None:
-        """Check if an Application with the given name already exists."""
         applications = self._repository.find_many(
             filter={"name": {"eq": name}}
         )

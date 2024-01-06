@@ -5,8 +5,6 @@ from st_server.shared.application.query import Query
 
 @dataclass(frozen=True)
 class FindManyServerQuery(Query):
-    """Query to find many Servers."""
-
     limit: int | None = None
     offset: int | None = None
     filter: dict | None = None

@@ -13,7 +13,6 @@ class DomainEvent:
     """
 
     def __init__(self, **kwargs) -> None:
-        """Initializes the domain event."""
         self.__dict__["occurred_on"] = datetime.utcnow().isoformat()
         self.__dict__.update(kwargs)
 
@@ -28,21 +27,17 @@ class DomainEvent:
         raise AttributeError("Attributes can be added but not deleted")
 
     def __eq__(self, other: object) -> bool:
-        """Checks if two domain events are equal."""
         if isinstance(other, DomainEvent):
             return self.__dict__ == other.__dict__
         return NotImplemented
 
     def __ne__(self, other: object) -> bool:
-        """Checks if two domain events are not equal."""
         return not self.__eq__(other)
 
     def __hash__(self) -> int:
-        """Returns the hash of the domain event."""
         return hash(frozenset(self.__dict__.items()))
 
     def __repr__(self) -> str:
-        """Returns the string representation of the domain event."""
         return "{c}({args})".format(
             c=self.__class__.__name__,
             args=", ".join(

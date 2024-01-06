@@ -10,17 +10,13 @@ from st_server.shared.application.exception import NotFound
 
 
 class DeleteApplicationCommandHandler(CommandHandler):
-    """Command handler for deleting an Application."""
-
     def __init__(
         self, repository: ApplicationRepository, message_bus: MessageBus
     ) -> None:
-        """Initialize the handler."""
         self._repository = repository
         self._message_bus = message_bus
 
     def handle(self, command: DeleteApplicationCommand) -> None:
-        """Handle a command."""
         application = self._repository.find_by_id(command.id)
         if application is None:
             raise NotFound(

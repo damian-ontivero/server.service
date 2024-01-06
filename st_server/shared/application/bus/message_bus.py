@@ -11,5 +11,4 @@ class MessageBus(metaclass=ABCMeta):
 
     @abstractmethod
     def publish(self, domain_event: DomainEvent) -> None:
-        """Publishes a domain event."""
         raise NotImplementedError

@@ -33,25 +33,20 @@ class ServerRepository(metaclass=ABCMeta):
         or_filters: list[dict[str, dict[str, str]]],
         sort: list[dict[str, str]],
     ) -> RepositoryResponse:
-        """Retrieves Servers based on provided filters, sorting, and pagination."""
         raise NotImplementedError
 
     @abstractmethod
     def find_by_id(self, id: int) -> Server | None:
-        """Retrieves a Server by its ID."""
         raise NotImplementedError
 
     @abstractmethod
     def add(self, server: Server) -> None:
-        """Adds a Server."""
         raise NotImplementedError
 
     @abstractmethod
     def update(self, server: Server) -> None:
-        """Updates a Server."""
         raise NotImplementedError
 
     @abstractmethod
     def delete_by_id(self, id: int) -> None:
-        """Deletes a Server by its ID."""
         raise NotImplementedError

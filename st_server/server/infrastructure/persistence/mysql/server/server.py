@@ -5,8 +5,6 @@ from st_server.server.infrastructure.persistence.mysql import db
 
 
 class ServerDbModel(db.Base):
-    """Server database model."""
-
     __tablename__ = "server"
 
     id = Column(String(32), primary_key=True)

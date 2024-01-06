@@ -43,7 +43,6 @@ class ServerApplication:
         return self
 
     def __eq__(self, other: object) -> bool:
-        """Checks if two value objects are equal."""
         if isinstance(other, ServerApplication):
             return (
                 self._server_id == other._server_id
@@ -54,11 +53,9 @@ class ServerApplication:
         return NotImplemented
 
     def __ne__(self, other: object) -> bool:
-        """Checks if two value objects are not equal."""
         return not self.__eq__(other)
 
     def __hash__(self) -> int:
-        """Returns the hash of the value object."""
         return hash(
             (
                 self._server_id,
@@ -69,7 +66,6 @@ class ServerApplication:
         )
 
     def __repr__(self) -> str:
-        """Returns the string representation of the value object."""
         return (
             f"{self.__class__.__name__}(server_id={self._server_id!r}, "
             f"application_id={self._application_id!r}, "

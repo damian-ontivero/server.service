@@ -19,24 +19,19 @@ class Environment:
         return self
 
     def __eq__(self, other: object) -> bool:
-        """Checks if two value objects are equal."""
         if isinstance(other, Environment):
             return self._value == other._value
         return NotImplemented
 
     def __ne__(self, other: object) -> bool:
-        """Checks if two value objects are not equal."""
         return not self.__eq__(other)
 
     def __hash__(self) -> int:
-        """Returns the hash of the value object."""
         return hash(self._value)
 
     def __repr__(self) -> str:
-        """Returns the string representation of the value object."""
         return f"{self.__class__.__name__}(value={self._value!r})"
 
     @property
     def value(self) -> str:
-        """Returns the values."""
         return self._value

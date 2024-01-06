@@ -5,8 +5,6 @@ from st_server.server.domain.server.credential import Credential
 
 @dataclass(frozen=True)
 class CredentialDto:
-    """Data Transfer Object for reading an Credential."""
-
     id: str
     server_id: str
     connection_type: str
