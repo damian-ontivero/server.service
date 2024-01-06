@@ -20,74 +20,125 @@ The goal of this project is to learn and practice software architecture.
 - Domain Events
 
 # Project structure
-```
-server.service/
-├── st_server/
-|   ├── server/
-|   |   ├── __init__.py
-|   |   ├── application/
-|   |   │   ├── __init__.py
-|   |   |   └── aggregate/                                # One package per aggregate
-|   |   |       ├── __init__.py
-|   |   |       ├── command/                              # Commands are used to perform actions that modify the aggregate
-|   |   |       |   ├── __init__.py
-|   |   |       |   ├── command.py                        # Command that represents the action to be performed
-|   |   |       |   └── command_handler.py                # Command handler that executes the command and mutates the aggregate
-|   |   |       ├── dto/                                  # Data transfer object to represent the data of the aggregate
-|   |   |       |    ├── __init__.py
-|   |   |       |    └── aggregate_dto.py
-|   |   |       └── query/                                # Queries are used for retrieving data or performing complex searches
-|   |   |            ├── __init__.py
-|   |   |            ├── query.py                         # Query that represents the search to be performed
-|   |   |            └── query_handler.py                 # Query handler that executes the query
-|   |   │
-|   |   ├── domain/
-|   |   │   ├── __init__.py
-|   |   |   └── aggregate/                                # One package per aggregate
-|   |   |       ├── __init__.py
-|   |   |       ├── root_entity.py                        # The root entity of the aggregate
-|   |   |       ├── other_entity.py                       # Other entities of the aggregate
-|   |   |       ├── value_object.py                       # Value object of the aggregate
-|   |   |       └── repository.py                         # Abstract repository for the aggregate
-|   |   │
-|   |   └── infrastructure/
-|   |       ├── __init__.py
-|   |       ├── persistence/
-|   |       |   ├── __init__.py
-|   |       |   └── mysql/                                # One package per persistence technology
-|   |       |       ├── __init__.py
-|   |       |       └── aggregate/                        # One package per aggregate
-|   |       |           ├── __init__.py
-|   |       |           ├── model_root_entity.py          # Database model for the root entity.
-|   |       |           ├── model_other_entity.py         # Database model for an other entity.
-|   |       |           ├── model_value_object.py         # Database model for a value object .
-|   |       |           └── repository_impl.py            # Repository implementation
-|   |       └── ui/
-|   |           ├── __init__.py
-|   |           └── api/                                  # One package per user interface technology
-|   |               ├── __init__.py
-|   |               ├── router/                           # Definitions of endpoints.
-|   |               |   ├── __init__.py
-|   |               |   └── aggregate.py                  # One router per aggregate
-|   |               ├── dependency.py                     # FastAPI dependency injection.
-|   |               ├── exception.py                      # Exception handling for FastAPI.
-|   |               └── main.py                           # Main file.
-|   |
-|   ├── shared/
-|   |   ├── __init__.py
-|   |   ├── application/
-|   |   ├── domain/
-|   |   └── infrastructure/
-|   |
-|   ├── __init__.py
-|   └── config.ini                                         # Configuration file.
-|
-├── .gitignore
-├── alembic.ini
-├── compose.dev.yaml
-├── Dockerfile
-├── poetry.lock
-├── pyproject.toml
-├── README.md
-└── setup.cfg
-```
+
+* [server/](.\st_server\server)
+  * [application/](.\st_server\server\application)
+    * [application/](.\st_server\server\application\application)
+      * [command/](.\st_server\server\application\application\command)
+        * [add_application_command.py](.\st_server\server\application\application\command\add_application_command.py)
+        * [add_application_command_handler.py](.\st_server\server\application\application\command\add_application_command_handler.py)
+        * [delete_application_command.py](.\st_server\server\application\application\command\delete_application_command.py)
+        * [delete_application_command_handler.py](.\st_server\server\application\application\command\delete_application_command_handler.py)
+        * [update_application_command.py](.\st_server\server\application\application\command\update_application_command.py)
+        * [update_application_command_handler.py](.\st_server\server\application\application\command\update_application_command_handler.py)
+        * [__init__.py](.\st_server\server\application\application\command\__init__.py)
+      * [dto/](.\st_server\server\application\application\dto)
+        * [application.py](.\st_server\server\application\application\dto\application.py)
+        * [__init__.py](.\st_server\server\application\application\dto\__init__.py)
+      * [query/](.\st_server\server\application\application\query)
+        * [find_many_application_query.py](.\st_server\server\application\application\query\find_many_application_query.py)
+        * [find_many_application_query_handler.py](.\st_server\server\application\application\query\find_many_application_query_handler.py)
+        * [find_one_application_query.py](.\st_server\server\application\application\query\find_one_application_query.py)
+        * [find_one_application_query_handler.py](.\st_server\server\application\application\query\find_one_application_query_handler.py)
+        * [__init__.py](.\st_server\server\application\application\query\__init__.py)
+      * [__init__.py](.\st_server\server\application\application\__init__.py)
+    * [server/](.\st_server\server\application\server)
+      * [command/](.\st_server\server\application\server\command)
+        * [add_server_command.py](.\st_server\server\application\server\command\add_server_command.py)
+        * [add_server_command_handler.py](.\st_server\server\application\server\command\add_server_command_handler.py)
+        * [delete_server_command.py](.\st_server\server\application\server\command\delete_server_command.py)
+        * [delete_server_command_handler.py](.\st_server\server\application\server\command\delete_server_command_handler.py)
+        * [update_server_command.py](.\st_server\server\application\server\command\update_server_command.py)
+        * [update_server_command_handler.py](.\st_server\server\application\server\command\update_server_command_handler.py)
+        * [__init__.py](.\st_server\server\application\server\command\__init__.py)
+      * [dto/](.\st_server\server\application\server\dto)
+        * [credential.py](.\st_server\server\application\server\dto\credential.py)
+        * [server.py](.\st_server\server\application\server\dto\server.py)
+        * [server_application.py](.\st_server\server\application\server\dto\server_application.py)
+        * [__init__.py](.\st_server\server\application\server\dto\__init__.py)
+      * [query/](.\st_server\server\application\server\query)
+        * [find_many_server_query.py](.\st_server\server\application\server\query\find_many_server_query.py)
+        * [find_many_server_query_handler.py](.\st_server\server\application\server\query\find_many_server_query_handler.py)
+        * [find_one_server_query.py](.\st_server\server\application\server\query\find_one_server_query.py)
+        * [find_one_server_query_handler.py](.\st_server\server\application\server\query\find_one_server_query_handler.py)
+        * [__init__.py](.\st_server\server\application\server\query\__init__.py)
+      * [__init__.py](.\st_server\server\application\server\__init__.py)
+    * [__init__.py](.\st_server\server\application\__init__.py)
+  * [domain/](.\st_server\server\domain)
+    * [application/](.\st_server\server\domain\application)
+      * [application.py](.\st_server\server\domain\application\application.py)
+      * [application_repository.py](.\st_server\server\domain\application\application_repository.py)
+      * [__init__.py](.\st_server\server\domain\application\__init__.py)
+    * [server/](.\st_server\server\domain\server)
+      * [connection_type.py](.\st_server\server\domain\server\connection_type.py)
+      * [credential.py](.\st_server\server\domain\server\credential.py)
+      * [environment.py](.\st_server\server\domain\server\environment.py)
+      * [operating_system.py](.\st_server\server\domain\server\operating_system.py)
+      * [server.py](.\st_server\server\domain\server\server.py)
+      * [server_application.py](.\st_server\server\domain\server\server_application.py)
+      * [server_repository.py](.\st_server\server\domain\server\server_repository.py)
+      * [server_status.py](.\st_server\server\domain\server\server_status.py)
+      * [__init__.py](.\st_server\server\domain\server\__init__.py)
+    * [__init__.py](.\st_server\server\domain\__init__.py)
+  * [infrastructure/](.\st_server\server\infrastructure)
+    * [persistence/](.\st_server\server\infrastructure\persistence)
+      * [mysql/](.\st_server\server\infrastructure\persistence\mysql)
+        * [application/](.\st_server\server\infrastructure\persistence\mysql\application)
+        * [server/](.\st_server\server\infrastructure\persistence\mysql\server)
+        * [db.py](.\st_server\server\infrastructure\persistence\mysql\db.py)
+        * [__init__.py](.\st_server\server\infrastructure\persistence\mysql\__init__.py)
+      * [__init__.py](.\st_server\server\infrastructure\persistence\__init__.py)
+    * [ui/](.\st_server\server\infrastructure\ui)
+      * [api/](.\st_server\server\infrastructure\ui\api)
+        * [router/](.\st_server\server\infrastructure\ui\api\router)
+        * [dependency.py](.\st_server\server\infrastructure\ui\api\dependency.py)
+        * [exception.py](.\st_server\server\infrastructure\ui\api\exception.py)
+        * [main.py](.\st_server\server\infrastructure\ui\api\main.py)
+        * [__init__.py](.\st_server\server\infrastructure\ui\api\__init__.py)
+      * [__init__.py](.\st_server\server\infrastructure\ui\__init__.py)
+    * [__init__.py](.\st_server\server\infrastructure\__init__.py)
+  * [__init__.py](.\st_server\server\__init__.py)
+* [shared/](.\st_server\shared)
+  * [application/](.\st_server\shared\application)
+    * [authorization/](.\st_server\shared\application\authorization)
+      * [authorization.proto](.\st_server\shared\application\authorization\authorization.proto)
+      * [authorization_client.py](.\st_server\shared\application\authorization\authorization_client.py)
+      * [authorization_pb2.py](.\st_server\shared\application\authorization\authorization_pb2.py)
+      * [authorization_pb2_grpc.py](.\st_server\shared\application\authorization\authorization_pb2_grpc.py)
+      * [check_permission.py](.\st_server\shared\application\authorization\check_permission.py)
+      * [__init__.py](.\st_server\shared\application\authorization\__init__.py)
+    * [bus/](.\st_server\shared\application\bus)
+      * [command_bus.py](.\st_server\shared\application\bus\command_bus.py)
+      * [message_bus.py](.\st_server\shared\application\bus\message_bus.py)
+      * [__init__.py](.\st_server\shared\application\bus\__init__.py)
+    * [validator/](.\st_server\shared\application\validator)
+      * [validate_access_token.py](.\st_server\shared\application\validator\validate_access_token.py)
+      * [validate_filter.py](.\st_server\shared\application\validator\validate_filter.py)
+      * [validate_pagination.py](.\st_server\shared\application\validator\validate_pagination.py)
+      * [validate_sort.py](.\st_server\shared\application\validator\validate_sort.py)
+      * [__init__.py](.\st_server\shared\application\validator\__init__.py)
+    * [command.py](.\st_server\shared\application\command.py)
+    * [command_handler.py](.\st_server\shared\application\command_handler.py)
+    * [exception.py](.\st_server\shared\application\exception.py)
+    * [file_manager.py](.\st_server\shared\application\file_manager.py)
+    * [query.py](.\st_server\shared\application\query.py)
+    * [query_handler.py](.\st_server\shared\application\query_handler.py)
+    * [query_response.py](.\st_server\shared\application\query_response.py)
+    * [__init__.py](.\st_server\shared\application\__init__.py)
+  * [domain/](.\st_server\shared\domain)
+    * [aggregate_root.py](.\st_server\shared\domain\aggregate_root.py)
+    * [domain_event.py](.\st_server\shared\domain\domain_event.py)
+    * [entity.py](.\st_server\shared\domain\entity.py)
+    * [entity_id.py](.\st_server\shared\domain\entity_id.py)
+    * [repository_response.py](.\st_server\shared\domain\repository_response.py)
+    * [__init__.py](.\st_server\shared\domain\__init__.py)
+  * [infrastructure/](.\st_server\shared\infrastructure)
+    * [message_bus/](.\st_server\shared\infrastructure\message_bus)
+      * [rabbitmq_message_bus.py](.\st_server\shared\infrastructure\message_bus\rabbitmq_message_bus.py)
+      * [__init__.py](.\st_server\shared\infrastructure\message_bus\__init__.py)
+    * [file_manager_impl.py](.\st_server\shared\infrastructure\file_manager_impl.py)
+    * [__init__.py](.\st_server\shared\infrastructure\__init__.py)
+  * [__init__.py](.\st_server\shared\__init__.py)
+* [config.ini](.\st_server\config.ini)
+* [__init__.py](.\st_server\__init__.py)
+
