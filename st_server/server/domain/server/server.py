@@ -19,48 +19,13 @@ class Server(AggregateRoot):
 
         pass
 
-    class NameChanged(DomainEvent):
-        """Domain event that represents the change of the name of a Server."""
+    class Modified(DomainEvent):
+        """Domain event that represents the modification of a Server."""
 
         pass
 
-    class CpuChanged(DomainEvent):
-        """Domain event that represents the change of the cpu of a Server."""
-
-        pass
-
-    class RamChanged(DomainEvent):
-        """Domain event that represents the change of the ram of a Server."""
-
-        pass
-
-    class HddChanged(DomainEvent):
-        """Domain event that represents the change of the hdd of a Server."""
-
-        pass
-
-    class EnvironmentChanged(DomainEvent):
-        """Domain event that represents the change of the environment of a Server."""
-
-        pass
-
-    class OperatingSystemChanged(DomainEvent):
-        """Domain event that represents the change of the operating system of a Server."""
-
-        pass
-
-    class CredentialChanged(DomainEvent):
-        """Domain event that represents the change of the credentials of a Server."""
-
-        pass
-
-    class ApplicationChanged(DomainEvent):
-        """Domain event that represents the change of the applications of a Server."""
-
-        pass
-
-    class StatusChanged(DomainEvent):
-        """Domain event that represents the change of the status of a Server."""
+    class Discarded(DomainEvent):
+        """Domain event that represents the discarding of a Server."""
 
         pass
 
@@ -131,7 +96,7 @@ class Server(AggregateRoot):
     def name(self, name: str) -> None:
         """Sets the name."""
         self._check_not_discarded()
-        domain_event = Server.NameChanged(
+        domain_event = Server.Modified(
             aggregate_id=self._id.value,
             old_value=self._name,
             new_value=name,
@@ -148,7 +113,7 @@ class Server(AggregateRoot):
     def cpu(self, cpu: str) -> None:
         """Sets the cpu."""
         self._check_not_discarded()
-        domain_event = Server.CpuChanged(
+        domain_event = Server.Modified(
             aggregate_id=self._id.value,
             old_value=self._cpu,
             new_value=cpu,
@@ -165,7 +130,7 @@ class Server(AggregateRoot):
     def ram(self, ram: str) -> None:
         """Sets the ram."""
         self._check_not_discarded()
-        domain_event = Server.RamChanged(
+        domain_event = Server.Modified(
             aggregate_id=self._id.value,
             old_value=self._ram,
             new_value=ram,
@@ -182,7 +147,7 @@ class Server(AggregateRoot):
     def hdd(self, hdd: str) -> None:
         """Sets the hdd."""
         self._check_not_discarded()
-        domain_event = Server.HddChanged(
+        domain_event = Server.Modified(
             aggregate_id=self._id.value,
             old_value=self._hdd,
             new_value=hdd,
@@ -199,7 +164,7 @@ class Server(AggregateRoot):
     def environment(self, environment: Environment) -> None:
         """Sets the environment."""
         self._check_not_discarded()
-        domain_event = Server.EnvironmentChanged(
+        domain_event = Server.Modified(
             aggregate_id=self._id.value,
             old_value=self._environment.value,
             new_value=environment.value,
@@ -216,7 +181,7 @@ class Server(AggregateRoot):
     def operating_system(self, operating_system: OperatingSystem) -> None:
         """Sets the operating system."""
         self._check_not_discarded()
-        domain_event = Server.OperatingSystemChanged(
+        domain_event = Server.Modified(
             aggregate_id=self._id.value,
             old_value=self._operating_system.__dict__,
             new_value=operating_system.__dict__,
@@ -233,7 +198,7 @@ class Server(AggregateRoot):
     def credentials(self, credentials: list[Credential]) -> None:
         """Sets the credentials."""
         self._check_not_discarded()
-        domain_event = Server.CredentialChanged(
+        domain_event = Server.Modified(
             aggregate_id=self._id.value,
             old_value=self._credentials,
             new_value=credentials,
@@ -250,7 +215,7 @@ class Server(AggregateRoot):
     def applications(self, applications: list[ServerApplication]) -> None:
         """Sets the applications."""
         self._check_not_discarded()
-        domain_event = Server.ApplicationChanged(
+        domain_event = Server.Modified(
             aggregate_id=self._id.value,
             old_value=self._applications,
             new_value=applications,
@@ -267,7 +232,7 @@ class Server(AggregateRoot):
     def status(self, status: ServerStatus) -> None:
         """Sets the status."""
         self._check_not_discarded()
-        domain_event = Server.StatusChanged(
+        domain_event = Server.Modified(
             aggregate_id=self._id.value,
             old_value=self._status.value,
             new_value=status.value,
@@ -287,7 +252,7 @@ class Server(AggregateRoot):
         credentials: list[dict],
         applications: list[dict],
     ):
-        """Named constructor to build a new Server."""
+        """Named constructor to build a new entity."""
         server = cls(
             id=EntityId.generate(),
             name=name,
@@ -340,7 +305,7 @@ class Server(AggregateRoot):
         status: str,
         discarded: bool,
     ):
-        """Named constructor to build a Server from primitive values."""
+        """Named constructor to restore the entity from its primitive values."""
         return cls(
             id=EntityId.from_text(id),
             name=name,
@@ -372,4 +337,12 @@ class Server(AggregateRoot):
             ],
             status=ServerStatus.from_text(status),
             discarded=discarded,
+        )
+
+    def discard(self) -> None:
+        """Discards the entity."""
+        self._check_not_discarded()
+        self._discarded = True
+        self.register_domain_event(
+            Server.Discarded(aggregate_id=self._id.value)
         )

@@ -10,23 +10,18 @@ class Application(AggregateRoot):
     This is the aggregate root entity of the Application aggregate.
     """
 
-    class Created(DomainEvent):
-        """Domain event that represents the creation of an Application."""
+    class Registered(DomainEvent):
+        """Domain event that represents the registration of an Application."""
 
         pass
 
-    class NameChanged(DomainEvent):
-        """Domain event that represents the change of the name of an Application."""
+    class Modified(DomainEvent):
+        """Domain event that represents the modification of an Application."""
 
         pass
 
-    class VersionChanged(DomainEvent):
-        """Domain event that represents the change of the version of an Application."""
-
-        pass
-
-    class ArchitectChanged(DomainEvent):
-        """Domain event that represents the change of the architect of an Application."""
+    class Discarded(DomainEvent):
+        """Domain event that represents the discarding of an Application."""
 
         pass
 
@@ -75,7 +70,7 @@ class Application(AggregateRoot):
     def name(self, name: str) -> None:
         """Sets the name."""
         self._check_not_discarded()
-        domain_event = Application.NameChanged(
+        domain_event = Application.Modified(
             aggregate_id=self._id.value,
             old_value=self._name,
             new_value=name,
@@ -93,7 +88,7 @@ class Application(AggregateRoot):
     def version(self, version: str) -> None:
         """Sets the version."""
         self._check_not_discarded()
-        domain_event = Application.VersionChanged(
+        domain_event = Application.Modified(
             aggregate_id=self._id.value,
             old_value=self._version,
             new_value=version,
@@ -111,7 +106,7 @@ class Application(AggregateRoot):
     def architect(self, architect: str) -> None:
         """Sets the architect."""
         self._check_not_discarded()
-        domain_event = Application.ArchitectChanged(
+        domain_event = Application.Modified(
             aggregate_id=self._id.value,
             old_value=self._architect,
             new_value=architect,
@@ -121,7 +116,7 @@ class Application(AggregateRoot):
 
     @staticmethod
     def register(name: str, version: str, architect: str) -> "Application":
-        """Creates a new Application."""
+        """Named constructor to build a new entity."""
         application = Application(
             id=EntityId.generate(),
             name=name,
@@ -130,6 +125,27 @@ class Application(AggregateRoot):
             discarded=False,
         )
         application.register_domain_event(
-            Application.Created(aggregate_id=application.id.value)
+            Application.Registered(aggregate_id=application.id.value)
         )
         return application
+
+    @staticmethod
+    def from_primitive_values(
+        id: str, name: str, version: str, architect: str, discarded: bool
+    ) -> "Application":
+        """Named constructor to restore the entity from its primitive values."""
+        return Application(
+            id=EntityId.from_text(id),
+            name=name,
+            version=version,
+            architect=architect,
+            discarded=discarded,
+        )
+
+    def discard(self) -> None:
+        """Discards the entity."""
+        self._check_not_discarded()
+        self._discarded = True
+        self.register_domain_event(
+            Application.Discarded(aggregate_id=self._id.value)
+        )
