@@ -128,30 +128,3 @@ class Credential(Entity):
     def public_port(self, public_port: int) -> None:
         self._check_not_discarded()
         self._public_port = public_port
-
-    @classmethod
-    def register(
-        cls,
-        server_id: str,
-        connection_type: str,
-        username: str,
-        password: str,
-        local_ip: str,
-        local_port: str,
-        public_ip: str,
-        public_port: str,
-    ) -> "Credential":
-        credential = cls(
-            id=EntityId.generate(),
-            server_id=EntityId.from_text(server_id),
-            connection_type=ConnectionType.from_text(connection_type),
-            username=username,
-            password=password,
-            local_ip=local_ip,
-            local_port=local_port,
-            public_ip=public_ip,
-            public_port=public_port,
-            discarded=False,
-        )
-
-        return credential

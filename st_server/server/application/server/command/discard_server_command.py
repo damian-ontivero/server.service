@@ -4,5 +4,5 @@ from st_server.shared.application.command import Command
 
 
 @dataclass
-class DeleteServerCommand(Command):
+class DiscardServerCommand(Command):
     id: int

@@ -1,5 +1,5 @@
-from st_server.server.application.server.command.update_server_command import (
-    UpdateServerCommand,
+from st_server.server.application.server.command.modify_server_command import (
+    ModifyServerCommand,
 )
 from st_server.server.application.server.dto.server import ServerDto
 from st_server.server.domain.server.environment import Environment
@@ -11,14 +11,14 @@ from st_server.shared.application.command_handler import CommandHandler
 from st_server.shared.application.exception import AlreadyExists, NotFound
 
 
-class UpdateServerCommandHandler(CommandHandler):
+class ModifyServerCommandHandler(CommandHandler):
     def __init__(
         self, repository: ServerRepository, message_bus: MessageBus
     ) -> None:
         self._repository = repository
         self._message_bus = message_bus
 
-    def handle(self, command: UpdateServerCommand) -> ServerDto:
+    def handle(self, command: ModifyServerCommand) -> ServerDto:
         server = self._repository.find_by_id(command.id)
         if server is None:
             raise NotFound(
@@ -34,14 +34,13 @@ class UpdateServerCommandHandler(CommandHandler):
         server.operating_system = OperatingSystem.from_data(
             command.operating_system
         )
-        server.credentials = command.credentials
-        server.applications = command.applications
+        # server.credentials = command.credentials
+        # server.applications = command.applications
         server.status = ServerStatus.from_text(command.status)
         self._repository.update(server)
-        for domain_event in server.domain_events:
-            self._message_bus.publish(domain_event)
+        # for domain_event in server.domain_events:
+        #     self._message_bus.publish(domain_event)
         server.clear_domain_events()
-        return ServerDto.from_entity(server)
 
     def _check_if_exists(self, name: str) -> None:
         servers = self._repository.find_many(filter={"name": {"eq": name}})

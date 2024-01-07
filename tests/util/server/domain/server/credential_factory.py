@@ -21,6 +21,7 @@ class CredentialFactory(factory.Factory):
     local_port = factory.Faker("pyint")
     public_ip = factory.Faker("ipv4")
     public_port = factory.Faker("pyint")
+    discarded = False
 
     @classmethod
     def _create(cls, model_class, *args, **kwargs):

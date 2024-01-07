@@ -4,7 +4,7 @@ from st_server.shared.application.command import Command
 
 
 @dataclass
-class AddServerCommand(Command):
+class RegisterServerCommand(Command):
     name: str | None = None
     cpu: str | None = None
     ram: str | None = None

@@ -76,13 +76,14 @@ class Server(AggregateRoot):
     @name.setter
     def name(self, name: str) -> None:
         self._check_not_discarded()
-        domain_event = Server.Modified(
-            aggregate_id=self._id.value,
-            old_value=self._name,
-            new_value=name,
-        )
         self._name = name
-        self.register_domain_event(domain_event)
+        self._register_domain_event(
+            Server.Modified(
+                aggregate_id=self._id.value,
+                old_value=self._name,
+                new_value=name,
+            )
+        )
 
     @property
     def cpu(self) -> str:
@@ -91,13 +92,14 @@ class Server(AggregateRoot):
     @cpu.setter
     def cpu(self, cpu: str) -> None:
         self._check_not_discarded()
-        domain_event = Server.Modified(
-            aggregate_id=self._id.value,
-            old_value=self._cpu,
-            new_value=cpu,
-        )
         self._cpu = cpu
-        self.register_domain_event(domain_event)
+        self._register_domain_event(
+            Server.Modified(
+                aggregate_id=self._id.value,
+                old_value=self._cpu,
+                new_value=cpu,
+            )
+        )
 
     @property
     def ram(self) -> str:
@@ -106,13 +108,14 @@ class Server(AggregateRoot):
     @ram.setter
     def ram(self, ram: str) -> None:
         self._check_not_discarded()
-        domain_event = Server.Modified(
-            aggregate_id=self._id.value,
-            old_value=self._ram,
-            new_value=ram,
-        )
         self._ram = ram
-        self.register_domain_event(domain_event)
+        self._register_domain_event(
+            Server.Modified(
+                aggregate_id=self._id.value,
+                old_value=self._ram,
+                new_value=ram,
+            )
+        )
 
     @property
     def hdd(self) -> str:
@@ -121,13 +124,14 @@ class Server(AggregateRoot):
     @hdd.setter
     def hdd(self, hdd: str) -> None:
         self._check_not_discarded()
-        domain_event = Server.Modified(
-            aggregate_id=self._id.value,
-            old_value=self._hdd,
-            new_value=hdd,
-        )
         self._hdd = hdd
-        self.register_domain_event(domain_event)
+        self._register_domain_event(
+            Server.Modified(
+                aggregate_id=self._id.value,
+                old_value=self._hdd,
+                new_value=hdd,
+            )
+        )
 
     @property
     def environment(self) -> Environment:
@@ -136,13 +140,14 @@ class Server(AggregateRoot):
     @environment.setter
     def environment(self, environment: Environment) -> None:
         self._check_not_discarded()
-        domain_event = Server.Modified(
-            aggregate_id=self._id.value,
-            old_value=self._environment.value,
-            new_value=environment.value,
-        )
         self._environment = environment
-        self.register_domain_event(domain_event)
+        self._register_domain_event(
+            Server.Modified(
+                aggregate_id=self._id.value,
+                old_value=self._environment.value,
+                new_value=environment.value,
+            )
+        )
 
     @property
     def operating_system(self) -> OperatingSystem:
@@ -151,13 +156,14 @@ class Server(AggregateRoot):
     @operating_system.setter
     def operating_system(self, operating_system: OperatingSystem) -> None:
         self._check_not_discarded()
-        domain_event = Server.Modified(
-            aggregate_id=self._id.value,
-            old_value=self._operating_system.__dict__,
-            new_value=operating_system.__dict__,
-        )
         self._operating_system = operating_system
-        self.register_domain_event(domain_event)
+        self._register_domain_event(
+            Server.Modified(
+                aggregate_id=self._id.value,
+                old_value=self._operating_system.__dict__,
+                new_value=operating_system.__dict__,
+            )
+        )
 
     @property
     def credentials(self) -> list[Credential]:
@@ -166,13 +172,14 @@ class Server(AggregateRoot):
     @credentials.setter
     def credentials(self, credentials: list[Credential]) -> None:
         self._check_not_discarded()
-        domain_event = Server.Modified(
-            aggregate_id=self._id.value,
-            old_value=self._credentials,
-            new_value=credentials,
-        )
         self._credentials = credentials
-        self.register_domain_event(domain_event)
+        self._register_domain_event(
+            Server.Modified(
+                aggregate_id=self._id.value,
+                old_value=self._credentials,
+                new_value=credentials,
+            )
+        )
 
     @property
     def applications(self) -> list[ServerApplication]:
@@ -181,13 +188,14 @@ class Server(AggregateRoot):
     @applications.setter
     def applications(self, applications: list[ServerApplication]) -> None:
         self._check_not_discarded()
-        domain_event = Server.Modified(
-            aggregate_id=self._id.value,
-            old_value=self._applications,
-            new_value=applications,
-        )
         self._applications = applications
-        self.register_domain_event(domain_event)
+        self._register_domain_event(
+            Server.Modified(
+                aggregate_id=self._id.value,
+                old_value=self._applications,
+                new_value=applications,
+            )
+        )
 
     @property
     def status(self) -> ServerStatus:
@@ -196,13 +204,14 @@ class Server(AggregateRoot):
     @status.setter
     def status(self, status: ServerStatus) -> None:
         self._check_not_discarded()
-        domain_event = Server.Modified(
-            aggregate_id=self._id.value,
-            old_value=self._status.value,
-            new_value=status.value,
-        )
         self._status = status
-        self.register_domain_event(domain_event)
+        self._register_domain_event(
+            Server.Modified(
+                aggregate_id=self._id.value,
+                old_value=self._status.value,
+                new_value=status.value,
+            )
+        )
 
     @classmethod
     def register(
@@ -248,7 +257,7 @@ class Server(AggregateRoot):
             status=ServerStatus.from_text("stopped"),
             discarded=False,
         )
-        server.register_domain_event(
+        server._register_domain_event(
             Server.Registered(aggregate_id=server.id.value)
         )
         return server
@@ -304,6 +313,6 @@ class Server(AggregateRoot):
     def discard(self) -> None:
         self._check_not_discarded()
         self._discarded = True
-        self.register_domain_event(
+        self._register_domain_event(
             Server.Discarded(aggregate_id=self._id.value)
         )

@@ -1,5 +1,5 @@
-from st_server.server.application.application.command.add_application_command import (
-    AddApplicationCommand,
+from st_server.server.application.application.command.register_application_command import (
+    RegisterApplicationCommand,
 )
 from st_server.server.application.application.dto.application import (
     ApplicationDto,
@@ -13,14 +13,14 @@ from st_server.shared.application.command_handler import CommandHandler
 from st_server.shared.application.exception import AlreadyExists
 
 
-class AddApplicationCommandHandler(CommandHandler):
+class RegisterApplicationCommandHandler(CommandHandler):
     def __init__(
         self, repository: ApplicationRepository, message_bus: MessageBus
     ) -> None:
         self._repository = repository
         self._message_bus = message_bus
 
-    def handle(self, command: AddApplicationCommand) -> ApplicationDto:
+    def handle(self, command: RegisterApplicationCommand) -> ApplicationDto:
         application = Application.register(**command.to_dict())
         self._check_if_exists(application.name)
         self._repository.add(application)

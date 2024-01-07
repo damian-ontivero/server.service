@@ -20,7 +20,7 @@ class AggregateRoot(Entity):
     def domain_events(self) -> list[DomainEvent]:
         return self._domain_events
 
-    def register_domain_event(self, domain_event: DomainEvent) -> None:
+    def _register_domain_event(self, domain_event: DomainEvent) -> None:
         if domain_event is None:
             raise ValueError("Domain event must not be None")
         self._domain_events.append(domain_event)

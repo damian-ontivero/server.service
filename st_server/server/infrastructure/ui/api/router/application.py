@@ -6,23 +6,23 @@ from fastapi.responses import JSONResponse
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from sqlalchemy.orm import Session
 
-from st_server.server.application.application.command.add_application_command import (
-    AddApplicationCommand,
+from st_server.server.application.application.command.discard_application_command import (
+    DiscardApplicationCommand,
 )
-from st_server.server.application.application.command.add_application_command_handler import (
-    AddApplicationCommandHandler,
+from st_server.server.application.application.command.discard_application_command_handler import (
+    DiscardApplicationCommandHandler,
 )
-from st_server.server.application.application.command.delete_application_command import (
-    DeleteApplicationCommand,
+from st_server.server.application.application.command.modify_application_command import (
+    ModifyApplicationCommand,
 )
-from st_server.server.application.application.command.delete_application_command_handler import (
-    DeleteApplicationCommandHandler,
+from st_server.server.application.application.command.modify_application_command_handler import (
+    ModifyApplicationCommandHandler,
 )
-from st_server.server.application.application.command.update_application_command import (
-    UpdateApplicationCommand,
+from st_server.server.application.application.command.register_application_command import (
+    RegisterApplicationCommand,
 )
-from st_server.server.application.application.command.update_application_command_handler import (
-    UpdateApplicationCommandHandler,
+from st_server.server.application.application.command.register_application_command_handler import (
+    RegisterApplicationCommandHandler,
 )
 from st_server.server.application.application.dto.application import (
     ApplicationDto,
@@ -107,7 +107,7 @@ def get(
 
 @router.post("", response_model=ApplicationDto)
 def create(
-    command: AddApplicationCommand,
+    command: RegisterApplicationCommand,
     command_bus: CommandBus = Depends(get_command_bus),
     repository: ApplicationRepositoryImpl = Depends(get_repository),
     message_bus: RabbitMQMessageBus = Depends(get_rabbitmq_message_bus),
@@ -115,7 +115,7 @@ def create(
 ):
     command_bus.register(
         command=command,
-        handler=AddApplicationCommandHandler(
+        handler=RegisterApplicationCommandHandler(
             repository=repository, message_bus=message_bus
         ),
     )
@@ -129,7 +129,7 @@ def create(
 @router.put("/{id}", response_model=ApplicationDto)
 def update(
     id: str,
-    command: UpdateApplicationCommand,
+    command: ModifyApplicationCommand,
     command_bus: CommandBus = Depends(get_command_bus),
     repository: ApplicationRepositoryImpl = Depends(get_repository),
     message_bus: RabbitMQMessageBus = Depends(get_rabbitmq_message_bus),
@@ -138,7 +138,7 @@ def update(
     command.id = id
     command_bus.register(
         command=command,
-        handler=UpdateApplicationCommandHandler(
+        handler=ModifyApplicationCommandHandler(
             repository=repository, message_bus=message_bus
         ),
     )
@@ -157,10 +157,10 @@ def delete(
     message_bus: RabbitMQMessageBus = Depends(get_rabbitmq_message_bus),
     authorization: HTTPAuthorizationCredentials = Depends(auth_scheme),
 ):
-    command = DeleteApplicationCommand(id=id)
+    command = DiscardApplicationCommand(id=id)
     command_bus.register(
         command=command,
-        handler=DeleteApplicationCommandHandler(
+        handler=DiscardApplicationCommandHandler(
             repository=repository, message_bus=message_bus
         ),
     )

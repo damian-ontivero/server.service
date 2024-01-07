@@ -6,23 +6,23 @@ from fastapi.responses import JSONResponse
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from sqlalchemy.orm import Session
 
-from st_server.server.application.server.command.add_server_command import (
-    AddServerCommand,
+from st_server.server.application.server.command.discard_server_command import (
+    DiscardServerCommand,
 )
-from st_server.server.application.server.command.add_server_command_handler import (
-    AddServerCommandHandler,
+from st_server.server.application.server.command.discard_server_command_handler import (
+    DiscardServerCommandHandler,
 )
-from st_server.server.application.server.command.delete_server_command import (
-    DeleteServerCommand,
+from st_server.server.application.server.command.modify_server_command import (
+    ModifyServerCommand,
 )
-from st_server.server.application.server.command.delete_server_command_handler import (
-    DeleteServerCommandHandler,
+from st_server.server.application.server.command.modify_server_command_handler import (
+    ModifyServerCommandHandler,
 )
-from st_server.server.application.server.command.update_server_command import (
-    UpdateServerCommand,
+from st_server.server.application.server.command.register_server_command import (
+    RegisterServerCommand,
 )
-from st_server.server.application.server.command.update_server_command_handler import (
-    UpdateServerCommandHandler,
+from st_server.server.application.server.command.register_server_command_handler import (
+    RegisterServerCommandHandler,
 )
 from st_server.server.application.server.dto.server import ServerDto
 from st_server.server.application.server.query.find_many_server_query import (
@@ -104,7 +104,7 @@ def get(
 
 @router.post("", response_model=ServerDto)
 def create(
-    command: AddServerCommand,
+    command: RegisterServerCommand,
     command_bus: CommandBus = Depends(get_command_bus),
     repository: ServerRepositoryImpl = Depends(get_mysql_repository),
     message_bus: RabbitMQMessageBus = Depends(get_rabbitmq_message_bus),
@@ -112,7 +112,7 @@ def create(
 ):
     command_bus.register(
         command=command,
-        handler=AddServerCommandHandler(
+        handler=RegisterServerCommandHandler(
             repository=repository, message_bus=message_bus
         ),
     )
@@ -126,7 +126,7 @@ def create(
 @router.put("/{id}", response_model=ServerDto)
 def update(
     id: str,
-    command: UpdateServerCommand,
+    command: ModifyServerCommand,
     command_bus: CommandBus = Depends(get_command_bus),
     repository: ServerRepositoryImpl = Depends(get_mysql_repository),
     message_bus: RabbitMQMessageBus = Depends(get_rabbitmq_message_bus),
@@ -135,7 +135,7 @@ def update(
     command.id = id
     command_bus.register(
         command=command,
-        handler=UpdateServerCommandHandler(
+        handler=ModifyServerCommandHandler(
             repository=repository, message_bus=message_bus
         ),
     )
@@ -154,10 +154,10 @@ def delete(
     message_bus: RabbitMQMessageBus = Depends(get_rabbitmq_message_bus),
     authorization: HTTPAuthorizationCredentials = Depends(auth_scheme),
 ):
-    command = DeleteServerCommand(id=id)
+    command = DiscardServerCommand(id=id)
     command_bus.register(
         command=command,
-        handler=DeleteServerCommandHandler(
+        handler=DiscardServerCommandHandler(
             repository=repository, message_bus=message_bus
         ),
     )

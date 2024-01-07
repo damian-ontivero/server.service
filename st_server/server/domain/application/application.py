@@ -48,13 +48,14 @@ class Application(AggregateRoot):
     @name.setter
     def name(self, name: str) -> None:
         self._check_not_discarded()
-        domain_event = Application.Modified(
-            aggregate_id=self._id.value,
-            old_value=self._name,
-            new_value=name,
-        )
         self._name = name
-        self.register_domain_event(domain_event)
+        self._register_domain_event(
+            Application.Modified(
+                aggregate_id=self._id.value,
+                old_value=self._name,
+                new_value=name,
+            )
+        )
 
     @property
     def version(self) -> str:
@@ -64,13 +65,14 @@ class Application(AggregateRoot):
     @version.setter
     def version(self, version: str) -> None:
         self._check_not_discarded()
-        domain_event = Application.Modified(
-            aggregate_id=self._id.value,
-            old_value=self._version,
-            new_value=version,
-        )
         self._version = version
-        self.register_domain_event(domain_event)
+        self._register_domain_event(
+            Application.Modified(
+                aggregate_id=self._id.value,
+                old_value=self._version,
+                new_value=version,
+            )
+        )
 
     @property
     def architect(self) -> str:
@@ -80,13 +82,14 @@ class Application(AggregateRoot):
     @architect.setter
     def architect(self, architect: str) -> None:
         self._check_not_discarded()
-        domain_event = Application.Modified(
-            aggregate_id=self._id.value,
-            old_value=self._architect,
-            new_value=architect,
-        )
         self._architect = architect
-        self.register_domain_event(domain_event)
+        self._register_domain_event(
+            Application.Modified(
+                aggregate_id=self._id.value,
+                old_value=self._architect,
+                new_value=architect,
+            )
+        )
 
     @staticmethod
     def register(name: str, version: str, architect: str) -> "Application":
@@ -98,7 +101,7 @@ class Application(AggregateRoot):
             architect=architect,
             discarded=False,
         )
-        application.register_domain_event(
+        application._register_domain_event(
             Application.Registered(aggregate_id=application.id.value)
         )
         return application
@@ -120,6 +123,6 @@ class Application(AggregateRoot):
         """Discards the entity."""
         self._check_not_discarded()
         self._discarded = True
-        self.register_domain_event(
+        self._register_domain_event(
             Application.Discarded(aggregate_id=self._id.value)
         )

@@ -1,5 +1,5 @@
-from st_server.server.application.server.command.add_server_command import (
-    AddServerCommand,
+from st_server.server.application.server.command.register_server_command import (
+    RegisterServerCommand,
 )
 from st_server.server.application.server.dto.server import ServerDto
 from st_server.server.domain.server.environment import Environment
@@ -12,14 +12,14 @@ from st_server.shared.application.command_handler import CommandHandler
 from st_server.shared.application.exception import AlreadyExists
 
 
-class AddServerCommandHandler(CommandHandler):
+class RegisterServerCommandHandler(CommandHandler):
     def __init__(
         self, repository: ServerRepository, message_bus: MessageBus
     ) -> None:
         self._repository = repository
         self._message_bus = message_bus
 
-    def handle(self, command: AddServerCommand) -> ServerDto:
+    def handle(self, command: RegisterServerCommand) -> ServerDto:
         self._check_if_exists(command.name)
         server = Server.register(**command.to_dict())
         self._repository.add(server)

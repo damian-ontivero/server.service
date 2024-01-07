@@ -1,5 +1,5 @@
-from st_server.server.application.application.command.update_application_command import (
-    UpdateApplicationCommand,
+from st_server.server.application.application.command.modify_application_command import (
+    ModifyApplicationCommand,
 )
 from st_server.server.application.application.dto.application import (
     ApplicationDto,
@@ -12,14 +12,14 @@ from st_server.shared.application.command_handler import CommandHandler
 from st_server.shared.application.exception import AlreadyExists, NotFound
 
 
-class UpdateApplicationCommandHandler(CommandHandler):
+class ModifyApplicationCommandHandler(CommandHandler):
     def __init__(
         self, repository: ApplicationRepository, message_bus: MessageBus
     ) -> None:
         self._repository = repository
         self._message_bus = message_bus
 
-    def handle(self, command: UpdateApplicationCommand) -> ApplicationDto:
+    def handle(self, command: ModifyApplicationCommand) -> ApplicationDto:
         application = self._repository.find_by_id(command.id)
         if application is None:
             raise NotFound(

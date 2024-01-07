@@ -4,8 +4,7 @@ from st_server.shared.application.command import Command
 
 
 @dataclass
-class UpdateApplicationCommand(Command):
-    id: str | None = None
+class RegisterApplicationCommand(Command):
     name: str | None = None
     version: str | None = None
     architect: str | None = None

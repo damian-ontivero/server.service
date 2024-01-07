@@ -4,7 +4,7 @@ from st_server.shared.application.command import Command
 
 
 @dataclass
-class UpdateServerCommand(Command):
+class ModifyServerCommand(Command):
     id: str | None = None
     name: str | None = None
     cpu: str | None = None
@@ -15,3 +15,4 @@ class UpdateServerCommand(Command):
     credentials: list[dict] = field(default_factory=list)
     applications: list[dict] = field(default_factory=list)
     status: str | None = None
+    discarded: bool | None = None

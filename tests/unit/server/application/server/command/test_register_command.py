@@ -1,16 +1,16 @@
-from st_server.server.application.server.command.add_server_command import (
-    AddServerCommand,
+from st_server.server.application.server.command.register_server_command import (
+    RegisterServerCommand,
 )
-from st_server.server.application.server.command.add_server_command_handler import (
-    AddServerCommandHandler,
+from st_server.server.application.server.command.register_server_command_handler import (
+    RegisterServerCommandHandler,
 )
 from tests.util.server.domain.server.server_factory import ServerFactory
 
 
-def test_add_one_ok(mock_server_repository, mock_rabbitmq_message_bus):
+def test_register_ok(mock_server_repository, mock_rabbitmq_message_bus):
     server = ServerFactory.build()
 
-    command = AddServerCommand(
+    command = RegisterServerCommand(
         name=server.name,
         cpu=server.cpu,
         ram=server.ram,
@@ -20,7 +20,7 @@ def test_add_one_ok(mock_server_repository, mock_rabbitmq_message_bus):
         credentials=server.credentials,
         applications=server.applications,
     )
-    AddServerCommandHandler(
+    RegisterServerCommandHandler(
         repository=mock_server_repository,
         message_bus=mock_rabbitmq_message_bus,
     ).handle(command)
