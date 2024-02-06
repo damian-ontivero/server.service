@@ -4,9 +4,7 @@ from st_server.server.application.application.command.discard_application_comman
 from st_server.server.application.application.command.discard_application_command_handler import (
     DiscardApplicationCommandHandler,
 )
-from tests.util.server.domain.application.application_factory import (
-    ApplicationFactory,
-)
+from tests.util.server.domain.application.application_factory import ApplicationFactory
 
 
 def test_discard_one_ok(

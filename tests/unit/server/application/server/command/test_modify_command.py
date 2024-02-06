@@ -1,10 +1,10 @@
-from st_server.server.application.server.command.modify_server_command import (
+from st_server.server.server.application.command.modify_server_command import (
     ModifyServerCommand,
 )
-from st_server.server.application.server.command.modify_server_command_handler import (
+from st_server.server.server.application.command.modify_server_command_handler import (
     ModifyServerCommandHandler,
 )
-from st_server.server.domain.server.server import Server
+from st_server.server.server.domain.server import Server
 from tests.util.server.domain.server.server_factory import ServerFactory
 
 

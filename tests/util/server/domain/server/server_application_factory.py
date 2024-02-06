@@ -1,7 +1,7 @@
 import factory
 import factory.fuzzy
 
-from st_server.server.domain.server.server_application import ServerApplication
+from st_server.server.server.domain.server_application import ServerApplication
 from st_server.shared.domain.entity_id import EntityId
 
 

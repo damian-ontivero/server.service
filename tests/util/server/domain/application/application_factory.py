@@ -1,8 +1,8 @@
 import factory
 import factory.fuzzy
 
-from st_server.server.domain.application.application import Application
-from st_server.server.infrastructure.persistence.mysql.application.application_repository import (
+from st_server.server.application.domain.application import Application
+from st_server.server.application.infrastructure.persistence.mysql.application_repository import (
     ApplicationRepositoryImpl,
 )
 from tests.conftest import SessionLocal

@@ -1,7 +1,7 @@
-from st_server.server.application.server.command.register_server_command import (
+from st_server.server.server.application.command.register_server_command import (
     RegisterServerCommand,
 )
-from st_server.server.application.server.command.register_server_command_handler import (
+from st_server.server.server.application.command.register_server_command_handler import (
     RegisterServerCommandHandler,
 )
 from tests.util.server.domain.server.server_factory import ServerFactory

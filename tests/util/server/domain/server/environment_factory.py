@@ -1,7 +1,7 @@
 import factory
 import factory.fuzzy
 
-from st_server.server.domain.server.environment import Environment
+from st_server.server.server.domain.environment import Environment
 
 
 class EnvironmentFactory(factory.Factory):

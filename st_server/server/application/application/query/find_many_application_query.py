@@ -1,6 +1,6 @@
 from dataclasses import dataclass, field
 
-from st_server.shared.application.query import Query
+from st_server.shared.domain.bus.query.query import Query
 
 
 @dataclass(frozen=True)

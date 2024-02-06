@@ -4,9 +4,7 @@ from st_server.server.application.application.command.register_application_comma
 from st_server.server.application.application.command.register_application_command_handler import (
     RegisterApplicationCommandHandler,
 )
-from tests.util.server.domain.application.application_factory import (
-    ApplicationFactory,
-)
+from tests.util.server.domain.application.application_factory import ApplicationFactory
 
 
 def test_register_ok(mock_application_repository, mock_rabbitmq_message_bus):

@@ -4,20 +4,20 @@ from st_server.server.application.application.command.modify_application_command
 from st_server.server.application.application.dto.application import (
     ApplicationDto,
 )
-from st_server.server.domain.application.application_repository import (
+from st_server.server.application.domain.application_repository import (
     ApplicationRepository,
 )
-from st_server.shared.application.bus.message_bus import MessageBus
-from st_server.shared.application.command_handler import CommandHandler
 from st_server.shared.application.exception import AlreadyExists, NotFound
+from st_server.shared.domain.bus.command.command_handler import CommandHandler
+from st_server.shared.domain.bus.event.event_bus import EventBus
 
 
 class ModifyApplicationCommandHandler(CommandHandler):
     def __init__(
-        self, repository: ApplicationRepository, message_bus: MessageBus
+        self, repository: ApplicationRepository, event_bus: EventBus
     ) -> None:
         self._repository = repository
-        self._message_bus = message_bus
+        self._event_bus = event_bus
 
     def handle(self, command: ModifyApplicationCommand) -> ApplicationDto:
         application = self._repository.find_by_id(command.id)

@@ -10,9 +10,7 @@ from st_server.server.application.application.query.find_one_application_query_h
     FindOneApplicationQueryHandler,
 )
 from st_server.shared.application.exception import NotFound
-from tests.util.server.domain.application.application_factory import (
-    ApplicationFactory,
-)
+from tests.util.server.domain.application.application_factory import ApplicationFactory
 
 
 def test_find_one_ok(mock_application_repository):
@@ -31,5 +29,7 @@ def test_find_one_not_found(mock_application_repository):
     with pytest.raises(NotFound):
         query = FindOneApplicationQuery("1234")
         FindOneApplicationQueryHandler(mock_application_repository).handle(
+            query
+        )
             query
         )

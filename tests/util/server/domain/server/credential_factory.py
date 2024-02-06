@@ -1,7 +1,7 @@
 import factory
 import factory.fuzzy
 
-from st_server.server.domain.server.credential import Credential
+from st_server.server.server.domain.credential import Credential
 from st_server.shared.domain.entity_id import EntityId
 from tests.util.server.domain.server.connection_type_factory import (
     ConnectionTypeFactory,

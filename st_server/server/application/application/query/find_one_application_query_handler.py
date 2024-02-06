@@ -4,18 +4,19 @@ from st_server.server.application.application.dto.application import (
 from st_server.server.application.application.query.find_one_application_query import (
     FindOneApplicationQuery,
 )
-from st_server.server.domain.application.application_repository import (
+from st_server.server.application.domain.application_repository import (
     ApplicationRepository,
 )
 from st_server.shared.application.exception import NotFound
+from st_server.shared.domain.bus.query.query_handler import QueryHandler
 
 
-class FindOneApplicationQueryHandler:
+class FindOneApplicationQueryHandler(QueryHandler):
     def __init__(self, repository: ApplicationRepository) -> None:
         self._repository = repository
 
     def handle(self, query: FindOneApplicationQuery) -> ApplicationDto:
-        application = self._repository.find_by_id(**query.to_dict())
+        application = self._repository.find_by_id(query.id)
         if application is None:
             raise NotFound(
                 "Application with id: {id!r} not found".format(id=query.id)

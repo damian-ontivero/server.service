@@ -1,7 +1,7 @@
 import factory
 import factory.fuzzy
 
-from st_server.server.domain.server.connection_type import ConnectionType
+from st_server.server.server.domain.connection_type import ConnectionType
 
 
 class ConnectionTypeFactory(factory.Factory):

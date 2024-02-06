@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 
-from st_server.server.domain.application.application import Application
+from st_server.server.application.domain.application import Application
 
 
 @dataclass(frozen=True)

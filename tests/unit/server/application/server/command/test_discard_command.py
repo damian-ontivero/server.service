@@ -1,7 +1,7 @@
-from st_server.server.application.server.command.discard_server_command import (
+from st_server.server.server.application.command.discard_server_command import (
     DiscardServerCommand,
 )
-from st_server.server.application.server.command.discard_server_command_handler import (
+from st_server.server.server.application.command.discard_server_command_handler import (
     DiscardServerCommandHandler,
 )
 from tests.util.server.domain.server.server_factory import ServerFactory
